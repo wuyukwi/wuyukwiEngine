@@ -1,0 +1,4 @@
+COMMAND_BEGIN
+"menu.wav" -1
+"test.wav" -1
+COMMAND_END

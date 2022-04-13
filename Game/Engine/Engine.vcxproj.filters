@@ -19,12 +19,15 @@
     <Filter Include="ImGui\backends">
       <UniqueIdentifier>{34dc5700-fdd8-4bbc-87f1-779edeae8db5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="D3D9Renderer">
+      <UniqueIdentifier>{252f0209-1694-41cc-9db1-c4a4cce57939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{a2778000-cb9d-47df-9227-f6a2b216db73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="D3D9Renderer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="defines.h">
@@ -63,14 +66,65 @@
     <ClInclude Include="GUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="vertex.h">
+    <ClInclude Include="structs.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D9Renderer.h">
+      <Filter>D3D9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyScript.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MathDefines.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLibrary.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingGeometry.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInput.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="InputInterface.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectSound.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundInterface.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D3D9Renderer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -92,7 +146,46 @@
     <ClCompile Include="imgui\backends\imgui_impl_win32.cpp">
       <Filter>ImGui\backends</Filter>
     </ClCompile>
+    <ClCompile Include="D3D9Renderer.cpp">
+      <Filter>D3D9Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="GUI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyScript.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingGeometry.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInput.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectSound.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
