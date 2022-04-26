@@ -39,4 +39,12 @@ struct GUIVertex
     }
 };
 
+// A general structure for our models.
+struct stModelVertex
+{
+    float x, y, z;
+    float nx, ny, nz;
+    unsigned long color;
+    float tu, tv;
+};
 #endif // _VERTEX_H_

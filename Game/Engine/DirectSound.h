@@ -44,7 +44,7 @@ class CDMSoundObject : public CSoundInterface
       ~CDMSoundObject() { Shutdown(); }
 
       bool Initialize(const char* filepath);
-      bool AddSound(char* soundfile, int numRepeats, int id);
+      bool AddSound(char* soundfile, int numRepeats, int& id);
       bool SetupSoundParameters(int id, float dopplerFactor,float rolloffFactor,float minDist, float maxDist);
 
       void Play(int id);

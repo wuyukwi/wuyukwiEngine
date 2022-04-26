@@ -1,0 +1,14 @@
+# Load Skydome.
+LoadSkyBoxAsX "maps/skybox.x"
+
+#Load terrain.
+LoadTerrainAsX "maps/level1/level1.x"
+
+# Set camera.
+SetCamera 1 2 3 4 5 6 7 8 9
+
+#Load models.
+LoadStaticModelAsX "maps/level1/house.x" 0 -2 0 0 0 0
+LoadArtifactModelAsX "maps/model/man/man.x" 0 0 0 0 0 0
+LoadCharacterModelAsX "maps/model/man/man.x" -75 -2 -80 0 0 0
+LoadCharacterModelAsX "maps/agent.x" 0 -2 -80 0 0 0

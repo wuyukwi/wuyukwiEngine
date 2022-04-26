@@ -103,9 +103,9 @@ bool CDMSoundObject::Initialize(const char* filepath)
 	return true;
 }
 
-bool CDMSoundObject::AddSound(char* soundfile, int numRepeats, int id)
+bool CDMSoundObject::AddSound(char* soundfile, int numRepeats, int& id)
 {
-	if (id > m_totalSounds || id < 0 || soundfile == nullptr)
+	if (id > m_totalSounds  || soundfile == nullptr)
 	{
 		return false;
 	}
@@ -113,6 +113,8 @@ bool CDMSoundObject::AddSound(char* soundfile, int numRepeats, int id)
 	// 音声データ格納配列を増加
 	if (!IncreaseSounds())
 		return false;
+
+	id = m_totalSounds;
 
 	// サウンドデータの初期化
 	HANDLE hFile;

@@ -73,19 +73,23 @@ void CScript::ParseCommand(char *destCommand)
        return;
    if(currentLine >= totalScriptLines) 
        return;
-   if(currentLineChar >= (int)strlen(m_script[currentLine])) 
-       return;
+   /*if(currentLineChar >= (int)strlen(m_script[currentLine])) 
+       return;*/
 
-   // 配列の初期化
    destCommand[0] = '\0';
-   
+
    // 行の先頭に＃がある場合、これはコメントである
-   if(IsLineComment())
-      {
-         destCommand[0] = '#';
-         destCommand[1] = '\0';
-         return;
-      }
+   if (IsLineComment())
+   {
+       destCommand[0] = '#';
+       destCommand[1] = '\0';
+       return;
+   }
+   // 行の先が改行の場合
+   if (m_script[currentLine][0] == '\0')
+   {
+       return;
+   }
 
    // スペースまたは改行が見つかるまですべての文字を読み込みます。
    while(currentLineChar < (int)strlen(m_script[currentLine]))

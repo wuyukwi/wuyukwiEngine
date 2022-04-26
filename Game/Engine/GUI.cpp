@@ -135,14 +135,12 @@ void CGUISystem::Shutdown()
 {
     // 全てのリソースをリリース
     for (int s = 0; s < m_totalControls; s++)
-    {
-        if (m_controls[s].m_text)
-        {
-            SAFE_DELETE_ARRAY(m_controls[s].m_text);
-        }
+    {   
+        SAFE_DELETE_ARRAY(m_controls[s].m_text);
     }
 
     m_totalControls = 0;
 
     SAFE_DELETE_ARRAY(m_controls);
+  
 }

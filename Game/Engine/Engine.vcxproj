@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{f321e0e6-c4d9-432f-a071-479572a374d6}</ProjectGuid>
     <RootNamespace>Engine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -152,18 +152,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BoundingGeometry.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="common.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="DirectSound.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="InputInterface.h" />
-    <ClInclude Include="MathDefines.h" />
-    <ClInclude Include="MathLibrary.h" />
+    <ClInclude Include="LogSystem.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Physics.h" />
-    <ClInclude Include="Plane.h" />
-    <ClInclude Include="Polygon.h" />
+    <ClInclude Include="objLoader.h" />
     <ClInclude Include="PropertyScript.h" />
-    <ClInclude Include="Quaternion.h" />
-    <ClInclude Include="Ray.h" />
+    <ClInclude Include="Route.h" />
+    <ClInclude Include="ScltMath.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="D3D9Renderer.h" />
     <ClInclude Include="defines.h" />
@@ -181,19 +181,23 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="RenderInterface.h" />
     <ClInclude Include="SoundInterface.h" />
-    <ClInclude Include="Vector.h" />
+    <ClInclude Include="Token.h" />
+    <ClInclude Include="UMFLoader.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="Vector.h" />
+    <ClInclude Include="XMesh.h" />
+    <ClInclude Include="XStructures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoundingGeometry.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="DirectSound.cpp" />
-    <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="LogSystem.cpp" />
+    <ClCompile Include="objLoader.cpp" />
     <ClCompile Include="PropertyScript.cpp" />
-    <ClCompile Include="Quaternion.cpp" />
-    <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Route.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="D3D9Renderer.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -205,7 +209,10 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="particle.cpp" />
-    <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="Token.cpp" />
+    <ClCompile Include="UMFLoader.cpp" />
+    <ClCompile Include="XMesh.cpp" />
+    <ClCompile Include="XStructures.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

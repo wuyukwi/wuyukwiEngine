@@ -27,7 +27,7 @@ class CInputInterface
 
       virtual bool MouseButtonUp(size_t button) = 0;
       virtual bool MouseButtonDown(size_t button) = 0;
-      virtual POINT GetMousePos() = 0;
+      virtual POINT GetMousePos(bool delta = false) = 0;
       virtual long GetMouseWheelPos() = 0;
 
       virtual bool ControllerButtonUp(size_t button) = 0;
@@ -50,7 +50,7 @@ class CDeviceInterface
       virtual bool ButtonUp(size_t key) = 0;
       virtual bool ButtonDown(size_t key) = 0;
 
-      virtual POINT GetPosition() = 0;
+      virtual POINT GetPosition(bool delta = false) = 0;
       virtual POINT GetZPosition() = 0;
 
       virtual void Shutdown() = 0;

@@ -38,14 +38,14 @@ BOOL gJSEnumDeviceCallBack(const DIDEVICEINSTANCE *inst, void* pData)
 CKeyboard::CKeyboard(LPDIRECTINPUT8 input, HWND hwnd)
 {
     // キーボードデバイスを作成、準備、および取得。
-   if(input->CreateDevice(GUID_SysKeyboard, &m_device, NULL) == DI_OK)
+   if(input->CreateDevice(GUID_SysKeyboard, &m_pDevice, NULL) == DI_OK)
       {
-         if(m_device->SetDataFormat(&c_dfDIKeyboard) == DI_OK)
+         if(m_pDevice->SetDataFormat(&c_dfDIKeyboard) == DI_OK)
             {
-               if(m_device->SetCooperativeLevel(hwnd,
+               if(m_pDevice->SetCooperativeLevel(hwnd,
                   DISCL_FOREGROUND |DISCL_NONEXCLUSIVE) == DI_OK)
                   {
-                     m_device->Acquire();
+                     m_pDevice->Acquire();
                   }
             }
    }
@@ -71,7 +71,7 @@ bool CKeyboard::ButtonDown(size_t key)
 }
 
 
-POINT CKeyboard::GetPosition()
+POINT CKeyboard::GetPosition(bool delta)
 {
    // キーボードは位置状態なし
    POINT p = { 0, 0 };
@@ -89,17 +89,17 @@ POINT CKeyboard::GetZPosition()
 
 bool CKeyboard::UpdateDevice()
 {
-   if(m_device)
+   if(m_pDevice)
       {
          // 入力比較のために古い状態を保存します。
          memcpy(m_oldKeys, m_keys, sizeof(m_keys));
 
          // 成功するか、不明なエラーが返されるまで、キーボードをポーリングします。
-         if(FAILED(m_device->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
+         if(FAILED(m_pDevice->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
             {
-               if(FAILED(m_device->Acquire())) 
+               if(FAILED(m_pDevice->Acquire())) 
                    return false;
-               if(FAILED(m_device->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
+               if(FAILED(m_pDevice->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
                   return false;
             }
        }
@@ -110,11 +110,11 @@ bool CKeyboard::UpdateDevice()
 
 void CKeyboard::Shutdown()
 {
-   if(m_device)
+   if(m_pDevice)
       {
-         m_device->Unacquire();
-         m_device->Release();
-         m_device = NULL;
+         m_pDevice->Unacquire();
+         m_pDevice->Release();
+         m_pDevice = NULL;
       }
 }
 
@@ -125,16 +125,16 @@ CMouse::CMouse(LPDIRECTINPUT8 input, HWND hwnd, bool exclusive)
    DWORD flags;
    m_hwnd = hwnd;
 
-   if(input->CreateDevice(GUID_SysMouse, &m_device, NULL) == DI_OK)
+   if(input->CreateDevice(GUID_SysMouse, &m_pDevice, NULL) == DI_OK)
       {
-         if(m_device->SetDataFormat(&c_dfDIMouse) == DI_OK)
+         if(m_pDevice->SetDataFormat(&c_dfDIMouse) == DI_OK)
             {
                if(exclusive) flags = DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_NOWINKEY;
                else flags = DISCL_FOREGROUND | DISCL_NONEXCLUSIVE;
 
-               if(m_device->SetCooperativeLevel(hwnd, flags) == DI_OK)
+               if(m_pDevice->SetCooperativeLevel(hwnd, flags) == DI_OK)
                   {
-                     m_device->Acquire();
+                     m_pDevice->Acquire();
                   }
             }
       }
@@ -161,16 +161,16 @@ bool CMouse::ButtonDown(size_t button)
 bool CMouse::UpdateDevice()
 {
 
-   if(m_device)
+   if(m_pDevice)
       {
          // 古いデータを保存
          memcpy(&m_oldMouseState, &m_mouseState, sizeof(m_mouseState));
 
          // デバイスの状態の取得中にエラーが発生した場合は、再取得する
-         if(FAILED(m_device->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
+         if(FAILED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
             {
-               if(FAILED(m_device->Acquire())) return false;
-               if(FAILED(m_device->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
+               if(FAILED(m_pDevice->Acquire())) return false;
+               if(FAILED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
                   return false;
             }
 
@@ -182,9 +182,16 @@ bool CMouse::UpdateDevice()
    return true;
 }
 
-POINT CMouse::GetPosition()
+POINT CMouse::GetPosition(bool delta)
 {
-   return m_position;
+    if (!delta)
+        return m_position;
+    else
+    {
+        POINT p = { m_mouseState.lX,m_mouseState.lY };
+
+        return p;
+    }
 }
 
 
@@ -197,11 +204,11 @@ POINT CMouse::GetZPosition()
 
 void CMouse::Shutdown()
 {
-   if(m_device)
+   if(m_pDevice)
       {
-         m_device->Unacquire();
-         m_device->Release();
-         m_device = NULL;
+         m_pDevice->Unacquire();
+         m_pDevice->Release();
+         m_pDevice = NULL;
       }
 }
 
@@ -220,7 +227,7 @@ CGameController::CGameController(LPDIRECTINPUT8 input, HWND hwnd)
    m_inputSystem->EnumDevices(DI8DEVCLASS_GAMECTRL, (LPDIENUMDEVICESCALLBACK)gJSEnumDeviceCallBack,
                               NULL, DIEDFL_ATTACHEDONLY);
 
-   if(m_device)
+   if(m_pDevice)
       {
          range.diph.dwSize = sizeof(DIPROPRANGE);
          range.diph.dwHeaderSize = sizeof(DIPROPHEADER);
@@ -228,11 +235,11 @@ CGameController::CGameController(LPDIRECTINPUT8 input, HWND hwnd)
          range.lMin = -1000;
          range.lMax = 1000;
          range.diph.dwObj = DIJOFS_X;
-         m_device->SetProperty(DIPROP_RANGE, &range.diph);
+         m_pDevice->SetProperty(DIPROP_RANGE, &range.diph);
          range.diph.dwObj = DIJOFS_Y;
-         m_device->SetProperty(DIPROP_RANGE, &range.diph);
+         m_pDevice->SetProperty(DIPROP_RANGE, &range.diph);
 
-         if(SUCCEEDED(m_device->GetCapabilities(&caps))) m_numButtons = caps.dwButtons;
+         if(SUCCEEDED(m_pDevice->GetCapabilities(&caps))) m_numButtons = caps.dwButtons;
          else m_numButtons = 4;
       }
 }
@@ -241,11 +248,11 @@ CGameController::CGameController(LPDIRECTINPUT8 input, HWND hwnd)
 BOOL CGameController::EnumDeviceCallBack(const DIDEVICEINSTANCE *inst, void* pData)
 {
    // Set to the first device found.
-   if(SUCCEEDED(m_inputSystem->CreateDevice(inst->guidInstance, &m_device, NULL)))
+   if(SUCCEEDED(m_inputSystem->CreateDevice(inst->guidInstance, &m_pDevice, NULL)))
       {
-         if(SUCCEEDED(m_device->SetDataFormat(&c_dfDIJoystick2)))
-            if(SUCCEEDED(m_device->SetCooperativeLevel(m_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
-               if(SUCCEEDED(m_device->Acquire()))
+         if(SUCCEEDED(m_pDevice->SetDataFormat(&c_dfDIJoystick2)))
+            if(SUCCEEDED(m_pDevice->SetCooperativeLevel(m_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
+               if(SUCCEEDED(m_pDevice->Acquire()))
                   {
                      strcpy(m_name, (char*)inst->tszProductName);
                      return DIENUM_STOP;
@@ -280,18 +287,18 @@ bool CGameController::ButtonDown(size_t button)
 
 bool CGameController::UpdateDevice()
 {
-   if(m_device)
+   if(m_pDevice)
       {
-         m_device->Poll();
+         m_pDevice->Poll();
 
          // Save old state for input comparing.
          memcpy(&m_oldGCState, &m_gcState, sizeof(m_gcState));
 
          // If error getting device state, re-aquire.
-         if(FAILED(m_device->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
+         if(FAILED(m_pDevice->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
             {
-               if(FAILED(m_device->Acquire())) return false;
-               if(FAILED(m_device->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
+               if(FAILED(m_pDevice->Acquire())) return false;
+               if(FAILED(m_pDevice->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
                   return false;
             }
 
@@ -306,7 +313,7 @@ bool CGameController::UpdateDevice()
 }
 
 
-POINT CGameController::GetPosition()
+POINT CGameController::GetPosition(bool delta)
 {
    POINT pos;
 
@@ -328,11 +335,11 @@ POINT CGameController::GetZPosition()
 
 void CGameController::Shutdown()
 {
-   if(m_device)
+   if(m_pDevice)
       {
-         m_device->Unacquire();
-         m_device->Release();
-         m_device = NULL;
+         m_pDevice->Unacquire();
+         m_pDevice->Release();
+         m_pDevice = NULL;
       }
 }
 
@@ -426,12 +433,12 @@ bool CDirectInputSystem::ControllerButtonDown(size_t button)
 }
 
 
-POINT CDirectInputSystem::GetMousePos()
+POINT CDirectInputSystem::GetMousePos(bool delta)
 {
    POINT null = {0, 0};
    if(!m_mouse) return null;
 
-   return m_mouse->GetPosition();
+   return m_mouse->GetPosition(delta);
 }
 
 

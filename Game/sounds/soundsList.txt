@@ -1,4 +1,5 @@
-COMMAND_BEGIN
-"menu.wav" -1
-"test.wav" -1
-COMMAND_END
+#音声リスト
+
+MENU_SOUND "menu.wav" -1
+SHOT_SOUND "test.wav" -1
+

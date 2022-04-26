@@ -37,7 +37,7 @@ class CSoundInterface
       virtual ~CSoundInterface(){}
 
       virtual bool Initialize(const char* filepath) = 0;
-      virtual bool AddSound(char* soundfile, int numRepeats, int id) = 0;
+      virtual bool AddSound(char* soundfile, int numRepeats, int& id) = 0;
       virtual bool SetupSoundParameters(int id, float dopplerFactor,float rolloffFactor,float minDist,float maxDist) = 0;
 
       virtual void Play(int id) = 0;

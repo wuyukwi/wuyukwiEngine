@@ -28,13 +28,13 @@ class CKeyboard : public CDeviceInterface
       bool ButtonUp(size_t key);
       bool ButtonDown(size_t key);
 
-      POINT GetPosition();
+      POINT GetPosition(bool delta = false);
       POINT GetZPosition();
 
       void Shutdown();
 
       // Keyboard device.
-      LPDIRECTINPUTDEVICE8 m_device;
+      LPDIRECTINPUTDEVICE8 m_pDevice;
       char m_keys[KEYS_SIZE];
       char m_oldKeys[KEYS_SIZE];
 };
@@ -51,13 +51,13 @@ class CMouse : public CDeviceInterface
       bool ButtonUp(size_t key);
       bool ButtonDown(size_t key);
 
-      POINT GetPosition();
+      POINT GetPosition(bool delta = false);
       POINT GetZPosition();
 
       void Shutdown();
 
       // Mouse device.
-      LPDIRECTINPUTDEVICE8 m_device;
+      LPDIRECTINPUTDEVICE8 m_pDevice;
       DIMOUSESTATE m_mouseState;
       DIMOUSESTATE m_oldMouseState;
       bool m_button[3];
@@ -89,13 +89,13 @@ class CGameController : public CDeviceInterface
       bool ButtonUp(size_t key);
       bool ButtonDown(size_t key);
 
-      POINT GetPosition();
+      POINT GetPosition(bool delta = false);
       POINT GetZPosition();
 
       void Shutdown();
 
       // Game controller device.
-      LPDIRECTINPUTDEVICE8 m_device;
+      LPDIRECTINPUTDEVICE8 m_pDevice;
       DIJOYSTATE2 m_gcState;
       DIJOYSTATE2 m_oldGCState;
       char m_name[256];
@@ -134,7 +134,7 @@ class CDirectInputSystem : public CInputInterface
       bool MouseButtonDown(size_t button);
 
       // Get mouse position (x, y) and mouse wheel data (z).
-      POINT GetMousePos();
+      POINT GetMousePos(bool delta = false);
       long GetMouseWheelPos();
 
       // Game controller functions.
