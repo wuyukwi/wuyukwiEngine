@@ -224,12 +224,12 @@ bool GameWorldLoad(const char* file)
 
     for (int i = 0; i < g_gameWorld.m_totalArtifacts; i++)
     {
-        BuildMatrixIdentity(g_gameWorld.m_models[i].worldMat);
+        BuildMatrixIdentity(g_gameWorld.m_artifacts[i].worldMat);
     }
 
     for (int i = 0; i < g_gameWorld.m_totalCharacters; i++)
     {
-        BuildMatrixIdentity(g_gameWorld.m_models[i].worldMat);
+        BuildMatrixIdentity(g_gameWorld.m_characters[i].worldMat);
     }
 
     g_gameWorld.m_levelStartTime = (float)g_timeCount;
@@ -311,10 +311,9 @@ void GameWorldRender()
             {
                 g_Render->SetWorldMatrix(&g_gameWorld.m_characters[i].worldMat);
 
-                if (g_gameWorld.m_characterSpot[i])
-                    g_Render->UpdateXAnimation(g_gameWorld.m_characters[i].m_id, g_elapsed,&g_gameWorld.m_characters[i].worldMat);
-                else
-                    g_Render->UpdateXAnimation(g_gameWorld.m_characters[i].m_id, 0,&g_gameWorld.m_characters[i].worldMat);
+               
+                g_Render->UpdateXAnimation(g_gameWorld.m_characters[i].m_id, g_elapsed,&g_gameWorld.m_characters[i].worldMat);
+             
 
                 g_Render->RenderXModel(g_gameWorld.m_characters[i].m_id);
             }

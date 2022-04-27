@@ -14,7 +14,7 @@
 
 CCamera::CCamera()
 {
-	m_pos = Vector3f(0.0f, 0.0f, 0.0f);
+	m_pos = Vector3f(100.0f, 50.0f, 20.0f);
 	m_right = Vector3f(1.0f, 0.0f, 0.0f);
 	m_up = Vector3f(0.0f, 1.0f, 0.0f);
 	m_look = Vector3f(0.0f, 0.0f, 1.0f);
@@ -65,6 +65,7 @@ void CCamera::fly(float units)
 void CCamera::pitch(float angle)
 {
 	Matrix4x4f T;
+
 	BuildMatrixRotationAxis(T, m_right, angle);
 
 	BuildVec3TransformCoord(m_up, m_up, T);
@@ -74,6 +75,9 @@ void CCamera::pitch(float angle)
 void CCamera::yaw(float angle)
 {
 	Matrix4x4f T;
+
+	// マトリックス標準化処理
+	BuildMatrixIdentity(T);
 
 	// 着地オブジェクトに対して世界y（0、1、0）を中心に回転します
 	if (m_cameraType == FOLLOW)
@@ -93,6 +97,10 @@ void CCamera::roll(float angle)
 	if (m_cameraType == FREE)
 	{
 		Matrix4x4f T;
+
+		// マトリックス標準化処理
+		BuildMatrixIdentity(T);
+
 		BuildMatrixRotationAxis(T, m_look, angle);
 
 		BuildVec3TransformCoord(m_right, m_right, T);

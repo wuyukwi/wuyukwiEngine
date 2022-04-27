@@ -513,6 +513,6 @@ inline Matrix4x4f BuildMatrixIdentity() {
 
 inline void BuildVec3TransformCoord(Vector3f& VOut, const Vector3f& V, Matrix4x4f& M) {
 	VOut.x = V.x * M.data[0][0] + V.y * M.data[1][0] + V.z * M.data[2][0] + M.data[3][0];
-	VOut.x = V.x * M.data[0][1] + V.y * M.data[1][1] + V.z * M.data[2][1] + M.data[3][1];
-	VOut.x = V.x * M.data[0][2] + V.y * M.data[1][2] + V.z * M.data[2][2] + M.data[3][2];
+	VOut.y = V.x * M.data[0][1] + V.y * M.data[1][1] + V.z * M.data[2][1] + M.data[3][1];
+	VOut.z = V.x * M.data[0][2] + V.y * M.data[1][2] + V.z * M.data[2][2] + M.data[3][2];
 }

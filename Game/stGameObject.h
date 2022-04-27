@@ -17,7 +17,10 @@
 struct stGameObject
 {
     stGameObject() : m_type(0), m_id(0), m_x(0), m_y(0), m_z(0),
-        m_rotX(0), m_rotY(0), m_rotZ(0), m_visible(1) {}
+        m_rotX(0), m_rotY(0), m_rotZ(0), m_visible(1)
+    {
+        BuildMatrixIdentity(worldMat);
+    }
 
     int m_type;
     int m_id;

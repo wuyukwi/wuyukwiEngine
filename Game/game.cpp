@@ -59,7 +59,7 @@ void GameLoop()
     GameProcessInput();
 
     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-    ImGui::Text("mouseXY :%d,%d,%d",g_Input->GetMousePos(true).x, g_Input->GetMousePos(true).y, g_LMBDown);               // Display some text (you can use a format strings too)
+    ImGui::Text("mouseXY :%d,%d,%d",g_Input->GetMousePos(true).x, g_Input->GetMousePos(true).y, g_LMBDown);              
     ImGui::End();
 
     // •`‰æŠJŽn
@@ -223,9 +223,11 @@ void GameProcessInput()
     }
 
     ImGui::Begin("camera");
-    /*ImGui::Text("camera pos :%f,%f,%f", g_camera.m_pos.x, g_camera.m_pos.y, g_camera.m_pos.z);
-    ImGui::Text("camera view :%f,%f,%f", g_camera.m_view.x, g_camera.m_view.y, g_camera.m_view.z);
-    ImGui::Text("camera up :%f,%f,%f", g_camera.m_up.x, g_camera.m_up.y, g_camera.m_up.z);*/
+    ImGui::Text("camera pos :%f,%f,%f", g_camera.GetCameraPos()->x, g_camera.GetCameraPos()->y, g_camera.GetCameraPos()->z);
+    ImGui::Text("camera right :%f,%f,%f", g_camera.GetCameraRight()->x, g_camera.GetCameraRight()->y, g_camera.GetCameraRight()->z);
+    ImGui::Text("camera up :%f,%f,%f", g_camera.GetCameraUp()->x, g_camera.GetCameraUp()->y, g_camera.GetCameraUp()->z);
+    ImGui::Text("camera look :%f,%f,%f", g_camera.GetCameraLook()->x, g_camera.GetCameraLook()->y, g_camera.GetCameraLook()->z);
+
     static float angle = 0.0f;
     static float cameraRot[3] = { 0.0f };
     if (g_Input->MouseButtonDown(MOUSE_LEFT_BUTTON))
@@ -241,14 +243,14 @@ void GameProcessInput()
         if (g_Input->KeyDown(DIK_W))
         {
            
-         
+            g_camera.walk(1.0f);
         
         }
 
         if (g_Input->KeyDown(DIK_S))
         {
            
-
+            g_camera.walk(-1.0f);
   
         }
 
@@ -256,15 +258,42 @@ void GameProcessInput()
 
         if (g_Input->KeyDown(DIK_A))
         {
-            
+            g_camera.strafe(-1.0f);
         }
 
         if (g_Input->KeyDown(DIK_D))
         {
-            
+            g_camera.strafe(1.0f);
+        }
+
+        
+        if (g_Input->KeyDown(DIK_R))
+        {
+            g_camera.fly(0.5f);
+        }
+
+        if (g_Input->KeyDown(DIK_F))
+        {
+            g_camera.fly(-0.5f);
         }
 
 
+        if (g_Input->KeyDown(DIK_UP))
+        {
+            g_camera.pitch(0.01f);
+        }
+        if (g_Input->KeyDown(DIK_DOWN))
+        {
+            g_camera.pitch(-0.01f);
+        }
+        if (g_Input->KeyDown(DIK_LEFT))
+        {
+            g_camera.yaw(0.01f);
+        }
+        if (g_Input->KeyDown(DIK_RIGHT))
+        {
+            g_camera.yaw(-0.01f);
+        }
 
         if (g_Input->MouseButtonUp(MOUSE_LEFT_BUTTON))
         {
