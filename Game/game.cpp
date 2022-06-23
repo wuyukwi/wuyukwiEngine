@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: game.h
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
@@ -11,6 +11,8 @@
 #include "game.h"
 #include "main.h"
 #include "Engine/defines.h"
+#include "Engine/Scene.h"
+#include "gameScene.h"
 
 char g_fpsStr[16] = { 0 };
 float g_elapsed = 0.0f;
@@ -30,8 +32,10 @@ stGameWorld g_gameWorld;
 
 GAME_STATE g_gameState = GAME_STATE::GS_MENU;
 
+Scene* g_scene;
+
 //=========================================
-// ƒQ[ƒ€‰Šú‰»
+// ã‚²ãƒ¼ãƒ åˆæœŸåŒ–
 //=========================================
 bool GameInitialize()
 {
@@ -39,35 +43,40 @@ bool GameInitialize()
     if (!InitializeMainMenu())
         return false;
 
+    g_scene = new gameScene();
+    g_scene->Start();
+
     return true;
 }
 
-
-
 //=========================================
-// ƒQ[ƒ€ƒ‹[ƒv
+// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
 //=========================================
 void GameLoop()
 {
-    if (!g_Render) 
+    if (!g_Render)
         return;
 
-    // imguiƒtƒŒ[ƒ€ì¬
+    // imguiãƒ•ãƒ¬ãƒ¼ãƒ ä½œæˆ
     g_Render->StartImGuiFrame();
 
-    // InputXVˆ—
+    // Inputæ›´æ–°å‡¦ç†
     GameProcessInput();
 
     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-    ImGui::Text("mouseXY :%d,%d,%d",g_Input->GetMousePos(true).x, g_Input->GetMousePos(true).y, g_LMBDown);              
+    ImGui::Text("mouseXY :%d,%d,%d", g_Input->GetMousePos(true).x, g_Input->GetMousePos(true).y, g_LMBDown);
     ImGui::End();
 
-    // •`‰æŠJŽn
+    // æç”»é–‹å§‹
     g_Render->StartRender(1, 1, 0);
-     
+
     if (g_gameState == GAME_STATE::GS_LEVEL)
     {
-        GameWorldRender();
+        g_scene->Updata(g_elapsed);
+        g_scene->Render();
+
+        //GameWorldRender();
+
     }
     else if (g_gameState == GAME_STATE::GS_MENU)
     {
@@ -75,47 +84,46 @@ void GameLoop()
     }
     else if (g_gameState == GAME_STATE::GS_LEVEL_1_SWITCH)
     {
-        MainMenuRender();
-        g_Render->EndRendering();
-        GameReleaseAll();
+        g_gameState = GAME_STATE::GS_LEVEL;
+        /*    MainMenuRender();
+            g_Render->EndRendering();
+            GameReleaseAll();
 
-        if (GameWorldLoad("maps/level1/level1.lvl"))
-        {
-            g_gameState = GAME_STATE::GS_LEVEL;
-        }
-        else
-        {
-            InitializeMainMenu();
-            g_Sound->Play(g_menuSound);
-            g_gameState = GAME_STATE::GS_MENU;
-            g_currentGUI = GUI_MAIN_SCREEN;
-        }
+            if (GameWorldLoad("maps/level1/level1.lvl"))
+            {
+
+            }
+            else
+            {
+                InitializeMainMenu();
+                g_Sound->Play(g_menuSound);
+                g_gameState = GAME_STATE::GS_MENU;
+                g_currentGUI = GUI_MAIN_SCREEN;
+            }*/
     }
 
     if (g_gameState == GAME_STATE::GS_LEVEL)
     {
-  
     }
 
-    // InGui‚Ì•`‰æ
+    // InGuiã®æç”»
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 
-    //FPS‚Ì•`‰æ
+    //FPSã®æç”»
     fpsRender();
 
-    // •`‰æI—¹
+    // æç”»çµ‚äº†
     g_Render->EndRendering();
 }
 
 //=========================================
-// ƒQ[ƒ€I—¹
+// ã‚²ãƒ¼ãƒ çµ‚äº†
 //=========================================
 void GameShutdown()
 {
     GameReleaseAll();
 }
-
 
 void GameReleaseAll()
 {
@@ -124,7 +132,6 @@ void GameReleaseAll()
     g_Render->ReleaseAllStaticBuffers();
     g_Render->ReleaseAllXModels();
     g_Render->ReleaseAllGUIs();
-
 
     g_gameWorld.m_levelID = -1;
     g_gameWorld.m_skyBoxID = -1;
@@ -140,19 +147,18 @@ void GameReleaseAll()
         g_Sound->Stop(g_menuSound);
 }
 
-
 //=========================================
-// fps•`‰æŠÖ”
+// fpsæç”»é–¢æ•°
 //=========================================
 void fpsRender()
 {
-    //FPS‚ðŒv‘ª—p•Ï”
+    //FPSã‚’è¨ˆæ¸¬ç”¨å¤‰æ•°
     static int fps = 0;
     static float currentTime = 0.0f;
     static float lastTime = 0.0f;
     static float frameTime = 0.0f;
 
-    //FPS‚Ì•`‰æ
+    //FPSã®æç”»
     g_Render->DisplayText(g_arialID, 0, 0, COLOR_ARGB(255, 255, 255, 255), g_fpsStr);
 
     static char s_elapsed[16] = { 0 };
@@ -163,14 +169,14 @@ void fpsRender()
     sprintf(timeCount, "timeCount: %d", g_timeCount);
     g_Render->DisplayText(g_arialID, 0, 40, COLOR_ARGB(255, 255, 255, 255), timeCount);
 
-    //FPS‚ðŒv‘ª
+    //FPSã‚’è¨ˆæ¸¬
     currentTime = float(timeGetTime());
     g_elapsed = ((currentTime - lastTime) * 0.001f);
     lastTime = currentTime;
 
     frameTime += g_elapsed;
 
-    // 1•bŒo‰ß
+    // 1ç§’çµŒéŽ
     if (frameTime > 1.0f)
     {
         sprintf(g_fpsStr, "FPS: %d", fps);
@@ -186,7 +192,7 @@ void fpsRender()
 }
 
 //=========================================
-// “ü—ÍŠÖ”
+// å…¥åŠ›é–¢æ•°
 //=========================================
 void GameProcessInput()
 {
@@ -232,26 +238,21 @@ void GameProcessInput()
     static float cameraRot[3] = { 0.0f };
     if (g_Input->MouseButtonDown(MOUSE_LEFT_BUTTON))
     {
-        
     }
 
     ImGui::SliderFloat3("rot", cameraRot, -1.0f, 1.0f);
     ImGui::SliderFloat("angle", &angle, -3.14f, 3.14f);
     ImGui::End();
-    if (g_gameState == GAME_STATE::GS_LEVEL &&g_gameWorld.m_missionStatus == MISSION_ONGOING)
+    if (g_gameState == GAME_STATE::GS_LEVEL && g_gameWorld.m_missionStatus == MISSION_ONGOING)
     {
         if (g_Input->KeyDown(DIK_W))
         {
-           
             g_camera.walk(1.0f);
-        
         }
 
         if (g_Input->KeyDown(DIK_S))
         {
-           
             g_camera.walk(-1.0f);
-  
         }
 
         g_Input->GetMousePos();
@@ -266,7 +267,6 @@ void GameProcessInput()
             g_camera.strafe(1.0f);
         }
 
-        
         if (g_Input->KeyDown(DIK_R))
         {
             g_camera.fly(0.5f);
@@ -276,7 +276,6 @@ void GameProcessInput()
         {
             g_camera.fly(-0.5f);
         }
-
 
         if (g_Input->KeyDown(DIK_UP))
         {
@@ -297,13 +296,11 @@ void GameProcessInput()
 
         if (g_Input->MouseButtonUp(MOUSE_LEFT_BUTTON))
         {
-           
         }
     }
 
     // Mouse Input
     POINT pos = g_Input->GetMousePos();
-
     g_mouseX = pos.x;
     g_mouseY = pos.y;
 

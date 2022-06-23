@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: DirectSound.cpp
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/12
@@ -13,456 +13,435 @@
 HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition);
 HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
 
-
-bool CreateDMSound(CSoundInterface**pObj)
+bool CreateDMSound(CSoundInterface** pObj)
 {
-   if(!*pObj) *pObj = new CDMSoundObject();
-   else return false;
-   
-   return true;
+    if (!*pObj) *pObj = new CDMSoundObject();
+    else return false;
+
+    return true;
 }
 
-
 CDMSoundObject::CDMSoundObject()
-{  
-	m_filePath = nullptr;
+{
+    m_filePath = nullptr;
     m_pXAudio2 = nullptr;
     pMasterVoice = nullptr;
-	m_audioState = nullptr;
-	m_comInit = false;
-	m_totalSounds = 0;
+    m_audioState = nullptr;
+    m_comInit = false;
+    m_totalSounds = 0;
 }
 
 int CDMSoundObject::IncreaseSounds()
 {
-	// This function increases the m_control array.
+    // This function increases the m_control array.
 
-	if (!m_audioState)
-	{
-		m_audioState = new AUDIO_STATE[1];
-		if (!m_audioState) return UGP_FAIL;
-	}
-	else
-	{
-		AUDIO_STATE* temp;
-		temp = new AUDIO_STATE[m_totalSounds + 1];
-		if (!temp) return UGP_FAIL;
+    if (!m_audioState)
+    {
+        m_audioState = new AUDIO_STATE[1];
+        if (!m_audioState) return UGP_FAIL;
+    }
+    else
+    {
+        AUDIO_STATE* temp;
+        temp = new AUDIO_STATE[m_totalSounds + 1];
+        if (!temp) return UGP_FAIL;
 
-		memcpy(temp, m_audioState,
-			sizeof(AUDIO_STATE) * m_totalSounds);
+        memcpy(temp, m_audioState,
+            sizeof(AUDIO_STATE) * m_totalSounds);
 
-		delete[] m_audioState;
-		m_audioState = temp;
-	}
+        delete[] m_audioState;
+        m_audioState = temp;
+    }
 
-	return UGP_OK;
+    return UGP_OK;
 }
 
 bool CDMSoundObject::Initialize(const char* filepath)
 {
-	m_filePath = filepath;
+    m_filePath = filepath;
 
-	if (!m_comInit)
-	{
-		// COMƒ‰ƒCƒuƒ‰ƒŠ‚Ì‰Šú‰»
-		CoInitializeEx(NULL, COINIT_MULTITHREADED);
-		m_comInit = true;
-	}
+    if (!m_comInit)
+    {
+        // COMãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®åˆæœŸåŒ–
+        CoInitializeEx(NULL, COINIT_MULTITHREADED);
+        m_comInit = true;
+    }
 
-	if (!m_pXAudio2)
-	{
-		//XAudio2 ƒGƒ“ƒWƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚µ‚Ü‚·B
-		if (FAILED(XAudio2Create(&m_pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR)))
-		{
-			// COMƒ‰ƒCƒuƒ‰ƒŠ‚ÌI—¹ˆ—
-			CoUninitialize();
+    if (!m_pXAudio2)
+    {
+        //XAudio2 ã‚¨ãƒ³ã‚¸ãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã—ã¾ã™ã€‚
+        if (FAILED(XAudio2Create(&m_pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR)))
+        {
+            // COMãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®çµ‚äº†å‡¦ç†
+            CoUninitialize();
 
-			return false;
-		}
-	}
-	      
-	if (!pMasterVoice)
-	{
-		// ƒ}ƒXƒ^[‰¹º‚ğì¬‚µ‚Ü‚·B
-		if (FAILED(m_pXAudio2->CreateMasteringVoice(&pMasterVoice)))
-		{
-			if (m_pXAudio2)
-			{
-				// XAudio2ƒIƒuƒWƒFƒNƒg‚ÌŠJ•ú
-				m_pXAudio2->Release();
-				m_pXAudio2 = NULL;
-			}
+            return false;
+        }
+    }
 
-			// COMƒ‰ƒCƒuƒ‰ƒŠ‚ÌI—¹ˆ—
-			CoUninitialize();
+    if (!pMasterVoice)
+    {
+        // ãƒã‚¹ã‚¿ãƒ¼éŸ³å£°ã‚’ä½œæˆã—ã¾ã™ã€‚
+        if (FAILED(m_pXAudio2->CreateMasteringVoice(&pMasterVoice)))
+        {
+            if (m_pXAudio2)
+            {
+                // XAudio2ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é–‹æ”¾
+                m_pXAudio2->Release();
+                m_pXAudio2 = NULL;
+            }
 
-			return false;
-		}
-	}
+            // COMãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®çµ‚äº†å‡¦ç†
+            CoUninitialize();
 
-	return true;
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool CDMSoundObject::AddSound(char* soundfile, int numRepeats, int& id)
 {
-	if (id > m_totalSounds  || soundfile == nullptr)
-	{
-		return false;
-	}
+    if (id > m_totalSounds || soundfile == nullptr)
+    {
+        return false;
+    }
 
-	// ‰¹ºƒf[ƒ^Ši”[”z—ñ‚ğ‘‰Á
-	if (!IncreaseSounds())
-		return false;
+    // éŸ³å£°ãƒ‡ãƒ¼ã‚¿æ ¼ç´é…åˆ—ã‚’å¢—åŠ 
+    if (!IncreaseSounds())
+        return false;
 
-	id = m_totalSounds;
+    id = m_totalSounds;
 
-	// ƒTƒEƒ“ƒhƒf[ƒ^‚Ì‰Šú‰»
-	HANDLE hFile;
-	DWORD dwChunkSize = 0;
-	DWORD dwChunkPosition = 0;
-	DWORD dwFiletype;
-	WAVEFORMATEXTENSIBLE wfx;
-	XAUDIO2_BUFFER buffer;
-	char* fileName = new char[strlen(m_filePath) + strlen(soundfile) + 1];
-	ZeroMemory(fileName, strlen(m_filePath) + strlen(soundfile) + 1);
-	strcat(fileName, m_filePath);
-	strcat(fileName, soundfile);
+    // ã‚µã‚¦ãƒ³ãƒ‰ãƒ‡ãƒ¼ã‚¿ã®åˆæœŸåŒ–
+    HANDLE hFile;
+    DWORD dwChunkSize = 0;
+    DWORD dwChunkPosition = 0;
+    DWORD dwFiletype;
+    WAVEFORMATEXTENSIBLE wfx;
+    XAUDIO2_BUFFER buffer;
+    char* fileName = new char[strlen(m_filePath) + strlen(soundfile) + 1];
+    ZeroMemory(fileName, strlen(m_filePath) + strlen(soundfile) + 1);
+    strcat(fileName, m_filePath);
+    strcat(fileName, soundfile);
 
-	// ƒoƒbƒtƒ@‚ÌƒNƒŠƒA
-	memset(&wfx, 0, sizeof(WAVEFORMATEXTENSIBLE));
-	memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+    // ãƒãƒƒãƒ•ã‚¡ã®ã‚¯ãƒªã‚¢
+    memset(&wfx, 0, sizeof(WAVEFORMATEXTENSIBLE));
+    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
 
-	// ƒTƒEƒ“ƒhƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ì¶¬
-	hFile = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		return false;
-	}
-	if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-	{// ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚ğæ“ª‚ÉˆÚ“®
-		return false;
-	}
+    // ã‚µã‚¦ãƒ³ãƒ‰ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®ç”Ÿæˆ
+    hFile = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    if (hFile == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+    if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+    {// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’å…ˆé ­ã«ç§»å‹•
+        return false;
+    }
 
-	// WAVEƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
-	if (FAILED(CheckChunk(hFile, 'FFIR', &dwChunkSize, &dwChunkPosition)))
-	{
-		return false;
-	}
-	if (FAILED(ReadChunkData(hFile, &dwFiletype, sizeof(DWORD), dwChunkPosition)))
-	{
-		return false;
-	}
-	if (dwFiletype != 'EVAW')
-	{
-		return false;
-	}
+    // WAVEãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
+    if (FAILED(CheckChunk(hFile, 'FFIR', &dwChunkSize, &dwChunkPosition)))
+    {
+        return false;
+    }
+    if (FAILED(ReadChunkData(hFile, &dwFiletype, sizeof(DWORD), dwChunkPosition)))
+    {
+        return false;
+    }
+    if (dwFiletype != 'EVAW')
+    {
+        return false;
+    }
 
-	// ƒtƒH[ƒ}ƒbƒgƒ`ƒFƒbƒN
-	if (FAILED(CheckChunk(hFile, ' tmf', &dwChunkSize, &dwChunkPosition)))
-	{
-		return false;
-	}
-	if (FAILED(ReadChunkData(hFile, &wfx, dwChunkSize, dwChunkPosition)))
-	{
-		return false;
-	}
+    // ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆãƒã‚§ãƒƒã‚¯
+    if (FAILED(CheckChunk(hFile, ' tmf', &dwChunkSize, &dwChunkPosition)))
+    {
+        return false;
+    }
+    if (FAILED(ReadChunkData(hFile, &wfx, dwChunkSize, dwChunkPosition)))
+    {
+        return false;
+    }
 
-	// ƒI[ƒfƒBƒIƒf[ƒ^“Ç‚İ‚İ
-	if (FAILED(CheckChunk(hFile, 'atad', &m_audioState[id].SizeAudio, &dwChunkPosition)))
-	{
-		return false;
-	}
-	m_audioState[id].pDataAudio = (BYTE*)malloc(m_audioState[id].SizeAudio);
-	if (FAILED(ReadChunkData(hFile, m_audioState[id].pDataAudio, m_audioState[id].SizeAudio, dwChunkPosition)))
-	{
-		return false;
-	}
+    // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
+    if (FAILED(CheckChunk(hFile, 'atad', &m_audioState[id].SizeAudio, &dwChunkPosition)))
+    {
+        return false;
+    }
+    m_audioState[id].pDataAudio = (BYTE*)malloc(m_audioState[id].SizeAudio);
+    if (FAILED(ReadChunkData(hFile, m_audioState[id].pDataAudio, m_audioState[id].SizeAudio, dwChunkPosition)))
+    {
+        return false;
+    }
 
-	// ƒ\[ƒXƒ{ƒCƒX‚Ì¶¬
-	if (FAILED(m_pXAudio2->CreateSourceVoice(&m_audioState[id].pSourceVoice, &(wfx.Format))))
-	{
-		return S_FALSE;
-	}
+    // ã‚½ãƒ¼ã‚¹ãƒœã‚¤ã‚¹ã®ç”Ÿæˆ
+    if (FAILED(m_pXAudio2->CreateSourceVoice(&m_audioState[id].pSourceVoice, &(wfx.Format))))
+    {
+        return S_FALSE;
+    }
 
-	// ƒoƒbƒtƒ@‚Ì’lİ’è
-	memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-	buffer.AudioBytes = m_audioState[id].SizeAudio;
-	buffer.pAudioData = m_audioState[id].pDataAudio;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopCount = m_audioState[id].Repeats = numRepeats;
+    // ãƒãƒƒãƒ•ã‚¡ã®å€¤è¨­å®š
+    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+    buffer.AudioBytes = m_audioState[id].SizeAudio;
+    buffer.pAudioData = m_audioState[id].pDataAudio;
+    buffer.Flags = XAUDIO2_END_OF_STREAM;
+    buffer.LoopCount = m_audioState[id].Repeats = numRepeats;
 
-	// ƒI[ƒfƒBƒIƒoƒbƒtƒ@‚Ì“o˜^
-	m_audioState[id].pSourceVoice->SubmitSourceBuffer(&buffer);
+    // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒãƒƒãƒ•ã‚¡ã®ç™»éŒ²
+    m_audioState[id].pSourceVoice->SubmitSourceBuffer(&buffer);
 
-	// ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY
-	CloseHandle(hFile);
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚º
+    CloseHandle(hFile);
 
-	m_totalSounds++;
+    m_totalSounds++;
 
-	return true;
-
+    return true;
 }
 
-bool CDMSoundObject::SetupSoundParameters(int id, float dopplerFactor,float rolloffFactor, float minDist, float maxDist)
+bool CDMSoundObject::SetupSoundParameters(int id, float dopplerFactor, float rolloffFactor, float minDist, float maxDist)
 {
-   //// Set listener.
-   //m_listenerParams.flDopplerFactor = dopplerFactor;
-   //m_listenerParams.flRolloffFactor = rolloffFactor;
-   //m_audioListener->SetAllParameters(&m_listenerParams,DS3D_IMMEDIATE);
+    //// Set listener.
+    //m_listenerParams.flDopplerFactor = dopplerFactor;
+    //m_listenerParams.flRolloffFactor = rolloffFactor;
+    //m_audioListener->SetAllParameters(&m_listenerParams,DS3D_IMMEDIATE);
 
-   //// Set buffer.
-   //m_bufferParams.flMinDistance = minDist;
-   //m_bufferParams.flMaxDistance = maxDist;
-   //m_audioBuffer->SetAllParameters(&m_bufferParams,DS3D_IMMEDIATE);
+    //// Set buffer.
+    //m_bufferParams.flMinDistance = minDist;
+    //m_bufferParams.flMaxDistance = maxDist;
+    //m_audioBuffer->SetAllParameters(&m_bufferParams,DS3D_IMMEDIATE);
 
-   return true;
+    return true;
 }
-
 
 void CDMSoundObject::Play(int id)
 {
-	// ƒZƒOƒƒ“ƒgÄ¶(Ä¶’†‚È‚ç’â~)
-	XAUDIO2_VOICE_STATE xa2state;
-	XAUDIO2_BUFFER buffer;
+    // ã‚»ã‚°ãƒ¡ãƒ³ãƒˆå†ç”Ÿ(å†ç”Ÿä¸­ãªã‚‰åœæ­¢)
+    XAUDIO2_VOICE_STATE xa2state;
+    XAUDIO2_BUFFER buffer;
 
-	// ƒoƒbƒtƒ@‚Ì’lİ’è
-	memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-	buffer.AudioBytes = m_audioState[id].SizeAudio;
-	buffer.pAudioData = m_audioState[id].pDataAudio;
-	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopCount = m_audioState[id].Repeats;
+    // ãƒãƒƒãƒ•ã‚¡ã®å€¤è¨­å®š
+    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+    buffer.AudioBytes = m_audioState[id].SizeAudio;
+    buffer.pAudioData = m_audioState[id].pDataAudio;
+    buffer.Flags = XAUDIO2_END_OF_STREAM;
+    buffer.LoopCount = m_audioState[id].Repeats;
 
-	// ó‘Ôæ“¾
-	m_audioState[id].pSourceVoice->GetState(&xa2state);
-	if (xa2state.BuffersQueued != 0)
-	{// Ä¶’†
-		// ˆê’â~
-		m_audioState[id].pSourceVoice->Stop(0);
+    // çŠ¶æ…‹å–å¾—
+    m_audioState[id].pSourceVoice->GetState(&xa2state);
+    if (xa2state.BuffersQueued != 0)
+    {// å†ç”Ÿä¸­
+        // ä¸€æ™‚åœæ­¢
+        m_audioState[id].pSourceVoice->Stop(0);
 
-		// ƒI[ƒfƒBƒIƒoƒbƒtƒ@‚Ìíœ
-		m_audioState[id].pSourceVoice->FlushSourceBuffers();
-	}
+        // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒãƒƒãƒ•ã‚¡ã®å‰Šé™¤
+        m_audioState[id].pSourceVoice->FlushSourceBuffers();
+    }
 
-	// ƒI[ƒfƒBƒIƒoƒbƒtƒ@‚Ì“o˜^
-	m_audioState[id].pSourceVoice->SubmitSourceBuffer(&buffer);
+    // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒãƒƒãƒ•ã‚¡ã®ç™»éŒ²
+    m_audioState[id].pSourceVoice->SubmitSourceBuffer(&buffer);
 
-	// Ä¶
-	m_audioState[id].pSourceVoice->Start(0);
+    // å†ç”Ÿ
+    m_audioState[id].pSourceVoice->Start(0);
 }
 
-
-void CDMSoundObject::UpdateSoundPosition(int id,float x, float y, float z)
+void CDMSoundObject::UpdateSoundPosition(int id, float x, float y, float z)
 {
-
-
 }
 
 //=============================================================================
-// ƒZƒOƒƒ“ƒg’â~(ƒ‰ƒxƒ‹w’è) -(‘S‚Ä)
+// ã‚»ã‚°ãƒ¡ãƒ³ãƒˆåœæ­¢(ãƒ©ãƒ™ãƒ«æŒ‡å®š) -(å…¨ã¦)
 //=============================================================================
 void CDMSoundObject::Stop(int id)
 {
-	XAUDIO2_VOICE_STATE xa2state;
+    XAUDIO2_VOICE_STATE xa2state;
 
-	if (id >= 0)
-	{
-		// ó‘Ôæ“¾
-		m_audioState[id].pSourceVoice->GetState(&xa2state);
-		if (xa2state.BuffersQueued != 0)
-		{// Ä¶’†
-			// ˆê’â~
-			m_audioState[id].pSourceVoice->Stop(0);
+    if (id >= 0)
+    {
+        // çŠ¶æ…‹å–å¾—
+        m_audioState[id].pSourceVoice->GetState(&xa2state);
+        if (xa2state.BuffersQueued != 0)
+        {// å†ç”Ÿä¸­
+            // ä¸€æ™‚åœæ­¢
+            m_audioState[id].pSourceVoice->Stop(0);
 
-			// ƒI[ƒfƒBƒIƒoƒbƒtƒ@‚Ìíœ
-			m_audioState[id].pSourceVoice->FlushSourceBuffers();
-		}
-	}
-	else
-	{
-		// ‘S‚Äˆê’â~
-		for (int nCntSound = 0; nCntSound < m_totalSounds; nCntSound++)
-		{
-			if (m_audioState[nCntSound].pSourceVoice)
-			{
-				// ‘S‚Äˆê’â~
-				m_audioState[nCntSound].pSourceVoice->Stop(0);
-			}
-		}
-	}
-
+            // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒãƒƒãƒ•ã‚¡ã®å‰Šé™¤
+            m_audioState[id].pSourceVoice->FlushSourceBuffers();
+        }
+    }
+    else
+    {
+        // å…¨ã¦ä¸€æ™‚åœæ­¢
+        for (int nCntSound = 0; nCntSound < m_totalSounds; nCntSound++)
+        {
+            if (m_audioState[nCntSound].pSourceVoice)
+            {
+                // å…¨ã¦ä¸€æ™‚åœæ­¢
+                m_audioState[nCntSound].pSourceVoice->Stop(0);
+            }
+        }
+    }
 }
 
 void CDMSoundObject::Shutdown()
 {
-   // Release all resources.
+    // Release all resources.
 
-	for (int cnt = 0; cnt < m_totalSounds; cnt++)
-	{
-		if (m_audioState[cnt].pSourceVoice)
-		{
-			// ˆê’â~
-			m_audioState[cnt].pSourceVoice->Stop(0);
+    for (int cnt = 0; cnt < m_totalSounds; cnt++)
+    {
+        if (m_audioState[cnt].pSourceVoice)
+        {
+            // ä¸€æ™‚åœæ­¢
+            m_audioState[cnt].pSourceVoice->Stop(0);
 
-			// ƒ\[ƒXƒ{ƒCƒX‚Ì”jŠü
-			m_audioState[cnt].pSourceVoice->DestroyVoice();
-			m_audioState[cnt].pSourceVoice = NULL;
+            // ã‚½ãƒ¼ã‚¹ãƒœã‚¤ã‚¹ã®ç ´æ£„
+            m_audioState[cnt].pSourceVoice->DestroyVoice();
+            m_audioState[cnt].pSourceVoice = NULL;
 
-			// ƒI[ƒfƒBƒIƒf[ƒ^‚ÌŠJ•ú
-			free(m_audioState[cnt].pDataAudio);
-			m_audioState[cnt].pDataAudio = NULL;
-		}
-	}
-	
+            // ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒ‡ãƒ¼ã‚¿ã®é–‹æ”¾
+            free(m_audioState[cnt].pDataAudio);
+            m_audioState[cnt].pDataAudio = NULL;
+        }
+    }
 
-	// ƒ}ƒXƒ^[ƒ{ƒCƒX‚Ì”jŠü
-	if (pMasterVoice)
-	{
-		pMasterVoice->DestroyVoice();
-		pMasterVoice = NULL;
-	}
+    // ãƒã‚¹ã‚¿ãƒ¼ãƒœã‚¤ã‚¹ã®ç ´æ£„
+    if (pMasterVoice)
+    {
+        pMasterVoice->DestroyVoice();
+        pMasterVoice = NULL;
+    }
 
-	// XAudio2ƒIƒuƒWƒFƒNƒg‚ÌŠJ•ú
-	if (m_pXAudio2)
-	{
-		SAFE_RELEASE(m_pXAudio2);
-	}
+    // XAudio2ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é–‹æ”¾
+    if (m_pXAudio2)
+    {
+        SAFE_RELEASE(m_pXAudio2);
+    }
 
-	// COMƒ‰ƒCƒuƒ‰ƒŠ‚ÌI—¹ˆ—
-	CoUninitialize();
-	m_comInit = false;
+    // COMãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®çµ‚äº†å‡¦ç†
+    CoUninitialize();
+    m_comInit = false;
 }
 //=============================================================================
-// ƒ`ƒƒƒ“ƒN‚Ìƒ`ƒFƒbƒN
+// ãƒãƒ£ãƒ³ã‚¯ã®ãƒã‚§ãƒƒã‚¯
 //=============================================================================
 HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition)
 {
-	HRESULT hr = S_OK;
-	DWORD dwRead;
-	DWORD dwChunkType;
-	DWORD dwChunkDataSize;
-	DWORD dwRIFFDataSize = 0;
-	DWORD dwFileType;
-	DWORD dwBytesRead = 0;
-	DWORD dwOffset = 0;
+    HRESULT hr = S_OK;
+    DWORD dwRead;
+    DWORD dwChunkType;
+    DWORD dwChunkDataSize;
+    DWORD dwRIFFDataSize = 0;
+    DWORD dwFileType;
+    DWORD dwBytesRead = 0;
+    DWORD dwOffset = 0;
 
-	if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-	{// ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚ğæ“ª‚ÉˆÚ“®
-		return HRESULT_FROM_WIN32(GetLastError());
-	}
+    if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+    {// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’å…ˆé ­ã«ç§»å‹•
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
 
-	while (hr == S_OK)
-	{
-		if (ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, NULL) == 0)
-		{// ƒ`ƒƒƒ“ƒN‚Ì“Ç‚İ‚İ
-			hr = HRESULT_FROM_WIN32(GetLastError());
-		}
+    while (hr == S_OK)
+    {
+        if (ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, NULL) == 0)
+        {// ãƒãƒ£ãƒ³ã‚¯ã®èª­ã¿è¾¼ã¿
+            hr = HRESULT_FROM_WIN32(GetLastError());
+        }
 
-		if (ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, NULL) == 0)
-		{// ƒ`ƒƒƒ“ƒNƒf[ƒ^‚Ì“Ç‚İ‚İ
-			hr = HRESULT_FROM_WIN32(GetLastError());
-		}
+        if (ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, NULL) == 0)
+        {// ãƒãƒ£ãƒ³ã‚¯ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
+            hr = HRESULT_FROM_WIN32(GetLastError());
+        }
 
-		switch (dwChunkType)
-		{
-		case 'FFIR':
-			dwRIFFDataSize = dwChunkDataSize;
-			dwChunkDataSize = 4;
-			if (ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, NULL) == 0)
-			{// ƒtƒ@ƒCƒ‹ƒ^ƒCƒv‚Ì“Ç‚İ‚İ
-				hr = HRESULT_FROM_WIN32(GetLastError());
-			}
-			break;
+        switch (dwChunkType)
+        {
+        case 'FFIR':
+            dwRIFFDataSize = dwChunkDataSize;
+            dwChunkDataSize = 4;
+            if (ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, NULL) == 0)
+            {// ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ã‚¤ãƒ—ã®èª­ã¿è¾¼ã¿
+                hr = HRESULT_FROM_WIN32(GetLastError());
+            }
+            break;
 
-		default:
-			if (SetFilePointer(hFile, dwChunkDataSize, NULL, FILE_CURRENT) == INVALID_SET_FILE_POINTER)
-			{// ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚ğƒ`ƒƒƒ“ƒNƒf[ƒ^•ªˆÚ“®
-				return HRESULT_FROM_WIN32(GetLastError());
-			}
-		}
+        default:
+            if (SetFilePointer(hFile, dwChunkDataSize, NULL, FILE_CURRENT) == INVALID_SET_FILE_POINTER)
+            {// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’ãƒãƒ£ãƒ³ã‚¯ãƒ‡ãƒ¼ã‚¿åˆ†ç§»å‹•
+                return HRESULT_FROM_WIN32(GetLastError());
+            }
+        }
 
-		dwOffset += sizeof(DWORD) * 2;
-		if (dwChunkType == format)
-		{
-			*pChunkSize = dwChunkDataSize;
-			*pChunkDataPosition = dwOffset;
+        dwOffset += sizeof(DWORD) * 2;
+        if (dwChunkType == format)
+        {
+            *pChunkSize = dwChunkDataSize;
+            *pChunkDataPosition = dwOffset;
 
-			return S_OK;
-		}
+            return S_OK;
+        }
 
-		dwOffset += dwChunkDataSize;
-		if (dwBytesRead >= dwRIFFDataSize)
-		{
-			return S_FALSE;
-		}
-	}
+        dwOffset += dwChunkDataSize;
+        if (dwBytesRead >= dwRIFFDataSize)
+        {
+            return S_FALSE;
+        }
+    }
 
-	return S_OK;
+    return S_OK;
 }
 
 //=============================================================================
-// ƒ`ƒƒƒ“ƒNƒf[ƒ^‚Ì“Ç‚İ‚İ
+// ãƒãƒ£ãƒ³ã‚¯ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 //=============================================================================
 HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset)
 {
-	DWORD dwRead;
+    DWORD dwRead;
 
-	if (SetFilePointer(hFile, dwBufferoffset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-	{// ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚ğw’èˆÊ’u‚Ü‚ÅˆÚ“®
-		return HRESULT_FROM_WIN32(GetLastError());
-	}
+    if (SetFilePointer(hFile, dwBufferoffset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+    {// ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’æŒ‡å®šä½ç½®ã¾ã§ç§»å‹•
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
 
-	if (ReadFile(hFile, pBuffer, dwBuffersize, &dwRead, NULL) == 0)
-	{// ƒf[ƒ^‚Ì“Ç‚İ‚İ
-		return HRESULT_FROM_WIN32(GetLastError());
-	}
+    if (ReadFile(hFile, pBuffer, dwBuffersize, &dwRead, NULL) == 0)
+    {// ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
 
-	return S_OK;
+    return S_OK;
 }
-
-
 
 CDirectMusicSystem::CDirectMusicSystem()
 {
-   m_soundList = NULL;
+    m_soundList = NULL;
 }
 
 bool CDirectMusicSystem::Initialize(const char* filepath)
 {
-	return true;
+    return true;
 }
 
-
-bool CDirectMusicSystem::AddSound(const char *filename,int numRepeats, int *id)
+bool CDirectMusicSystem::AddSound(const char* filename, int numRepeats, int* id)
 {
-	return true;
+    return true;
 }
 
-
-bool CDirectMusicSystem::SetupSoundParameters(int id,float dopplerFactor,float rolloffFactor,float min, float max)
+bool CDirectMusicSystem::SetupSoundParameters(int id, float dopplerFactor, float rolloffFactor, float min, float max)
 {
-	return true;
+    return true;
 }
-
 
 void CDirectMusicSystem::Play(int id)
 {
-
 }
 
-
-void CDirectMusicSystem::UpdateSoundPosition(int id, float x,float y, float z)
+void CDirectMusicSystem::UpdateSoundPosition(int id, float x, float y, float z)
 {
-
 }
-
 
 void CDirectMusicSystem::Stop(int id)
 {
-
 }
-
 
 void CDirectMusicSystem::Shutdown()
 {
-
 }

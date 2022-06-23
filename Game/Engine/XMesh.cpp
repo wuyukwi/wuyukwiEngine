@@ -8,216 +8,201 @@
 
 **********************************************************************************/
 
-
 #include"XMesh.h"
 #include"XStructures.h"
 #include"defines.h"
 
 CXModel::CXModel()
 {
-   m_pRoot = nullptr;
-   m_pAnimControl = nullptr;
-   m_boneMatrices = nullptr;
-   m_maxBones = 0;
-   m_currentContainer = nullptr;
-   m_center = D3DXVECTOR3(0, 0, 0);
-   m_radius = 0;
-   m_currentAni = 0;
-   m_numAnimations = 0;
-   m_currentTrack = 0;
-   m_speed = 1.0f;
-   m_currentTime = 0;
-   m_transition = 0.25f;
-   m_pDevice = nullptr;
-   m_pAllocateHier = nullptr;
+    m_pRoot = nullptr;
+    m_pAnimControl = nullptr;
+    m_boneMatrices = nullptr;
+    m_maxBones = 0;
+    m_currentContainer = nullptr;
+    m_center = D3DXVECTOR3(0, 0, 0);
+    m_radius = 0;
+    m_currentAni = 0;
+    m_numAnimations = 0;
+    m_currentTrack = 0;
+    m_speed = 1.0f;
+    m_currentTime = 0;
+    m_transition = 0.25f;
+    m_pDevice = nullptr;
+    m_pAllocateHier = nullptr;
 }
 
-
-bool CXModel::LoadXFile(char *file)
+bool CXModel::LoadXFile(char* file)
 {
-   if(!m_pDevice) return false;
+    if (!m_pDevice) return false;
 
-   m_pAllocateHier = new CAllocateHierarchy();
+    m_pAllocateHier = new CAllocateHierarchy();
 
-   // ファイルからXメッシュをロードします。
-   if(FAILED(D3DXLoadMeshHierarchyFromX(file, D3DXMESH_MANAGED,m_pDevice, m_pAllocateHier, NULL, &m_pRoot, &m_pAnimControl)))
-       return false;
+    // ファイルからXメッシュをロードします。
+    if (FAILED(D3DXLoadMeshHierarchyFromX(file, D3DXMESH_MANAGED, m_pDevice, m_pAllocateHier, NULL, &m_pRoot, &m_pAnimControl)))
+        return false;
 
-   // Xモデルのアニメーションセットの最大数を記録します。
-   if(m_pAnimControl)
-      m_numAnimations = m_pAnimControl->GetMaxNumAnimationSets();
+    // Xモデルのアニメーションセットの最大数を記録します。
+    if (m_pAnimControl)
+        m_numAnimations = m_pAnimControl->GetMaxNumAnimationSets();
 
-   // ボーンセットアップ
-   if(m_pRoot)
-      {
-       SetupBoneMatrixPointers(m_pRoot, m_pRoot);
+    // ボーンセットアップ
+    if (m_pRoot)
+    {
+        SetupBoneMatrixPointers(m_pRoot, m_pRoot);
 
-       // Frame階層内のすべてのメッシュの境界球を計算します。
-       D3DXFrameCalculateBoundingSphere(m_pRoot, &m_center,&m_radius);
-      }
+        // Frame階層内のすべてのメッシュの境界球を計算します。
+        D3DXFrameCalculateBoundingSphere(m_pRoot, &m_center, &m_radius);
+    }
 
-   // アニメーション初期化
-   SetAnimation(0);
+    // アニメーション初期化
+    SetAnimation(0);
 
-   return true;
+    return true;
 }
-
 
 void CXModel::Shutdown()
 {
-
     if (m_pRoot)
     {
         D3DXFrameDestroy(m_pRoot, m_pAllocateHier);
     }
-   m_pRoot = NULL;
+    m_pRoot = NULL;
 
-   SAFE_RELEASE(m_pAnimControl);
-   SAFE_DELETE(m_pAllocateHier);
+    SAFE_RELEASE(m_pAnimControl);
+    SAFE_DELETE(m_pAllocateHier);
 }
-
 
 HRESULT CXModel::SetupBoneMatrixPointers(LPD3DXFRAME pFrameBase, LPD3DXFRAME pFrameRoot)
 {
-   if(!m_pDevice) E_FAIL;
+    if (!m_pDevice) E_FAIL;
 
-   if (pFrameBase->pMeshContainer != nullptr)
-   {
-       stD3DFrameDerived* pFrame = NULL;
-       stD3DContainerDerived* pMeshContainer = (stD3DContainerDerived*)pFrameBase->pMeshContainer;
+    if (pFrameBase->pMeshContainer != nullptr)
+    {
+        stD3DFrameDerived* pFrame = NULL;
+        stD3DContainerDerived* pMeshContainer = (stD3DContainerDerived*)pFrameBase->pMeshContainer;
 
-       //スキンメッシュがある場合は、ボーンマトリックスを設定します
-       if (pMeshContainer->pSkinInfo != nullptr)
-       {
-           UINT numBones = pMeshContainer->pSkinInfo->GetNumBones();
-           pMeshContainer->ppBoneMatrixPtrs = new D3DXMATRIX * [numBones];
-           for (UINT countBone = 0; countBone < numBones; countBone++)
-           {
-               pFrame = (stD3DFrameDerived*)D3DXFrameFind(pFrameRoot, pMeshContainer->pSkinInfo->GetBoneName(countBone));
-               if (pFrame == NULL) return E_FAIL;
+        //スキンメッシュがある場合は、ボーンマトリックスを設定します
+        if (pMeshContainer->pSkinInfo != nullptr)
+        {
+            UINT numBones = pMeshContainer->pSkinInfo->GetNumBones();
+            pMeshContainer->ppBoneMatrixPtrs = new D3DXMATRIX * [numBones];
+            for (UINT countBone = 0; countBone < numBones; countBone++)
+            {
+                pFrame = (stD3DFrameDerived*)D3DXFrameFind(pFrameRoot, pMeshContainer->pSkinInfo->GetBoneName(countBone));
+                if (pFrame == NULL) return E_FAIL;
 
-               pMeshContainer->ppBoneMatrixPtrs[countBone] = &pFrame->finalMatrix;
-           }
-       }
-   }
+                pMeshContainer->ppBoneMatrixPtrs[countBone] = &pFrame->finalMatrix;
+            }
+        }
+    }
 
-       if (pFrameBase->pFrameSibling != nullptr)
-       {
-           if (FAILED(SetupBoneMatrixPointers(pFrameBase->pFrameSibling, pFrameRoot)))
-               return E_FAIL;
-       }
+    if (pFrameBase->pFrameSibling != nullptr)
+    {
+        if (FAILED(SetupBoneMatrixPointers(pFrameBase->pFrameSibling, pFrameRoot)))
+            return E_FAIL;
+    }
 
-       if (pFrameBase->pFrameFirstChild != nullptr)
-       {
-           if (FAILED(SetupBoneMatrixPointers(pFrameBase->pFrameFirstChild, pFrameRoot)))
-               return E_FAIL;
-       }
-   
-       return S_OK;
+    if (pFrameBase->pFrameFirstChild != nullptr)
+    {
+        if (FAILED(SetupBoneMatrixPointers(pFrameBase->pFrameFirstChild, pFrameRoot)))
+            return E_FAIL;
+    }
 
+    return S_OK;
 }
-
 
 void CXModel::Update(float time, const LPD3DXMATRIX matWorld)
 {
-   if(m_pAnimControl) m_pAnimControl->AdvanceTime(time, NULL);
+    if (m_pAnimControl) m_pAnimControl->AdvanceTime(time, NULL);
 
-   m_pDevice->SetTransform(D3DTS_WORLD, matWorld);
-   UpdateFrameMatrices(m_pRoot, matWorld);
-
+    m_pDevice->SetTransform(D3DTS_WORLD, matWorld);
+    UpdateFrameMatrices(m_pRoot, matWorld);
 }
-
 
 void CXModel::Render()
 {
-	if(m_pRoot)
-	   DrawFrame(m_pRoot);
+    if (m_pRoot)
+        DrawFrame(m_pRoot);
 }
-
 
 void CXModel::SetAnimation(unsigned int index)
 {
-   if(index >= m_numAnimations || index == m_currentAni)
-      return;
+    if (index >= m_numAnimations || index == m_currentAni)
+        return;
 
-   m_currentAni = index;
+    m_currentAni = index;
 
-   LPD3DXANIMATIONSET set;
-   m_pAnimControl->GetAnimationSet(m_currentAni, &set);
+    LPD3DXANIMATIONSET set;
+    m_pAnimControl->GetAnimationSet(m_currentAni, &set);
 
-   unsigned long nextTrack = (m_currentTrack == 0 ? 1 : 0);
+    unsigned long nextTrack = (m_currentTrack == 0 ? 1 : 0);
 
-   // 次のトラックを設定します。
-   m_pAnimControl->SetTrackAnimationSet(nextTrack, set);
-   set->Release();	
+    // 次のトラックを設定します。
+    m_pAnimControl->SetTrackAnimationSet(nextTrack, set);
+    set->Release();
 
-   // すべてのトラックを取り出します。
-   m_pAnimControl->UnkeyAllTrackEvents(m_currentTrack);
-   m_pAnimControl->UnkeyAllTrackEvents(nextTrack);
+    // すべてのトラックを取り出します。
+    m_pAnimControl->UnkeyAllTrackEvents(m_currentTrack);
+    m_pAnimControl->UnkeyAllTrackEvents(nextTrack);
 
-   // 現在のトラック。
-   m_pAnimControl->KeyTrackEnable(m_currentTrack, FALSE, m_currentTime + m_transition);
-   m_pAnimControl->KeyTrackSpeed(m_currentTrack, 0.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
-   m_pAnimControl->KeyTrackWeight(m_currentTrack, 0.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
+    // 現在のトラック。
+    m_pAnimControl->KeyTrackEnable(m_currentTrack, FALSE, m_currentTime + m_transition);
+    m_pAnimControl->KeyTrackSpeed(m_currentTrack, 0.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
+    m_pAnimControl->KeyTrackWeight(m_currentTrack, 0.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
 
-   // 次のトラックをキーにします。
-   m_pAnimControl->SetTrackEnable(nextTrack, TRUE);
-   m_pAnimControl->KeyTrackSpeed(nextTrack, 1.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
-   m_pAnimControl->KeyTrackWeight(nextTrack, 1.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
+    // 次のトラックをキーにします。
+    m_pAnimControl->SetTrackEnable(nextTrack, TRUE);
+    m_pAnimControl->KeyTrackSpeed(nextTrack, 1.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
+    m_pAnimControl->KeyTrackWeight(nextTrack, 1.0f, m_currentTime, m_transition, D3DXTRANSITION_LINEAR);
 
-   m_currentTrack = nextTrack;
+    m_currentTrack = nextTrack;
 }
-
 
 void CXModel::NextAnimation()
-{	
-   unsigned int newAnimationSet = m_currentAni + 1;
+{
+    unsigned int newAnimationSet = m_currentAni + 1;
 
-   if(newAnimationSet >= m_numAnimations)
-      newAnimationSet = 0;
+    if (newAnimationSet >= m_numAnimations)
+        newAnimationSet = 0;
 
-   SetAnimation(newAnimationSet);
+    SetAnimation(newAnimationSet);
 }
-
 
 void CXModel::UpdateFrameMatrices(LPD3DXFRAME pFrameBase, LPD3DXMATRIX pParentMatrix)
 {
     if (pFrameBase == NULL || pParentMatrix == NULL) return;
     stD3DFrameDerived* pFrame = (stD3DFrameDerived*)pFrameBase;
 
-
     D3DXMatrixMultiply(&pFrame->finalMatrix, &pFrame->TransformationMatrix, pParentMatrix);
 
     //if (pFrame->pFrameSibling != nullptr)
     UpdateFrameMatrices(pFrame->pFrameSibling, pParentMatrix);
     //if (pFrame->pFrameSibling != nullptr)
-    UpdateFrameMatrices(pFrame->pFrameFirstChild, &pFrame->finalMatrix);  
-
+    UpdateFrameMatrices(pFrame->pFrameFirstChild, &pFrame->finalMatrix);
 }
-
 
 void CXModel::DrawFrame(LPD3DXFRAME pFrame)
 {
-    if (!m_pDevice || pFrame==nullptr)
-       return;
+    if (!m_pDevice || pFrame == nullptr)
+        return;
 
     // メッシュコンテナ取得
     LPD3DXMESHCONTAINER pMeshContainer;
-    pMeshContainer = pFrame->pMeshContainer;                    
+    pMeshContainer = pFrame->pMeshContainer;
 
-   //　スキンメッシュを描画する
-   while(pMeshContainer != NULL)
-      {
-       DrawMeshContainer(pMeshContainer, pFrame);  
-       pMeshContainer = pMeshContainer->pNextMeshContainer;    
-      }
+    //　スキンメッシュを描画する
+    while (pMeshContainer != NULL)
+    {
+        DrawMeshContainer(pMeshContainer, pFrame);
+        pMeshContainer = pMeshContainer->pNextMeshContainer;
+    }
 
-   //　ボーンを描画する
-   //if(pFrame->pFrameSibling != NULL)
-      DrawFrame(pFrame->pFrameSibling);
+    //　ボーンを描画する
+    //if(pFrame->pFrameSibling != NULL)
+    DrawFrame(pFrame->pFrameSibling);
 
-   //if(pFrame->pFrameFirstChild != NULL)
-      DrawFrame(pFrame->pFrameFirstChild);
+    //if(pFrame->pFrameFirstChild != NULL)
+    DrawFrame(pFrame->pFrameFirstChild);
 }
 
 //--------------------------------------------------------------------------------------
@@ -236,7 +221,6 @@ void CXModel::DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFR
 
     UINT CountMatrixIndex;
     D3DXMATRIXA16 matTemp;
-
 
     // スキンあるかどうかをチェック
     if (pMeshContainer->pSkinInfo != nullptr)

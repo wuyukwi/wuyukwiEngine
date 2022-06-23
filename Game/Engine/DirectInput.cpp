@@ -1,13 +1,12 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: DirectInput.cpp
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/12
 
 **********************************************************************************/
-
 
 #include"DirectInput.h"
 
@@ -16,170 +15,156 @@
 
 #define MOUSE_BUFF_SIZE 16
 
+CGameController* gThis = nullptr;
 
-CGameController *gThis = NULL;
-
-
-bool CreateDIInput(CInputInterface **pObj, HWND hwnd, HINSTANCE hInst, bool exclusive)
+bool CreateDIInput(CInputInterface** pObj, HWND hwnd, HINSTANCE hInst, bool exclusive)
 {
-   if(!*pObj) *pObj = new CDirectInputSystem(hwnd, hInst, exclusive);
-   else return false;
-   
-   return true;
+    if (!*pObj) *pObj = new CDirectInputSystem(hwnd, hInst, exclusive);
+    else return false;
+
+    return true;
 }
 
-
-BOOL gJSEnumDeviceCallBack(const DIDEVICEINSTANCE *inst, void* pData)
+BOOL gJSEnumDeviceCallBack(const DIDEVICEINSTANCE* inst, void* pData)
 {
-   return gThis->EnumDeviceCallBack(inst, pData);
+    return gThis->EnumDeviceCallBack(inst, pData);
 }
-
 
 CKeyboard::CKeyboard(LPDIRECTINPUT8 input, HWND hwnd)
 {
-    // ƒL[ƒ{[ƒhƒfƒoƒCƒX‚ðì¬A€”õA‚¨‚æ‚ÑŽæ“¾B
-   if(input->CreateDevice(GUID_SysKeyboard, &m_pDevice, NULL) == DI_OK)
-      {
-         if(m_pDevice->SetDataFormat(&c_dfDIKeyboard) == DI_OK)
+    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½œæˆã€æº–å‚™ã€ãŠã‚ˆã³å–å¾—ã€‚
+    if (input->CreateDevice(GUID_SysKeyboard, &m_pDevice, nullptr) == DI_OK)
+    {
+        if (m_pDevice->SetDataFormat(&c_dfDIKeyboard) == DI_OK)
+        {
+            if (m_pDevice->SetCooperativeLevel(hwnd,
+                DISCL_FOREGROUND | DISCL_NONEXCLUSIVE) == DI_OK)
             {
-               if(m_pDevice->SetCooperativeLevel(hwnd,
-                  DISCL_FOREGROUND |DISCL_NONEXCLUSIVE) == DI_OK)
-                  {
-                     m_pDevice->Acquire();
-                  }
+                m_pDevice->Acquire();
             }
-   }
+        }
+    }
 
-   // ‰Šú‰»ˆ—
-   memset(m_keys, 0, sizeof(m_keys));
+    // åˆæœŸåŒ–å‡¦ç†
+    memset(m_keys, 0, sizeof(m_keys));
 }
 
 bool CKeyboard::ButtonUp(size_t key)
 {
-   // •Ï”‚ÌƒL[‚ª•ú‚µ‚½uŠÔ‚¾‚¯Ature‚ð•Ô‚µ‚Ü‚·B
-   return (!(m_keys[key] & 0x80) && m_keys[key] != m_oldKeys[key]);
+    // å¤‰æ•°ã®ã‚­ãƒ¼ãŒæ”¾ã—ãŸçž¬é–“ã ã‘ã€tureã‚’è¿”ã—ã¾ã™ã€‚
+    return (!(m_keys[key] & 0x80) && m_keys[key] != m_oldKeys[key]);
 }
-
 
 bool CKeyboard::ButtonDown(size_t key)
 {
-   // •Ï”‚ÌƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍAfalse‚ð•Ô‚µ‚Ü‚·B
+    // å¤‰æ•°ã®ã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€falseã‚’è¿”ã—ã¾ã™ã€‚
     if (m_keys[key] & 0x80)
         return true;
     else
         return false;
 }
 
-
 POINT CKeyboard::GetPosition(bool delta)
 {
-   // ƒL[ƒ{[ƒh‚ÍˆÊ’uó‘Ô‚È‚µ
-   POINT p = { 0, 0 };
-   return p;
+    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã¯ä½ç½®çŠ¶æ…‹ãªã—
+    POINT p = { 0, 0 };
+    return p;
 }
-
 
 POINT CKeyboard::GetZPosition()
 {
-   // ƒL[ƒ{[ƒh‚ÍˆÊ’uó‘Ô‚È‚µ
-   POINT p = { 0, 0 };
-   return p;
+    // ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã¯ä½ç½®çŠ¶æ…‹ãªã—
+    POINT p = { 0, 0 };
+    return p;
 }
-
 
 bool CKeyboard::UpdateDevice()
 {
-   if(m_pDevice)
-      {
-         // “ü—Í”äŠr‚Ì‚½‚ß‚ÉŒÃ‚¢ó‘Ô‚ð•Û‘¶‚µ‚Ü‚·B
-         memcpy(m_oldKeys, m_keys, sizeof(m_keys));
+    if (m_pDevice)
+    {
+        // å…¥åŠ›æ¯”è¼ƒã®ãŸã‚ã«å¤ã„çŠ¶æ…‹ã‚’ä¿å­˜ã—ã¾ã™ã€‚
+        memcpy(m_oldKeys, m_keys, sizeof(m_keys));
 
-         // ¬Œ÷‚·‚é‚©A•s–¾‚ÈƒGƒ‰[‚ª•Ô‚³‚ê‚é‚Ü‚ÅAƒL[ƒ{[ƒh‚ðƒ|[ƒŠƒ“ƒO‚µ‚Ü‚·B
-         if(FAILED(m_pDevice->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
-            {
-               if(FAILED(m_pDevice->Acquire())) 
-                   return false;
-               if(FAILED(m_pDevice->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
-                  return false;
-            }
-       }
+        // æˆåŠŸã™ã‚‹ã‹ã€ä¸æ˜Žãªã‚¨ãƒ©ãƒ¼ãŒè¿”ã•ã‚Œã‚‹ã¾ã§ã€ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚’ãƒãƒ¼ãƒªãƒ³ã‚°ã—ã¾ã™ã€‚
+        if (FAILED(m_pDevice->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
+        {
+            if (FAILED(m_pDevice->Acquire()))
+                return false;
+            if (FAILED(m_pDevice->GetDeviceState(sizeof(m_keys), (LPVOID)m_keys)))
+                return false;
+        }
+    }
 
-   return true;
+    return true;
 }
-
 
 void CKeyboard::Shutdown()
 {
-   if(m_pDevice)
-      {
-         m_pDevice->Unacquire();
-         m_pDevice->Release();
-         m_pDevice = NULL;
-      }
+    if (m_pDevice)
+    {
+        m_pDevice->Unacquire();
+        m_pDevice->Release();
+        m_pDevice = NULL;
+    }
 }
-
 
 CMouse::CMouse(LPDIRECTINPUT8 input, HWND hwnd, bool exclusive)
 {
-   // ƒ}ƒEƒX‰Šú‰»ˆ—
-   DWORD flags;
-   m_hwnd = hwnd;
+    // ãƒžã‚¦ã‚¹åˆæœŸåŒ–å‡¦ç†
+    DWORD flags;
+    m_hwnd = hwnd;
 
-   if(input->CreateDevice(GUID_SysMouse, &m_pDevice, NULL) == DI_OK)
-      {
-         if(m_pDevice->SetDataFormat(&c_dfDIMouse) == DI_OK)
+    if (input->CreateDevice(GUID_SysMouse, &m_pDevice, NULL) == DI_OK)
+    {
+        if (m_pDevice->SetDataFormat(&c_dfDIMouse) == DI_OK)
+        {
+            if (exclusive) flags = DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_NOWINKEY;
+            else flags = DISCL_FOREGROUND | DISCL_NONEXCLUSIVE;
+
+            if (m_pDevice->SetCooperativeLevel(hwnd, flags) == DI_OK)
             {
-               if(exclusive) flags = DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_NOWINKEY;
-               else flags = DISCL_FOREGROUND | DISCL_NONEXCLUSIVE;
-
-               if(m_pDevice->SetCooperativeLevel(hwnd, flags) == DI_OK)
-                  {
-                     m_pDevice->Acquire();
-                  }
+                m_pDevice->Acquire();
             }
-      }
+        }
+    }
 }
-
 
 bool CMouse::ButtonUp(size_t button)
 {
-    // •Ï”‚ÌƒL[‚ª•ú‚µ‚½uŠÔ‚¾‚¯Ature‚ð•Ô‚µ‚Ü‚·B
-   return (!(m_mouseState.rgbButtons[button] & 0x80) &&m_mouseState.rgbButtons[button] != m_oldMouseState.rgbButtons[button]);
+    // å¤‰æ•°ã®ã‚­ãƒ¼ãŒæ”¾ã—ãŸçž¬é–“ã ã‘ã€tureã‚’è¿”ã—ã¾ã™ã€‚
+    return (!(m_mouseState.rgbButtons[button] & 0x80) && m_mouseState.rgbButtons[button] != m_oldMouseState.rgbButtons[button]);
 }
-
 
 bool CMouse::ButtonDown(size_t button)
 {
-    // •Ï”‚ÌƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍAfalse‚ð•Ô‚µ‚Ü‚·B
-   if (m_mouseState.rgbButtons[button] & 0x80)
-       return true;
-   else
-       return false;
+    // å¤‰æ•°ã®ã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€falseã‚’è¿”ã—ã¾ã™ã€‚
+    if (m_mouseState.rgbButtons[button] & 0x80)
+        return true;
+    else
+        return false;
 }
-
 
 bool CMouse::UpdateDevice()
 {
+    if (m_pDevice)
+    {
+        // å¤ã„ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
+        memcpy(&m_oldMouseState, &m_mouseState, sizeof(m_mouseState));
 
-   if(m_pDevice)
-      {
-         // ŒÃ‚¢ƒf[ƒ^‚ð•Û‘¶
-         memcpy(&m_oldMouseState, &m_mouseState, sizeof(m_mouseState));
+        // ãƒ‡ãƒã‚¤ã‚¹ã®çŠ¶æ…‹ã®å–å¾—ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸå ´åˆã¯ã€å†å–å¾—ã™ã‚‹
+        if (FAILED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
+        {
+            if (FAILED(m_pDevice->Acquire())) return false;
+            if (FAILED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
+                return false;
+        }
 
-         // ƒfƒoƒCƒX‚Ìó‘Ô‚ÌŽæ“¾’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚ÍAÄŽæ“¾‚·‚é
-         if(FAILED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
-            {
-               if(FAILED(m_pDevice->Acquire())) return false;
-               if(FAILED(m_pDevice->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState)))
-                  return false;
-            }
+        // ãƒžã‚¦ã‚¹ã®ç›¸å¯¾ä½ç½®ã‚’å–å¾—ã—ã¾ã™ã€‚
+        GetCursorPos(&m_position);
+        ScreenToClient(m_hwnd, &m_position);
+    }
 
-         // ƒ}ƒEƒX‚Ì‘Š‘ÎˆÊ’u‚ðŽæ“¾‚µ‚Ü‚·B
-         GetCursorPos(&m_position);
-         ScreenToClient(m_hwnd, &m_position);
-      }
-
-   return true;
+    return true;
 }
 
 POINT CMouse::GetPosition(bool delta)
@@ -194,308 +179,282 @@ POINT CMouse::GetPosition(bool delta)
     }
 }
 
-
 POINT CMouse::GetZPosition()
 {
-   POINT p = { m_mouseState.lZ, m_mouseState.lZ };
-   return p;
+    POINT p = { m_mouseState.lZ, m_mouseState.lZ };
+    return p;
 }
-
 
 void CMouse::Shutdown()
 {
-   if(m_pDevice)
-      {
-         m_pDevice->Unacquire();
-         m_pDevice->Release();
-         m_pDevice = NULL;
-      }
+    if (m_pDevice)
+    {
+        m_pDevice->Unacquire();
+        m_pDevice->Release();
+        m_pDevice = NULL;
+    }
 }
-
 
 CGameController::CGameController(LPDIRECTINPUT8 input, HWND hwnd)
 {
-   // Save copies.
-   gThis = this;
-   m_hwnd = hwnd;
-   m_inputSystem = input;
+    // Save copies.
+    gThis = this;
+    m_hwnd = hwnd;
+    m_inputSystem = input;
 
-   // Initialize the game controller.
-   DIPROPRANGE range;
-   DIDEVCAPS caps;
+    // Initialize the game controller.
+    DIPROPRANGE range;
+    DIDEVCAPS caps;
 
-   m_inputSystem->EnumDevices(DI8DEVCLASS_GAMECTRL, (LPDIENUMDEVICESCALLBACK)gJSEnumDeviceCallBack,
-                              NULL, DIEDFL_ATTACHEDONLY);
+    m_inputSystem->EnumDevices(DI8DEVCLASS_GAMECTRL, (LPDIENUMDEVICESCALLBACK)gJSEnumDeviceCallBack,
+        NULL, DIEDFL_ATTACHEDONLY);
 
-   if(m_pDevice)
-      {
-         range.diph.dwSize = sizeof(DIPROPRANGE);
-         range.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-         range.diph.dwHow = DIPH_BYOFFSET;
-         range.lMin = -1000;
-         range.lMax = 1000;
-         range.diph.dwObj = DIJOFS_X;
-         m_pDevice->SetProperty(DIPROP_RANGE, &range.diph);
-         range.diph.dwObj = DIJOFS_Y;
-         m_pDevice->SetProperty(DIPROP_RANGE, &range.diph);
+    if (m_pDevice)
+    {
+        range.diph.dwSize = sizeof(DIPROPRANGE);
+        range.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+        range.diph.dwHow = DIPH_BYOFFSET;
+        range.lMin = -1000;
+        range.lMax = 1000;
+        range.diph.dwObj = DIJOFS_X;
+        m_pDevice->SetProperty(DIPROP_RANGE, &range.diph);
+        range.diph.dwObj = DIJOFS_Y;
+        m_pDevice->SetProperty(DIPROP_RANGE, &range.diph);
 
-         if(SUCCEEDED(m_pDevice->GetCapabilities(&caps))) m_numButtons = caps.dwButtons;
-         else m_numButtons = 4;
-      }
+        if (SUCCEEDED(m_pDevice->GetCapabilities(&caps))) m_numButtons = caps.dwButtons;
+        else m_numButtons = 4;
+    }
 }
 
-
-BOOL CGameController::EnumDeviceCallBack(const DIDEVICEINSTANCE *inst, void* pData)
+BOOL CGameController::EnumDeviceCallBack(const DIDEVICEINSTANCE* inst, void* pData)
 {
-   // Set to the first device found.
-   if(SUCCEEDED(m_inputSystem->CreateDevice(inst->guidInstance, &m_pDevice, NULL)))
-      {
-         if(SUCCEEDED(m_pDevice->SetDataFormat(&c_dfDIJoystick2)))
-            if(SUCCEEDED(m_pDevice->SetCooperativeLevel(m_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
-               if(SUCCEEDED(m_pDevice->Acquire()))
-                  {
-                     strcpy(m_name, (char*)inst->tszProductName);
-                     return DIENUM_STOP;
-                  }
-      }
+    // Set to the first device found.
+    if (SUCCEEDED(m_inputSystem->CreateDevice(inst->guidInstance, &m_pDevice, NULL)))
+    {
+        if (SUCCEEDED(m_pDevice->SetDataFormat(&c_dfDIJoystick2)))
+            if (SUCCEEDED(m_pDevice->SetCooperativeLevel(m_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
+                if (SUCCEEDED(m_pDevice->Acquire()))
+                {
+                    strcpy(m_name, (char*)inst->tszProductName);
+                    return DIENUM_STOP;
+                }
+    }
 
-   // Return continue to try to init other connected devices.
-   return DIENUM_CONTINUE;
+    // Return continue to try to init other connected devices.
+    return DIENUM_CONTINUE;
 }
-
 
 bool CGameController::ButtonUp(size_t button)
 {
-   if(button < 0 || button >= m_numButtons) return false;
-   return (!(m_gcState.rgbButtons[button] & 0x80) &&
-           m_gcState.rgbButtons[button] != m_oldGCState.rgbButtons[button]);
+    if (button < 0 || button >= m_numButtons) return false;
+    return (!(m_gcState.rgbButtons[button] & 0x80) &&
+        m_gcState.rgbButtons[button] != m_oldGCState.rgbButtons[button]);
 }
-
 
 bool CGameController::ButtonDown(size_t button)
 {
+    if (button < 0 || button >= m_numButtons)
+        return false;
 
-   if(button < 0 || button >= m_numButtons) 
-       return false;
-
-   if (m_gcState.rgbButtons[button] & 0x80)
-       return true;
-   else
-       return true;
+    if (m_gcState.rgbButtons[button] & 0x80)
+        return true;
+    else
+        return true;
 }
-
 
 bool CGameController::UpdateDevice()
 {
-   if(m_pDevice)
-      {
-         m_pDevice->Poll();
+    if (m_pDevice)
+    {
+        m_pDevice->Poll();
 
-         // Save old state for input comparing.
-         memcpy(&m_oldGCState, &m_gcState, sizeof(m_gcState));
+        // Save old state for input comparing.
+        memcpy(&m_oldGCState, &m_gcState, sizeof(m_gcState));
 
-         // If error getting device state, re-aquire.
-         if(FAILED(m_pDevice->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
-            {
-               if(FAILED(m_pDevice->Acquire())) return false;
-               if(FAILED(m_pDevice->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
-                  return false;
-            }
+        // If error getting device state, re-aquire.
+        if (FAILED(m_pDevice->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
+        {
+            if (FAILED(m_pDevice->Acquire())) return false;
+            if (FAILED(m_pDevice->GetDeviceState(sizeof(DIJOYSTATE2), &m_gcState)))
+                return false;
+        }
 
-         m_xGCPos = m_gcState.lX;
-         m_yGCPos = m_gcState.lY;
+        m_xGCPos = m_gcState.lX;
+        m_yGCPos = m_gcState.lY;
 
-         m_xGCPos2 = m_gcState.lZ;
-         m_yGCPos2 = m_gcState.lRz;
-      }
+        m_xGCPos2 = m_gcState.lZ;
+        m_yGCPos2 = m_gcState.lRz;
+    }
 
-   return true;
+    return true;
 }
-
 
 POINT CGameController::GetPosition(bool delta)
 {
-   POINT pos;
+    POINT pos;
 
-   pos.x = m_xGCPos;
-   pos.y = m_yGCPos;
-   return pos;
+    pos.x = m_xGCPos;
+    pos.y = m_yGCPos;
+    return pos;
 }
-
 
 POINT CGameController::GetZPosition()
 {
-   POINT pos;
+    POINT pos;
 
-   pos.x = m_xGCPos2;
-   pos.y = m_yGCPos2;
-   return pos;
+    pos.x = m_xGCPos2;
+    pos.y = m_yGCPos2;
+    return pos;
 }
-
 
 void CGameController::Shutdown()
 {
-   if(m_pDevice)
-      {
-         m_pDevice->Unacquire();
-         m_pDevice->Release();
-         m_pDevice = NULL;
-      }
+    if (m_pDevice)
+    {
+        m_pDevice->Unacquire();
+        m_pDevice->Release();
+        m_pDevice = NULL;
+    }
 }
-
 
 CDirectInputSystem::CDirectInputSystem(HWND hwnd, HINSTANCE hInst, bool exclusive)
 {
-   // Initialize objects...
-   m_keyboard = NULL;
-   m_mouse = NULL;
-   m_gameController = NULL;
+    // Initialize objects...
+    m_keyboard = NULL;
+    m_mouse = NULL;
+    m_gameController = NULL;
 
-   // Create input system.
-   if(DirectInput8Create(hInst, DIRECTINPUT_VERSION,
-      IID_IDirectInput8, (void **)&m_system, NULL) == DI_OK)
-   {
-      m_keyboard = new CKeyboard(m_system, hwnd);
-      m_mouse = new CMouse(m_system, hwnd, exclusive);
-      m_gameController = new CGameController(m_system, hwnd);
-   }
+    // Create input system.
+    if (DirectInput8Create(hInst, DIRECTINPUT_VERSION,
+        IID_IDirectInput8, (void**)&m_system, NULL) == DI_OK)
+    {
+        m_keyboard = new CKeyboard(m_system, hwnd);
+        m_mouse = new CMouse(m_system, hwnd, exclusive);
+        m_gameController = new CGameController(m_system, hwnd);
+    }
 }
-
 
 CDirectInputSystem::~CDirectInputSystem()
 {
-   // Shut everything down.
-   Shutdown();
+    // Shut everything down.
+    Shutdown();
 }
-
 
 bool CDirectInputSystem::Initialize()
 {
-   // Everything took place in the constructor.
-   // Force keyboard and mouse before considering the
-   // system initialized.
-   return (m_keyboard && m_mouse);
+    // Everything took place in the constructor.
+    // Force keyboard and mouse before considering the
+    // system initialized.
+    return (m_keyboard && m_mouse);
 }
-
 
 bool CDirectInputSystem::UpdateDevices()
 {
-   int hr;
+    int hr;
 
-   // Get the device state.
-   if(m_mouse) hr = m_mouse->UpdateDevice();
-   if(m_keyboard) hr = m_keyboard->UpdateDevice();
-   if(m_gameController) hr = m_gameController->UpdateDevice();
+    // Get the device state.
+    if (m_mouse) hr = m_mouse->UpdateDevice();
+    if (m_keyboard) hr = m_keyboard->UpdateDevice();
+    if (m_gameController) hr = m_gameController->UpdateDevice();
 
-   return true;
+    return true;
 }
-
 
 bool CDirectInputSystem::KeyUp(size_t key)
 {
-   if(!m_keyboard) return false;
-   return m_keyboard->ButtonUp(key);
+    if (!m_keyboard) return false;
+    return m_keyboard->ButtonUp(key);
 }
-
 
 bool CDirectInputSystem::KeyDown(size_t key)
 {
-   if(!m_keyboard) return false;
-   return m_keyboard->ButtonDown(key);
+    if (!m_keyboard) return false;
+    return m_keyboard->ButtonDown(key);
 }
-
 
 bool CDirectInputSystem::MouseButtonUp(size_t button)
 {
-   if(!m_mouse) return false;
-   return m_mouse->ButtonUp(button);
+    if (!m_mouse) return false;
+    return m_mouse->ButtonUp(button);
 }
-
 
 bool CDirectInputSystem::MouseButtonDown(size_t button)
 {
-   if(!m_mouse) return false;
-   return m_mouse->ButtonDown(button);
+    if (!m_mouse) return false;
+    return m_mouse->ButtonDown(button);
 }
-
 
 bool CDirectInputSystem::ControllerButtonUp(size_t button)
 {
-   if(!m_gameController) return false;
-   return m_gameController->ButtonUp(button);
+    if (!m_gameController) return false;
+    return m_gameController->ButtonUp(button);
 }
-
 
 bool CDirectInputSystem::ControllerButtonDown(size_t button)
 {
-   if(!m_gameController) return false;
-   return m_gameController->ButtonDown(button);
+    if (!m_gameController) return false;
+    return m_gameController->ButtonDown(button);
 }
-
 
 POINT CDirectInputSystem::GetMousePos(bool delta)
 {
-   POINT null = {0, 0};
-   if(!m_mouse) return null;
+    POINT null = { 0, 0 };
+    if (!m_mouse) return null;
 
-   return m_mouse->GetPosition(delta);
+    return m_mouse->GetPosition(delta);
 }
-
 
 long CDirectInputSystem::GetMouseWheelPos()
 {
-   if(!m_mouse) return 0;
+    if (!m_mouse) return 0;
 
-   POINT wheel =  m_mouse->GetZPosition();
-   return wheel.y;
+    POINT wheel = m_mouse->GetZPosition();
+    return wheel.y;
 }
-
 
 POINT CDirectInputSystem::GetLeftStickPos()
 {
-   POINT null = {0, 0};
-   if(!m_gameController) return null;
+    POINT null = { 0, 0 };
+    if (!m_gameController) return null;
 
-   return m_gameController->GetPosition();
+    return m_gameController->GetPosition();
 }
-
 
 POINT CDirectInputSystem::GetRightStickPos()
 {
-   POINT null = {0, 0};
-   if(!m_gameController) return null;
+    POINT null = { 0, 0 };
+    if (!m_gameController) return null;
 
-   return m_gameController->GetZPosition();
+    return m_gameController->GetZPosition();
 }
-
 
 void CDirectInputSystem::Shutdown()
 {
-   // Delete each object...
-   if(m_keyboard)
-      {
-         m_keyboard->Shutdown();
-         delete m_keyboard;
-         m_keyboard = NULL;
-      }
+    // Delete each object...
+    if (m_keyboard)
+    {
+        m_keyboard->Shutdown();
+        delete m_keyboard;
+        m_keyboard = NULL;
+    }
 
-   if(m_mouse)
-      {
-         m_mouse->Shutdown();
-         delete m_mouse;
-         m_mouse = NULL;
-      }
+    if (m_mouse)
+    {
+        m_mouse->Shutdown();
+        delete m_mouse;
+        m_mouse = NULL;
+    }
 
-   if(m_gameController)
-      {
-         m_gameController->Shutdown();
-         delete m_gameController;
-         m_gameController = NULL;
-      }
+    if (m_gameController)
+    {
+        m_gameController->Shutdown();
+        delete m_gameController;
+        m_gameController = NULL;
+    }
 
-   if(m_system)
-      {
-         m_system->Release();
-         m_system = NULL;
-      }
+    if (m_system)
+    {
+        m_system->Release();
+        m_system = NULL;
+    }
 }

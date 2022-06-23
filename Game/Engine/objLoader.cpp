@@ -1,263 +1,260 @@
-/*
+ï»¿/*
    Demo Name:  Game Project 11
       Author:  Allen Sherrod
      Chapter:  Chapter 12
 */
 
-
 #include"objLoader.h"
 
-
-stObjModel *LoadOBJModel(char *fileName)
+stObjModel* LoadOBJModel(char* fileName)
 {
-   FILE *file;
-   char *data = NULL;
-   CToken lexer, tempLex;
-   char tempLine[512];
-   char token[512];
+    FILE* file;
+    char* data = NULL;
+    CToken lexer, tempLex;
+    char tempLine[512];
+    char token[512];
 
-   // ƒtƒ@ƒCƒ‹‚ğŠJ‚«‚Ü‚·B
-   file = fopen(fileName, "r");
-   if(!file) return NULL;
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã¾ã™ã€‚
+    file = fopen(fileName, "r");
+    if (!file) return NULL;
 
-    // ƒtƒ@ƒCƒ‹‚Ì’·‚³‚ğæ“¾‚µ‚Ü‚·B
-   fseek(file, 0, SEEK_END);
-   int length = ftell(file);
-   fseek(file, 0, SEEK_SET);
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã®é•·ã•ã‚’å–å¾—ã—ã¾ã™ã€‚
+    fseek(file, 0, SEEK_END);
+    int length = ftell(file);
+    fseek(file, 0, SEEK_SET);
 
-   // ƒtƒ@ƒCƒ‹‚©‚ç‚·‚×‚Ä‚Ìƒf[ƒ^‚ğ“Ç‚İ‚İ‚Ü‚·
-   data = new char[(length + 1) * sizeof(char)];
-   if(!data) return NULL;
-   fread(data, length, 1, file);
-   data[length] = '\0';
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã™ã¹ã¦ã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã¾ã™
+    data = new char[(length + 1) * sizeof(char)];
+    if (!data) return NULL;
+    fread(data, length, 1, file);
+    data[length] = '\0';
 
-   // Š®—¹‚µ‚½‚çƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚Ü‚·B
-   fclose(file);
+    // å®Œäº†ã—ãŸã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™ã€‚
+    fclose(file);
 
-   // ƒtƒ@ƒCƒ‹‚ğTokenStream‚Éİ’è‚µ‚Ü‚·B
-   lexer.SetTokenStream(data);
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’TokenStreamã«è¨­å®šã—ã¾ã™ã€‚
+    lexer.SetTokenStream(data);
 
-   // ‚à‚¤•K—v‚ ‚è‚Ü‚¹‚ñB
-   delete[] data; data = NULL;
+    // ã‚‚ã†å¿…è¦ã‚ã‚Šã¾ã›ã‚“ã€‚
+    delete[] data; data = NULL;
 
-   bool validFile = false;
+    bool validFile = false;
 
-   // ƒtƒ@ƒCƒ‹“à‚Ì‚Ç‚±‚©‚ÅWavefront‚Æ‚¢‚¤’PŒê‚ğ’T‚µ‚ÄA‚±‚Ì.obj‚ªŒİŠ·«‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğ”»’f‚µ‚Ü‚·B
-   // ‚±‚ê‚ÍAƒ‚ƒfƒ‰[‚ª‚í‚¸‚©‚ÉˆÙ‚È‚éŒ`®‚ÉƒGƒNƒXƒ|[ƒg‚·‚é‚½‚ß‚Å‚·B
-   while(lexer.GetNextToken(token))
-      {
-         if(strcmp(token, "Wavefront") == 0)
+    // ãƒ•ã‚¡ã‚¤ãƒ«å†…ã®ã©ã“ã‹ã§Wavefrontã¨ã„ã†å˜èªã‚’æ¢ã—ã¦ã€ã“ã®.objãŒäº’æ›æ€§ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã—ã¾ã™ã€‚
+    // ã“ã‚Œã¯ã€ãƒ¢ãƒ‡ãƒ©ãƒ¼ãŒã‚ãšã‹ã«ç•°ãªã‚‹å½¢å¼ã«ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã™ã‚‹ãŸã‚ã§ã™ã€‚
+    while (lexer.GetNextToken(token))
+    {
+        if (strcmp(token, "Wavefront") == 0)
+        {
+            validFile = true;
+            break;
+        }
+    }
+
+    if (!validFile) return NULL;
+
+    // ãƒªã‚»ãƒƒãƒˆã—ã¾ã™ã€‚
+    lexer.Reset();
+
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã§å®£è¨€ã•ã‚ŒãŸãã‚Œãã‚Œã®ç·æ•°ã‚’å–å¾—ã™ã‚‹ãŸã‚ã«ä½¿ç”¨ã•ã‚Œã¾ã™ã€‚
+    // facesã¯ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã€ã“ã‚Œã‚‰ã®æ•°ã¯ç•°ãªã‚‹å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚
+    int totalVertices = 0, totalNormals = 0,
+        totalTexC = 0, totalFaces = 0;
+
+    // æœ€åˆã®ï¼ˆã¾ãŸã¯æ¬¡ã®ï¼‰è¡Œã‚’å–å¾—ã—ã¾ã™ã€‚
+    while (lexer.MoveToNextLine(tempLine))
+    {
+        // //è¡Œã‚’TokenStreamã«è¨­å®šã—ã¾ã™ã€‚
+        tempLex.SetTokenStream(tempLine);
+
+        // æ”¹è¡Œã‚’èª­ã¿å–ã‚Šã¾ã™ã€‚
+        lexer.GetNextToken(NULL);
+
+        // temp lexã«ä½•ã‹ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ã€ç¶šè¡Œã—ã¾ã™ã€‚
+        if (!tempLex.GetNextToken(token)) continue;
+
+        //è¡Œã®æœ€åˆã®ãƒˆãƒ¼ã‚¯ãƒ³ãŒvã€vnã€vtã€ã¾ãŸã¯fã®å ´åˆ ãã®ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’å¢—åŠ ã—ã¾ã™ã€‚
+        if (strcmp(token, "v") == 0) totalVertices++;
+        else if (strcmp(token, "vn") == 0) totalNormals++;
+        else if (strcmp(token, "vt") == 0) totalTexC++;
+        else if (strcmp(token, "f") == 0) totalFaces++;
+
+        token[0] = '\0';
+    }
+
+    // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿æŒã™ã‚‹ãŸã‚ã®ä¸€æ™‚ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰²ã‚Šå½“ã¦ã¾ã™ã€‚
+    // ãã‚Œãã‚Œ3ã¤ã®å€¤ï¼ˆvã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹/vtã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹/vnã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼‰ã‚’æŒã¤3ã¤ã®é ‚ç‚¹ãŒã‚ã‚‹ãŸã‚ã€facesã¯9ã§ã™ã€‚
+    float* verts = new float[totalVertices * 3];
+    float* norms = new float[totalNormals * 3];
+    float* texC = new float[totalTexC * 2];
+    int* faces = new int[totalFaces * 9];
+    int vIndex = 0, nIndex = 0, tIndex = 0, fIndex = 0, index = 0;
+
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã®å…ˆé ­ã«ç§»å‹•ã—ã¾ã™ã€‚
+    lexer.Reset();
+
+    // ã™ã¹ã¦ã‚’ã‚„ã‚Šç›´ã—ã¾ã™ãŒã€ä»Šå›ã¯ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã—ã¾ã™ã€‚
+    while (lexer.MoveToNextLine(tempLine))
+    {
+        // temp lexã«è¨­å®šã—ã€éå»ã®æ”¹è¡Œã‚’èª­ã¿å–ã‚Šã€tokenã‚’å–å¾—ã—ã¾ã™ã€‚
+        tempLex.SetTokenStream(tempLine);
+        lexer.GetNextToken(NULL);
+        if (!tempLex.GetNextToken(token)) continue;
+
+        // vã®å ´åˆã€é ‚ç‚¹xã€yã€zã‚’å–å¾—ã—ã¾ã™ã€‚
+        if (strcmp(token, "v") == 0)
+        {
+            // xã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            verts[vIndex] = (float)atof(token);
+            vIndex++;
+
+            // yã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            verts[vIndex] = (float)atof(token);
+            vIndex++;
+
+            // zã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            verts[vIndex] = (float)atof(token);
+            vIndex++;
+        }
+        // ãã‚Œä»¥å¤–ã®å ´åˆã€vnã®å ´åˆã€é ‚ç‚¹æ³•ç·šã®xã€yã€zã‚’å–å¾—ã—ã¾ã™ã€‚
+        else if (strcmp(token, "vn") == 0)
+        {
+            // xã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            norms[nIndex] = (float)atof(token);
+            nIndex++;
+
+            // yã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            norms[nIndex] = (float)atof(token);
+            nIndex++;
+
+            // zã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            norms[nIndex] = (float)atof(token);
+            nIndex++;
+        }
+        //ãã‚Œä»¥å¤–ã®å ´åˆvtã®å ´åˆã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ uã€vã‚’å–å¾—ã—ã¾ã™ã€‚
+        else if (strcmp(token, "vt") == 0)
+        {
+            // uã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            texC[tIndex] = (float)atof(token);
+            tIndex++;
+
+            // vã‚’å–å¾—ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+            tempLex.GetNextToken(token);
+            texC[tIndex] = (float)atof(token);
+            tIndex++;
+        }
+        //ãã‚Œä»¥å¤–ã®å ´åˆã€fã®å ´åˆã€å„é ‚ç‚¹3ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚»ãƒƒãƒˆã‚’å–å¾—ã—ã¾ã™ã€‚
+        else if (strcmp(token, "f") == 0)
+        {
+            // Load for each vertex (3 in a triangle).
+            for (int i = 0; i < 3; i++)
             {
-               validFile = true;
-               break;
+                //é ‚ç‚¹ã”ã¨ã«ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ï¼ˆä¸‰è§’å½¢ã®3ã¤ã®é ‚ç‚¹ï¼‰ã€‚
+                tempLex.GetNextToken(token);
+                int len = strlen(token);
+
+                //ã‚»ãƒƒãƒˆï¼ˆ1/1/1ï¼‰ã®é–“ã«ã‚¹ãƒšãƒ¼ã‚¹ãŒãªã„ãŸã‚ã€ãƒˆãƒ¼ã‚¯ãƒ³ã‚’å˜ç´”ã«èª­ã¿å–ã‚‹ã“ã¨ã¯ã§ããªã„ãŸã‚
+                // ãƒ«ãƒ¼ãƒ—ã—ã¦/è¨˜å·ã®å‰ã®å„å€¤ã‚’å–ã‚Šå‡ºã™å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+                for (int s = 0; s < len + 1; s++)
+                {
+                    char buff[64];
+
+                    // /ã§ãªã„å ´åˆã€ã¾ãŸã¯æœ€å¾Œã«ãªã„å ´åˆã€‚
+                    if (token[s] != '/' && s < len)
+                    {
+                        buff[index] = token[s];
+                        index++;
+                    }
+                    else
+                    {
+                        //ãã‚Œä»¥å¤–ã®å ´åˆã¯ã€æ–‡å­—åˆ—ã‚’çµ‚äº†ã—ã€å¤‰æ›ã—ã¦ä¿å­˜ã—ã¾ã™ã€‚
+                        buff[index] = '\0';
+                        faces[fIndex] = (int)atoi(buff);
+                        fIndex++;
+                        index = 0;
+                    }
+                }
             }
-      }
+        }
 
-   if(!validFile) return NULL;
+        token[0] = '\0';
+    }
 
-   // ƒŠƒZƒbƒg‚µ‚Ü‚·B
-   lexer.Reset();
+    // ã‚‚ã†å¿…è¦ã‚ã‚Šã¾ã›ã‚“ã€‚
+    lexer.Shutdown();
 
-   // ƒtƒ@ƒCƒ‹‚ÅéŒ¾‚³‚ê‚½‚»‚ê‚¼‚ê‚Ì‘”‚ğæ“¾‚·‚é‚½‚ß‚Ég—p‚³‚ê‚Ü‚·B
-   // faces‚ÍƒCƒ“ƒfƒbƒNƒX‚ğg—p‚·‚é‚½‚ßA‚±‚ê‚ç‚Ì”‚ÍˆÙ‚È‚é‰Â”\«‚ª‚ ‚è‚Ü‚·B
-   int totalVertices = 0, totalNormals = 0,
-       totalTexC = 0, totalFaces = 0;
+    // å‰²ã‚Šå½“ã¦ã¦ãƒ¢ãƒ‡ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã—ã¾ã™ã€‚
+    stObjModel* model = new stObjModel;
+    if (!model) return NULL;
+    memset(model, 0, sizeof(stObjModel));
 
-   // Å‰‚Ìi‚Ü‚½‚ÍŸ‚Ìjs‚ğæ“¾‚µ‚Ü‚·B
-   while(lexer.MoveToNextLine(tempLine))
-      {
-         // //s‚ğTokenStream‚Éİ’è‚µ‚Ü‚·B
-         tempLex.SetTokenStream(tempLine);
+    // facesã®æ•°ã‚’ä¿å­˜ã—ã¾ã™ã€‚
+    model->numFaces = totalFaces;
 
-         // ‰üs‚ğ“Ç‚İæ‚è‚Ü‚·B
-         lexer.GetNextToken(NULL);
+    // ä¸€æ™‚ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¾ã™ã€‚
+    vIndex = 0, nIndex = 0, tIndex = 0, fIndex = 0, index = 0;
 
-         // temp lex‚É‰½‚©‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡‚ÍA‘±s‚µ‚Ü‚·B
-         if(!tempLex.GetNextToken(token)) continue;
+    // ãƒ¢ãƒ‡ãƒ«ã®å„éƒ¨åˆ†ã«ãƒ‡ãƒ¼ã‚¿ã‚’å‰²ã‚Šå½“ã¦ã¾ã™ã€‚
+    model->vertices = new float[totalFaces * 3 * 3];
+    if (totalNormals) model->normals = new float[totalFaces * 3 * 3];
+    if (totalTexC) model->texCoords = new float[totalFaces * 3 * 2];
 
-         //s‚ÌÅ‰‚Ìƒg[ƒNƒ“‚ªvAvnAvtA‚Ü‚½‚Íf‚Ìê‡ ‚»‚ÌƒJƒEƒ“ƒ^[‚ğ‘‰Á‚µ‚Ü‚·B
-         if(strcmp(token, "v") == 0) totalVertices++;
-         else if(strcmp(token, "vn") == 0) totalNormals++;
-         else if(strcmp(token, "vt") == 0) totalTexC++;
-         else if(strcmp(token, "f") == 0) totalFaces++;
+    // ãƒ«ãƒ¼ãƒ—ã—ã¦ãƒ¢ãƒ‡ãƒ«ã«å…¥åŠ›ã—ã¾ã™ã€‚
+    for (int f = 0; f < totalFaces * 9; f += 3)
+    {
+        // é ‚ç‚¹ã‚’å–å¾—ã—ã¾ã™ã€‚ ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯1ã‹ã‚‰æœ€å¤§ã§ã¯ãªã0ã‹ã‚‰æœ€å¤§-1ã®ç¯„å›²ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹ãŸã‚ã€1ã‚’æ¸›ç®—ã—ã¾ã™ã€‚
+        // é ‚ç‚¹ã«ã¯3ã¤ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆï¼ˆxã€yã€zï¼‰ãŒã‚ã‚‹ãŸã‚ã€3ã‚’æ›ã‘ã¾ã™ã€‚
+        model->vertices[vIndex + 0] = verts[(faces[f + 0] - 1) * 3 + 0];
+        model->vertices[vIndex + 1] = verts[(faces[f + 0] - 1) * 3 + 1];
+        model->vertices[vIndex + 2] = verts[(faces[f + 0] - 1) * 3 + 2];
+        vIndex += 3;
 
-         token[0] = '\0';
-      }
+        //ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ãƒ‡ãƒ¼ã‚¿ã§ã‚‚åŒã˜ã“ã¨ã‚’è¡Œã„ã¾ã™ã€‚ 2ç•ªç›®ã®ãƒ‡ãƒ¼ã‚¿ã¯texcoordãƒ‡ãƒ¼ã‚¿ãªã®ã§ã€1ã‚’fï¼ˆv / vt / vnï¼‰ã«é©ç”¨ã—ã¾ã™ã€‚
+        if (model->texCoords)
+        {
+            model->texCoords[tIndex + 0] = texC[(faces[f + 1] - 1) * 2 + 0];
+            model->texCoords[tIndex + 1] = texC[(faces[f + 1] - 1) * 2 + 1];
+            tIndex += 2;
+        }
 
-   // ƒf[ƒ^‚ğ•Û‚·‚é‚½‚ß‚ÌˆêƒXƒy[ƒX‚ğŠ„‚è“–‚Ä‚Ü‚·B 
-   // ‚»‚ê‚¼‚ê3‚Â‚Ì’livƒCƒ“ƒfƒbƒNƒX/vtƒCƒ“ƒfƒbƒNƒX/vnƒCƒ“ƒfƒbƒNƒXj‚ğ‚Â3‚Â‚Ì’¸“_‚ª‚ ‚é‚½‚ßAfaces‚Í9‚Å‚·B
-   float *verts = new float[totalVertices * 3];
-   float *norms = new float[totalNormals * 3];
-   float *texC = new float[totalTexC * 2];
-   int *faces = new int[totalFaces * 9];
-   int vIndex = 0, nIndex = 0, tIndex = 0, fIndex = 0, index = 0;
+        // æ³•ç·šã®ãƒ‡ãƒ¼ã‚¿ã§ã‚‚åŒã˜ã“ã¨ã‚’è¡Œã„ã¾ã™ã€‚
+        if (model->normals)
+        {
+            model->normals[nIndex + 0] = norms[(faces[f + 2] - 1) * 3 + 0];
+            model->normals[nIndex + 1] = norms[(faces[f + 2] - 1) * 3 + 1];
+            model->normals[nIndex + 2] = norms[(faces[f + 2] - 1) * 3 + 2];
+            nIndex += 3;
+        }
+    }
 
-   // ƒtƒ@ƒCƒ‹‚Ìæ“ª‚ÉˆÚ“®‚µ‚Ü‚·B
-   lexer.Reset();
+    // ä¸€æ™‚ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¾ã™ã€‚
+    delete[] verts;
+    delete[] norms;
+    delete[] texC;
+    delete[] faces;
 
-   // ‚·‚×‚Ä‚ğ‚â‚è’¼‚µ‚Ü‚·‚ªA¡‰ñ‚Íƒf[ƒ^‚ğæ“¾‚µ‚Ü‚·B
-   while(lexer.MoveToNextLine(tempLine))
-      {
-       // temp lex‚Éİ’è‚µA‰ß‹‚Ì‰üs‚ğ“Ç‚İæ‚èAtoken‚ğæ“¾‚µ‚Ü‚·B
-         tempLex.SetTokenStream(tempLine);
-         lexer.GetNextToken(NULL);
-         if(!tempLex.GetNextToken(token)) continue;
-
-         // v‚Ìê‡A’¸“_xAyAz‚ğæ“¾‚µ‚Ü‚·B
-         if(strcmp(token, "v") == 0)
-            {
-               // x‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               verts[vIndex] = (float)atof(token);
-               vIndex++;
-               
-               // y‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               verts[vIndex] = (float)atof(token);
-               vIndex++;
-               
-               // z‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               verts[vIndex] = (float)atof(token);
-               vIndex++;
-            }
-         // ‚»‚êˆÈŠO‚Ìê‡Avn‚Ìê‡A’¸“_–@ü‚ÌxAyAz‚ğæ“¾‚µ‚Ü‚·B
-         else if(strcmp(token, "vn") == 0)
-            {
-               // x‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               norms[nIndex] = (float)atof(token);
-               nIndex++;
-               
-               // y‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               norms[nIndex] = (float)atof(token);
-               nIndex++;
-               
-               // z‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               norms[nIndex] = (float)atof(token);
-               nIndex++;
-            }
-         //‚»‚êˆÈŠO‚Ìê‡vt‚Ìê‡AƒeƒNƒXƒ`ƒƒ uAv‚ğæ“¾‚µ‚Ü‚·B
-         else if(strcmp(token, "vt") == 0)
-            {
-               // u‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               texC[tIndex] = (float)atof(token);
-               tIndex++;
-               
-               // v‚ğæ“¾‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-               tempLex.GetNextToken(token);
-               texC[tIndex] = (float)atof(token);
-               tIndex++;
-            }
-         //‚»‚êˆÈŠO‚Ìê‡Af‚Ìê‡AŠe’¸“_3‚ÌƒCƒ“ƒfƒbƒNƒXƒZƒbƒg‚ğæ“¾‚µ‚Ü‚·B
-         else if(strcmp(token, "f") == 0)
-            {
-               // Load for each vertex (3 in a triangle).
-               for(int i = 0; i < 3; i++)
-                  {
-                   //’¸“_‚²‚Æ‚Éƒ[ƒh‚µ‚Ü‚·iOŠpŒ`‚Ì3‚Â‚Ì’¸“_jB
-                     tempLex.GetNextToken(token);
-                     int len = strlen(token);
-
-                     //ƒZƒbƒgi1/1/1j‚ÌŠÔ‚ÉƒXƒy[ƒX‚ª‚È‚¢‚½‚ßAƒg[ƒNƒ“‚ğ’Pƒ‚É“Ç‚İæ‚é‚±‚Æ‚Í‚Å‚«‚È‚¢‚½‚ß
-                     // ƒ‹[ƒv‚µ‚Ä/‹L†‚Ì‘O‚ÌŠe’l‚ğæ‚èo‚·•K—v‚ª‚ ‚è‚Ü‚·B
-                     for(int s = 0; s < len + 1; s++)
-                        {
-                           char buff[64];
-
-                           // /‚Å‚È‚¢ê‡A‚Ü‚½‚ÍÅŒã‚É‚È‚¢ê‡B
-                           if(token[s] != '/' && s < len)
-                              {
-                                 buff[index] = token[s];
-                                 index++;
-                              }
-                           else
-                              {
-                                 //‚»‚êˆÈŠO‚Ìê‡‚ÍA•¶š—ñ‚ğI—¹‚µA•ÏŠ·‚µ‚Ä•Û‘¶‚µ‚Ü‚·B
-                                 buff[index] = '\0';
-                                 faces[fIndex] = (int)atoi(buff);
-                                 fIndex++;
-                                 index = 0;
-                              }
-                        }
-                  }
-            }
-
-         token[0] = '\0';
-      }
-
-   // ‚à‚¤•K—v‚ ‚è‚Ü‚¹‚ñB
-   lexer.Shutdown();
-
-   // Š„‚è“–‚Ä‚Äƒ‚ƒfƒ‹ƒIƒuƒWƒFƒNƒg‚ğì¬‚µ‚Ü‚·B
-   stObjModel *model = new stObjModel;
-   if(!model) return NULL;
-   memset(model, 0, sizeof(stObjModel));
-
-   // faces‚Ì”‚ğ•Û‘¶‚µ‚Ü‚·B
-   model->numFaces = totalFaces;
-
-   // ˆêƒJƒEƒ“ƒ^[‚ğƒŠƒZƒbƒg‚µ‚Ü‚·B
-   vIndex = 0, nIndex = 0, tIndex = 0, fIndex = 0, index = 0;
-
-   // ƒ‚ƒfƒ‹‚ÌŠe•”•ª‚Éƒf[ƒ^‚ğŠ„‚è“–‚Ä‚Ü‚·B
-   model->vertices = new float[totalFaces * 3 * 3];
-   if(totalNormals) model->normals = new float[totalFaces * 3 * 3];
-   if(totalTexC) model->texCoords = new float[totalFaces * 3 * 2];
-
-   // ƒ‹[ƒv‚µ‚Äƒ‚ƒfƒ‹‚É“ü—Í‚µ‚Ü‚·B
-   for(int f = 0; f < totalFaces * 9; f+=3)
-      {
-         // ’¸“_‚ğæ“¾‚µ‚Ü‚·B ƒCƒ“ƒfƒbƒNƒX‚Í1‚©‚çÅ‘å‚Å‚Í‚È‚­0‚©‚çÅ‘å-1‚Ì”ÍˆÍ‚Å‚ ‚é•K—v‚ª‚ ‚é‚½‚ßA1‚ğŒ¸Z‚µ‚Ü‚·B
-         // ’¸“_‚É‚Í3‚Â‚ÌƒRƒ“ƒ|[ƒlƒ“ƒgixAyAzj‚ª‚ ‚é‚½‚ßA3‚ğŠ|‚¯‚Ü‚·B
-         model->vertices[vIndex + 0] = verts[(faces[f + 0] - 1) * 3 + 0];
-         model->vertices[vIndex + 1] = verts[(faces[f + 0] - 1) * 3 + 1];
-         model->vertices[vIndex + 2] = verts[(faces[f + 0] - 1) * 3 + 2];
-         vIndex += 3;
-
-         //ƒeƒNƒXƒ`ƒƒÀ•Wƒf[ƒ^‚Å‚à“¯‚¶‚±‚Æ‚ğs‚¢‚Ü‚·B 2”Ô–Ú‚Ìƒf[ƒ^‚Ítexcoordƒf[ƒ^‚È‚Ì‚ÅA1‚ğfiv / vt / vnj‚É“K—p‚µ‚Ü‚·B
-         if(model->texCoords)
-            {
-               model->texCoords[tIndex + 0] = texC[(faces[f + 1] - 1) * 2 + 0];
-               model->texCoords[tIndex + 1] = texC[(faces[f + 1] - 1) * 2 + 1];
-               tIndex += 2;
-            }
-
-         // –@ü‚Ìƒf[ƒ^‚Å‚à“¯‚¶‚±‚Æ‚ğs‚¢‚Ü‚·B
-         if(model->normals)
-            {
-               model->normals[nIndex + 0] = norms[(faces[f + 2] - 1) * 3 + 0];
-               model->normals[nIndex + 1] = norms[(faces[f + 2] - 1) * 3 + 1];
-               model->normals[nIndex + 2] = norms[(faces[f + 2] - 1) * 3 + 2];
-               nIndex += 3;
-            }
-      }
-
-   // ˆêƒf[ƒ^‚ğíœ‚µ‚Ü‚·B
-   delete[] verts;
-   delete[] norms;
-   delete[] texC;
-   delete[] faces;
-
-   return model;
+    return model;
 }
 
-
-void FreeOBJModel(stObjModel *model)
+void FreeOBJModel(stObjModel* model)
 {
-   if(!model) return;
+    if (!model) return;
 
-   // ‚·‚×‚Ä‚ÌƒŠƒ\[ƒX‚ğ‰ğ•ú‚µ‚Ü‚·B
-   if(model->vertices) delete[] model->vertices;
-   model->vertices = NULL;
-   if(model->normals) delete[] model->normals;
-   model->normals = NULL;
-   if(model->texCoords) delete[] model->texCoords;
-   model->texCoords = NULL;
+    // ã™ã¹ã¦ã®ãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾ã—ã¾ã™ã€‚
+    if (model->vertices) delete[] model->vertices;
+    model->vertices = NULL;
+    if (model->normals) delete[] model->normals;
+    model->normals = NULL;
+    if (model->texCoords) delete[] model->texCoords;
+    model->texCoords = NULL;
 
-   delete model;
-   model = NULL;
+    delete model;
+    model = NULL;
 }

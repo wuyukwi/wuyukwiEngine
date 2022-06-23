@@ -148,6 +148,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameEngine.cpp" />
     <ClCompile Include="gameLoad.cpp" />
+    <ClCompile Include="gameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="gameEngine.h" />
     <ClInclude Include="gameLoad.h" />
+    <ClInclude Include="gameScene.h" />
     <ClInclude Include="stGameObject.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="menu.h" />

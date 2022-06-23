@@ -1,9 +1,8 @@
-/*
+ï»¿/*
    Demo Name:  Game Project 12
       Author:  Allen Sherrod
      Chapter:  Chapter 13
 */
-
 
 #include "XStructures.h"
 #include "defines.h"
@@ -29,8 +28,8 @@ HRESULT CAllocateHierarchy::AllocateName(LPCSTR Name, LPSTR* pNewName)
 }
 
 // ------------------------------------------------ --------------------------------------
-// ƒXƒLƒ“ƒƒbƒVƒ…‚ğƒ[ƒh‚·‚é‚Æ‚«A‚Ü‚½‚Íƒƒ\ƒbƒh‚ğ•ÏX‚·‚é‚Æ‚«‚ÉCreateMeshContainer‚É‚æ‚Á‚ÄŒÄ‚Ño‚³‚ê‚Ü‚·B 
-// ‚±‚ÌŠÖ”‚ÍAƒƒbƒVƒ…ƒRƒ“ƒeƒi‚ÌpSkinInfo‚ğg—p‚µ‚ÄA–Ú“I‚Ì•`‰æ‰Â”\‚ÈƒƒbƒVƒ…‚Æƒ{[ƒ“‚Ì‘g‚İ‡‚í‚¹ƒe[ƒuƒ‹‚ğ¶¬‚µ‚Ü‚·B
+// ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã¨ãã€ã¾ãŸã¯ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å¤‰æ›´ã™ã‚‹ã¨ãã«CreateMeshContainerã«ã‚ˆã£ã¦å‘¼ã³å‡ºã•ã‚Œã¾ã™ã€‚
+// ã“ã®é–¢æ•°ã¯ã€ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠã®pSkinInfoã‚’ä½¿ç”¨ã—ã¦ã€ç›®çš„ã®æç”»å¯èƒ½ãªãƒ¡ãƒƒã‚·ãƒ¥ã¨ãƒœãƒ¼ãƒ³ã®çµ„ã¿åˆã‚ã›ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç”Ÿæˆã—ã¾ã™ã€‚
 // ------------------------------------------------ --------------------------------------
 HRESULT CAllocateHierarchy::GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, stD3DContainerDerived* pMeshContainer)
 {
@@ -43,29 +42,28 @@ HRESULT CAllocateHierarchy::GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, st
     SAFE_RELEASE(pMeshContainer->MeshData.pMesh);
     SAFE_RELEASE(pMeshContainer->pBoneCombinationBuf);
 
-    // ƒ{[ƒ“‚ÌÅ“K‰»
+    // ãƒœãƒ¼ãƒ³ã®æœ€é©åŒ–
     if (FAILED(pMeshContainer->pSkinInfo->ConvertToBlendedMesh(
-        pMeshContainer->pOrigMesh,// “ü—ÍƒƒbƒVƒ…
+        pMeshContainer->pOrigMesh,// å…¥åŠ›ãƒ¡ãƒƒã‚·ãƒ¥
         D3DXMESH_MANAGED | D3DXMESHOPT_VERTEXCACHE,
-        pMeshContainer->pAdjacency,// ƒƒbƒVƒ…‚Ì—×Úƒf[ƒ^(“ü—Í)
-        NULL,// ƒƒbƒVƒ…‚Ì—×Úƒf[ƒ^(o—Í)
-        NULL,// ƒ|ƒŠƒSƒ“‚ÌV‹KƒCƒ“ƒfƒbƒNƒX‚Ìƒoƒbƒtƒ@
-        NULL,// ’¸“_‚ÌV‹KƒCƒ“ƒfƒbƒNƒX‚Ìƒoƒbƒtƒ@
-        &pMeshContainer->NumInfl,// ‚P‚Â‚Ì’¸“_‚É‰e‹¿‚ğ‹y‚Ú‚·d‚İ‚Ì”
-        &pMeshContainer->NumAttributeGroups,// ƒ{[ƒ“‚Ì”
-        &pMeshContainer->pBoneCombinationBuf,// ƒ{[ƒ“ƒf[ƒ^‚ªŠi”[‚³‚ê‚½ƒoƒbƒtƒ@
-        &pMeshContainer->MeshData.pMesh)))// •ÏŠ·Œã‚ÌƒƒbƒVƒ…
+        pMeshContainer->pAdjacency,// ãƒ¡ãƒƒã‚·ãƒ¥ã®éš£æ¥ãƒ‡ãƒ¼ã‚¿(å…¥åŠ›)
+        NULL,// ãƒ¡ãƒƒã‚·ãƒ¥ã®éš£æ¥ãƒ‡ãƒ¼ã‚¿(å‡ºåŠ›)
+        NULL,// ãƒãƒªã‚´ãƒ³ã®æ–°è¦ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ãƒãƒƒãƒ•ã‚¡
+        NULL,// é ‚ç‚¹ã®æ–°è¦ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ãƒãƒƒãƒ•ã‚¡
+        &pMeshContainer->NumInfl,// ï¼‘ã¤ã®é ‚ç‚¹ã«å½±éŸ¿ã‚’åŠã¼ã™é‡ã¿ã®æ•°
+        &pMeshContainer->NumAttributeGroups,// ãƒœãƒ¼ãƒ³ã®æ•°
+        &pMeshContainer->pBoneCombinationBuf,// ãƒœãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿ãŒæ ¼ç´ã•ã‚ŒãŸãƒãƒƒãƒ•ã‚¡
+        &pMeshContainer->MeshData.pMesh)))// å¤‰æ›å¾Œã®ãƒ¡ãƒƒã‚·ãƒ¥
         return E_FAIL;
     return S_OK;
 }
 
 //--------------------------------------------------------------------------------------
 // Name: CD3DAllocate::CreateFrame()
-// Desc: Frame‚ğì¬‚µ‚ÄC‰Šú‰»‚·‚é
+// Desc: Frameã‚’ä½œæˆã—ã¦ï¼ŒåˆæœŸåŒ–ã™ã‚‹
 //----------------------------------------------------------------------------
-HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME *ppNewFrame)
+HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME* ppNewFrame)
 {
-
     HRESULT hr = S_OK;
     stD3DFrameDerived* pFrame;
 
@@ -82,7 +80,7 @@ HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME *ppNewFrame)
     if (FAILED(hr))
         goto e_Exit;
 
-    // frame‚Ìƒƒ“ƒo[‚ğ‰Šú‰»‚µ‚Ü‚·
+    // frameã®ãƒ¡ãƒ³ãƒãƒ¼ã‚’åˆæœŸåŒ–ã—ã¾ã™
     D3DXMatrixIdentity(&pFrame->TransformationMatrix);
     D3DXMatrixIdentity(&pFrame->finalMatrix);
 
@@ -96,12 +94,10 @@ HRESULT CAllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME *ppNewFrame)
 e_Exit:
     delete pFrame;
     return hr;
-
 }
 
-
 //--------------------------------------------------------------------------------------
-// ƒƒbƒVƒ…“Ç‚İ‚ñ‚ÅA•K—v‚Èƒf[ƒ^‚ğ•Û‘¶‚·‚é
+// ãƒ¡ãƒƒã‚·ãƒ¥èª­ã¿è¾¼ã‚“ã§ã€å¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã™ã‚‹
 //--------------------------------------------------------------------------------------
 HRESULT CAllocateHierarchy::CreateMeshContainer(
     LPCSTR Name,
@@ -112,75 +108,75 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
     CONST DWORD* pAdjacency,
     LPD3DXSKININFO pSkinInfo,
     LPD3DXMESHCONTAINER* ppNewMeshContainer)
-{    
+{
     HRESULT hr;
     stD3DContainerDerived* pMeshContainer = nullptr;
     UINT NumFaces;
-    UINT iMaterial; //ƒ}ƒeƒŠƒAƒ‹ƒJƒEƒ“ƒg
+    UINT iMaterial; //ãƒãƒ†ãƒªã‚¢ãƒ«ã‚«ã‚¦ãƒ³ãƒˆ
     UINT countBone, numBones;
     LPDIRECT3DDEVICE9 pd3dDevice = nullptr;
 
     LPD3DXMESH pMesh = nullptr;
 
-   if(pMeshData->Type != D3DXMESHTYPE_MESH)
-      {
-       //D3DXMESHTYPE_PMESH‚ÍƒvƒƒOƒŒƒbƒVƒuƒƒbƒVƒ…‚Å‚·B
-       //D3DXMESHTYPE_PATCHMESH‚Íƒpƒbƒ`ƒƒbƒVƒ…‚Å‚·B
-       //‚±‚ÌƒR[ƒh‚Å‚ÍA’Êí‚ÌƒƒbƒVƒ…‚Ì‚İ‚ğˆ—‚µ‚Ü‚·B
-       hr = E_FAIL;
-       goto e_Exit;
-      }
+    if (pMeshData->Type != D3DXMESHTYPE_MESH)
+    {
+        //D3DXMESHTYPE_PMESHã¯ãƒ—ãƒ­ã‚°ãƒ¬ãƒƒã‚·ãƒ–ãƒ¡ãƒƒã‚·ãƒ¥ã§ã™ã€‚
+        //D3DXMESHTYPE_PATCHMESHã¯ãƒ‘ãƒƒãƒãƒ¡ãƒƒã‚·ãƒ¥ã§ã™ã€‚
+        //ã“ã®ã‚³ãƒ¼ãƒ‰ã§ã¯ã€é€šå¸¸ã®ãƒ¡ãƒƒã‚·ãƒ¥ã®ã¿ã‚’å‡¦ç†ã—ã¾ã™ã€‚
+        hr = E_FAIL;
+        goto e_Exit;
+    }
 
-   // ƒƒbƒVƒ…ƒf[ƒ^\‘¢‚©‚çpMeshƒCƒ“ƒ^[ƒtƒFƒCƒXƒ|ƒCƒ“ƒ^‚ğæ“¾‚µ‚Ü‚·
-   pMesh = pMeshData->pMesh;
+    // ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã‹ã‚‰pMeshã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—ã—ã¾ã™
+    pMesh = pMeshData->pMesh;
 
-   // FVFŒ©‚Â‚©‚ç‚È‚¢‚©‚çI‚í‚è‚Ü‚·
-   if (pMesh->GetFVF() == 0)
-   {
-       hr = E_FAIL;
-       goto e_Exit;
-   }
-   
-   //ƒI[ƒo[ƒ[ƒh‚³‚ê‚½\‘¢‚ğŠ„‚è“–‚Ä‚ÄD3DXMESHCONTAINER‚Æ‚µ‚Ä•Ô‚µ‚Ü‚·
-   pMeshContainer = new stD3DContainerDerived;
-   if (pMeshContainer == NULL)
-   {
-       hr = E_OUTOFMEMORY;
-       goto e_Exit;
-   }
-   memset(pMeshContainer, 0, sizeof(stD3DContainerDerived));
+    // FVFè¦‹ã¤ã‹ã‚‰ãªã„ã‹ã‚‰çµ‚ã‚ã‚Šã¾ã™
+    if (pMesh->GetFVF() == 0)
+    {
+        hr = E_FAIL;
+        goto e_Exit;
+    }
 
-   // ƒl[ƒ€‚ğƒRƒs[‚µ‚Ü‚·B
-   hr = AllocateName(Name, &pMeshContainer->Name);
-   if (FAILED(hr))
-       goto e_Exit;
+    //ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸæ§‹é€ ã‚’å‰²ã‚Šå½“ã¦ã¦D3DXMESHCONTAINERã¨ã—ã¦è¿”ã—ã¾ã™
+    pMeshContainer = new stD3DContainerDerived;
+    if (pMeshContainer == NULL)
+    {
+        hr = E_OUTOFMEMORY;
+        goto e_Exit;
+    }
+    memset(pMeshContainer, 0, sizeof(stD3DContainerDerived));
 
-    // D3D ƒfƒoƒCƒXæ“¾.
+    // ãƒãƒ¼ãƒ ã‚’ã‚³ãƒ”ãƒ¼ã—ã¾ã™ã€‚
+    hr = AllocateName(Name, &pMeshContainer->Name);
+    if (FAILED(hr))
+        goto e_Exit;
+
+    // D3D ãƒ‡ãƒã‚¤ã‚¹å–å¾—.
     pMesh->GetDevice(&pd3dDevice);
 
-    // –Ê”‚ğ•Û‘¶
+    // é¢æ•°ã‚’ä¿å­˜
     NumFaces = pMesh->GetNumFaces();
 
-    // ’¸“_–@ü‚È‚¢ê‡‚Í’Ç‰Á‚µ‚Ü‚·B
+    // é ‚ç‚¹æ³•ç·šãªã„å ´åˆã¯è¿½åŠ ã—ã¾ã™ã€‚
     if (!(pMesh->GetFVF() & D3DFVF_NORMAL))
     {
         pMeshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
 
-        // ƒƒbƒVƒ…‚ğƒNƒ[ƒ“‚µ‚ÄFVF‚É–@ü‚ğ’Ç‰Á‚µ‚Ü‚·
+        // ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ã‚¯ãƒ­ãƒ¼ãƒ³ã—ã¦FVFã«æ³•ç·šã‚’è¿½åŠ ã—ã¾ã™
         hr = pMesh->CloneMeshFVF(pMesh->GetOptions(),
             pMesh->GetFVF() | D3DFVF_NORMAL,
             pd3dDevice, &pMeshContainer->MeshData.pMesh);
         if (FAILED(hr))
             goto e_Exit;
 
-        // g—p‚·‚éƒƒbƒVƒ…ƒRƒ“ƒeƒi‚©‚çV‚µ‚¢pMeshƒ|ƒCƒ“ƒ^‚ğæ“¾‚µ‚Ü‚·
-        // ’FpMesh‚Ö‚ÌQÆ‚ª‚Ü‚¾‚È‚¢‚½‚ßApMesh‚ğƒŠƒŠ[ƒX‚µ‚Ü‚¹‚ñ
+        // ä½¿ç”¨ã™ã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠã‹ã‚‰æ–°ã—ã„pMeshãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—ã—ã¾ã™
+        // æ³¨ï¼špMeshã¸ã®å‚ç…§ãŒã¾ã ãªã„ãŸã‚ã€pMeshã‚’ãƒªãƒªãƒ¼ã‚¹ã—ã¾ã›ã‚“
         pMesh = pMeshContainer->MeshData.pMesh;
 
-        // –@ü‚ğì¬‚µ‚Ü‚·
+        // æ³•ç·šã‚’ä½œæˆã—ã¾ã™
         D3DXComputeNormals(pMesh, NULL);
     }
-    else 
+    else
     {
         pMeshContainer->MeshData.pMesh = pMesh;
         pMeshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
@@ -188,7 +184,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
         pMesh->AddRef();
     }
 
-    // ƒ}ƒeƒŠƒAƒ‹î•ñ•Û‘¶—p‚Ìƒƒ‚ƒŠ‚ğŠ„‚è“–‚Ä‚Ü‚·B
+    // ãƒãƒ†ãƒªã‚¢ãƒ«æƒ…å ±ä¿å­˜ç”¨ã®ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã¾ã™ã€‚
     pMeshContainer->NumMaterials = max(1, NumMaterials);
     pMeshContainer->pMaterials = new D3DXMATERIAL[pMeshContainer->NumMaterials];
     pMeshContainer->ppTextures = new LPDIRECT3DTEXTURE9[pMeshContainer->NumMaterials];
@@ -199,13 +195,13 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
         goto e_Exit;
     }
 
-    // —×Úî•ñ•Û‘¶‚µ‚Ü‚·
+    // éš£æ¥æƒ…å ±ä¿å­˜ã—ã¾ã™
     memcpy(pMeshContainer->pAdjacency, pAdjacency, sizeof(DWORD) * NumFaces * 3);
 
-    // ƒƒ‚ƒŠƒNƒŠƒA
+    // ãƒ¡ãƒ¢ãƒªã‚¯ãƒªã‚¢
     memset(pMeshContainer->ppTextures, 0, sizeof(LPDIRECT3DTEXTURE9) * pMeshContainer->NumMaterials);
 
-    // ƒ}ƒeƒŠƒAƒ‹î•ñ‚ª’ñ‹Ÿ‚³‚ê‚Ä‚¢‚éê‡‚ÍA‚»‚ê‚ç‚ğƒRƒs[‚µ‚Ü‚·
+    // ãƒãƒ†ãƒªã‚¢ãƒ«æƒ…å ±ãŒæä¾›ã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ã€ãã‚Œã‚‰ã‚’ã‚³ãƒ”ãƒ¼ã—ã¾ã™
     if (NumMaterials > 0)
     {
         memcpy(pMeshContainer->pMaterials, pMaterials, sizeof(D3DXMATERIAL) * NumMaterials);
@@ -214,17 +210,17 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
         {
             if (pMeshContainer->pMaterials[iMaterial].pTextureFilename != nullptr)
             {
-                if (FAILED(D3DXCreateTextureFromFileA(pd3dDevice, 
+                if (FAILED(D3DXCreateTextureFromFileA(pd3dDevice,
                     pMeshContainer->pMaterials[iMaterial].pTextureFilename,
                     &pMeshContainer->ppTextures[iMaterial])))
-                    pMeshContainer->ppTextures[iMaterial] = nullptr;//ƒeƒNƒXƒ`ƒƒ‚È‚¢ê‡‚Ínullptr
+                    pMeshContainer->ppTextures[iMaterial] = nullptr;//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãªã„å ´åˆã¯nullptr
 
-                // ƒ[ƒhŒãƒeƒNƒXƒ`ƒƒƒl[ƒ€‚ğnullptr‚É‚µ‚Ü‚·B
+                // ãƒ­ãƒ¼ãƒ‰å¾Œãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ¼ãƒ ã‚’nullptrã«ã—ã¾ã™ã€‚
                 pMeshContainer->pMaterials[iMaterial].pTextureFilename = nullptr;
             }
         }
     }
-    else //’ñ‹Ÿ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍAƒfƒtƒHƒ‹ƒg‚ğg—p‚µ‚Ü‚·
+    else //æä¾›ã•ã‚Œã¦ã„ãªã„å ´åˆã¯ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚’ä½¿ç”¨ã—ã¾ã™
     {
         pMeshContainer->pMaterials[0].pTextureFilename = NULL;
         memset(&pMeshContainer->pMaterials[0].MatD3D, 0, sizeof(D3DMATERIAL9));
@@ -234,17 +230,17 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
         pMeshContainer->pMaterials[0].MatD3D.Specular = pMeshContainer->pMaterials[0].MatD3D.Diffuse;
     }
 
-    // ƒXƒLƒ“ƒƒbƒVƒ…î•ñ‚ª‚ ‚éê‡‚ÍA•K—v‚Èƒf[ƒ^‚ğ•Û‘¶‚µ‚Ä‚©‚çAHWƒXƒLƒ“—p‚ÉƒZƒbƒgƒAƒbƒv‚µ‚Ü‚·
+    // ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥æƒ…å ±ãŒã‚ã‚‹å ´åˆã¯ã€å¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã¦ã‹ã‚‰ã€HWã‚¹ã‚­ãƒ³ç”¨ã«ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã—ã¾ã™
     if (pSkinInfo != NULL)
     {
-        // Å‰‚ÉSkinInfo‚ÆƒIƒŠƒWƒiƒ‹ƒƒbƒVƒ…ƒf[ƒ^‚ğ•Û‘¶‚µ‚Ü‚·
+        // æœ€åˆã«SkinInfoã¨ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã¾ã™
         pMeshContainer->pSkinInfo = pSkinInfo;
         pSkinInfo->AddRef();
 
         pMeshContainer->pOrigMesh = pMesh;
         pMesh->AddRef();
 
-        // ’¸“_‚ğ}Œ`‹óŠÔ‚©‚çBones‚Ì‹óŠÔ‚ÉˆÚ“®‚·‚é‚É‚ÍAoffsets—ñ‚Ì”z—ñ‚ª•K—v‚É‚È‚è‚Ü‚·
+        // é ‚ç‚¹ã‚’å›³å½¢ç©ºé–“ã‹ã‚‰Bonesã®ç©ºé–“ã«ç§»å‹•ã™ã‚‹ã«ã¯ã€offsetè¡Œåˆ—ã®é…åˆ—ãŒå¿…è¦ã«ãªã‚Šã¾ã™
         numBones = pSkinInfo->GetNumBones();
         pMeshContainer->pBoneOffsetMatrices = new D3DXMATRIX[numBones];
         if (pMeshContainer->pBoneOffsetMatrices == NULL)
@@ -253,13 +249,13 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
             goto e_Exit;
         }
 
-        // Šeƒ{[ƒ“offsets—ñ‚ğæ“¾‚µ‚Ü‚·
+        // å„ãƒœãƒ¼ãƒ³offsetè¡Œåˆ—ã‚’å–å¾—ã—ã¾ã™
         for (countBone = 0; countBone < numBones; countBone++)
         {
             pMeshContainer->pBoneOffsetMatrices[countBone] = *(pMeshContainer->pSkinInfo->GetBoneOffsetMatrix(countBone));
         }
 
-        // GenerateSkinnedMeshŠÖ”‚ÍAˆê”Ê“I‚ÈƒXƒLƒ“î•ñ‚ğæ“¾‚µAHW‘Î‰ƒo[ƒWƒ‡ƒ“‚É•ÏŠ·‚µ‚Ü‚·
+        // GenerateSkinnedMeshé–¢æ•°ã¯ã€ä¸€èˆ¬çš„ãªã‚¹ã‚­ãƒ³æƒ…å ±ã‚’å–å¾—ã—ã€HWå¯¾å¿œãƒãƒ¼ã‚¸ãƒ§ãƒ³ã«å¤‰æ›ã—ã¾ã™
         hr = GenerateSkinnedMesh(pd3dDevice, pMeshContainer);
         if (FAILED(hr))
             goto e_Exit;
@@ -268,27 +264,24 @@ HRESULT CAllocateHierarchy::CreateMeshContainer(
     *ppNewMeshContainer = pMeshContainer;
     pMeshContainer = nullptr;
 
- 
 e_Exit:
-   SAFE_RELEASE(pd3dDevice);
+    SAFE_RELEASE(pd3dDevice);
 
-   // ƒƒ‚ƒŠƒNƒŠƒA 
-   if (pMeshContainer != NULL)
-   {
-       DestroyMeshContainer(pMeshContainer);
-   }
+    // ãƒ¡ãƒ¢ãƒªã‚¯ãƒªã‚¢
+    if (pMeshContainer != NULL)
+    {
+        DestroyMeshContainer(pMeshContainer);
+    }
 
-   return hr;
+    return hr;
 }
 
-
-HRESULT CAllocateHierarchy::DestroyFrame(LPD3DXFRAME pInFrame) 
+HRESULT CAllocateHierarchy::DestroyFrame(LPD3DXFRAME pInFrame)
 {
     SAFE_DELETE_ARRAY(pInFrame->Name);
     SAFE_DELETE(pInFrame);
     return S_OK;
 }
-
 
 HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase)
 {
@@ -301,7 +294,7 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
     SAFE_DELETE_ARRAY(pMeshContainer->pMaterials);
     SAFE_DELETE_ARRAY(pMeshContainer->pBoneOffsetMatrices);
 
-    // Š„‚è“–‚Ä‚ç‚ê‚½‚·‚×‚Ä‚ÌƒeƒNƒXƒ`ƒƒ‚ğ‰ğ•ú‚µ‚Ü‚·
+    // å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸã™ã¹ã¦ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’è§£æ”¾ã—ã¾ã™
     if (pMeshContainer->ppTextures != NULL)
     {
         for (countMaterial = 0; countMaterial < pMeshContainer->NumMaterials; countMaterial++)
@@ -317,5 +310,4 @@ HRESULT CAllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContai
     SAFE_RELEASE(pMeshContainer->pOrigMesh);
     SAFE_DELETE(pMeshContainer);
     return S_OK;
-
 }

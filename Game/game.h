@@ -1,13 +1,12 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: game.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
 
 **********************************************************************************/
-
 
 #ifndef _GAME_H_
 #define _GAME_H_
@@ -16,9 +15,10 @@
 #include "Engine/Matrix.h"
 #include "Engine/Vector.h"
 #include "stGameObject.h"
+#include "Engine/Scene.h"
 
 //*****************************************
-// ÉOÉçÅ[ÉoÉãä÷êîêÈåæ
+// „Ç∞„É≠„Éº„Éê„É´Èñ¢Êï∞ÂÆ£Ë®Ä
 //*****************************************
 bool GameInitialize();
 void GameLoop();
@@ -137,5 +137,7 @@ extern float g_elapsed;
 extern int g_timeCount;
 
 extern int g_shotSound;
+
+extern Scene* g_scene;
 
 #endif _GAME_H_

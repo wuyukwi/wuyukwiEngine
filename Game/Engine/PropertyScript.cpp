@@ -1,13 +1,12 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: PropertyScript.cpp
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/11
 
 **********************************************************************************/
-
 
 #include"PropertyScript.h"
 #include<fstream>
@@ -22,54 +21,53 @@ int DetermineType(int startIndex, char* buffer)
     bool charFound = false;
     int index = startIndex;
 
-    // ƒ‹[ƒv‚µ‚ÄA•¶š—ñ‚ğæ“¾‚µ‚Ü‚·B
+    // ãƒ«ãƒ¼ãƒ—ã—ã¦ã€æ–‡å­—åˆ—ã‚’å–å¾—ã—ã¾ã™ã€‚
     while (index < (int)strlen(buffer))
     {
-        // V‚µ‚¢s‚ª‚È‚¢‚½‚ßA‚±‚Ìƒ‹[ƒv“à‚É“ü‚é‚ÆA‚±‚ê‚ğ©“®“I‚É’Ç‰Á‚µ‚Ü‚·B
-        if (numComponents == 0) 
+        // æ–°ã—ã„è¡ŒãŒãªã„ãŸã‚ã€ã“ã®ãƒ«ãƒ¼ãƒ—å†…ã«å…¥ã‚‹ã¨ã€ã“ã‚Œã‚’è‡ªå‹•çš„ã«è¿½åŠ ã—ã¾ã™ã€‚
+        if (numComponents == 0)
             numComponents++;
 
-        if (buffer[index] == ' ') 
+        if (buffer[index] == ' ')
             numComponents++;
 
-        if (buffer[index] == '.') 
+        if (buffer[index] == '.')
             decimalFound = true;
 
         if ((buffer[index] >= 'a' && buffer[index] <= 'z') ||
             (buffer[index] >= 'A' && buffer[index] <= 'Z') ||
-            buffer[index] == '_') 
+            buffer[index] == '_')
             charFound = true;
 
         index++;
-
     }
 
-    // –¼‘O‚ÌŒã‚É•Ï”‚ª1‚Â‚¾‚¯•\¦‚³‚ê‚Ä‚¢‚éê‡Avector‚Í3‚Å‚ ‚é•K—v‚ª‚ ‚é‚½‚ßAvectorˆÈŠO‚Ì”CˆÓ‚Ìƒ^ƒCƒv‚É‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+    // åå‰ã®å¾Œã«å¤‰æ•°ãŒ1ã¤ã ã‘è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹å ´åˆã€vectorã¯3ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹ãŸã‚ã€vectorä»¥å¤–ã®ä»»æ„ã®ã‚¿ã‚¤ãƒ—ã«ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚
     switch (numComponents)
     {
     case 1:
-        // •¶š‚ª‚ ‚éê‡A‚»‚ê‚Í•¶š—ñ‚Å‚·B
-        if (charFound) 
+        // æ–‡å­—ãŒã‚ã‚‹å ´åˆã€ãã‚Œã¯æ–‡å­—åˆ—ã§ã™ã€‚
+        if (charFound)
             type = STRING_VAR;
-        else 
+        else
             type = INT_VAR;
 
-        // ¬”‚ª‚ ‚èA•¶š‚ª‚È‚¢ê‡‚ÍAfloat‚É‚È‚è‚Ü‚·B
-        if (decimalFound == true && charFound == false) 
+        // å°æ•°ãŒã‚ã‚Šã€æ–‡å­—ãŒãªã„å ´åˆã¯ã€floatã«ãªã‚Šã¾ã™ã€‚
+        if (decimalFound == true && charFound == false)
             type = FLOAT_VAR;
         break;
 
     case 3:
-        // ƒxƒNƒgƒ‹‚Í’P‚È‚éfloat‚Å‚ ‚é‚½‚ßAƒOƒ‹[ƒv“à‚É•¶š‚ªŠÜ‚Ü‚ê‚Ä‚¢‚éê‡‚ÍA•¶š—ñ‚Å‚ ‚éB
-        if (charFound) 
+        // ãƒ™ã‚¯ãƒˆãƒ«ã¯å˜ãªã‚‹floatã§ã‚ã‚‹ãŸã‚ã€ã‚°ãƒ«ãƒ¼ãƒ—å†…ã«æ–‡å­—ãŒå«ã¾ã‚Œã¦ã„ã‚‹å ´åˆã¯ã€æ–‡å­—åˆ—ã§ã‚ã‚‹ã€‚
+        if (charFound)
             type = STRING_VAR;
-        else 
+        else
             type = VECTOR_VAR;
         break;
 
     default:
-        // –¼‘O‚ÌŒã‚É•¡”‚Ì’PŒê‚ª‚ ‚éê‡A•¶š—ñ‚É‚ÍƒXƒy[ƒX‚ğŠÜ‚ß‚é‚±‚Æ‚ª‚Å‚«‚é‚½‚ßA•¶š—ñ‚Å‚ ‚éB
-        if (numComponents > 0) 
+        // åå‰ã®å¾Œã«è¤‡æ•°ã®å˜èªãŒã‚ã‚‹å ´åˆã€æ–‡å­—åˆ—ã«ã¯ã‚¹ãƒšãƒ¼ã‚¹ã‚’å«ã‚ã‚‹ã“ã¨ãŒã§ãã‚‹ãŸã‚ã€æ–‡å­—åˆ—ã§ã‚ã‚‹ã€‚
+        if (numComponents > 0)
             type = STRING_VAR;
         break;
     }
@@ -77,24 +75,22 @@ int DetermineType(int startIndex, char* buffer)
     return type;
 }
 
-
 void CVariable::SetData(int t, char* n, void* data)
 {
     if (!name) return;
 
-    // •Ï”–¼‚ğİ’è‚µ‚Ä‚©‚çAƒ^ƒCƒv‚Æƒf[ƒ^‚ğİ’è‚µ‚Ü‚·B
+    // å¤‰æ•°åã‚’è¨­å®šã—ã¦ã‹ã‚‰ã€ã‚¿ã‚¤ãƒ—ã¨ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ã€‚
     memcpy(name, n, strlen(n));
     name[strlen(n)] = '\0';
     SetData(t, data);
 }
-
 
 void CVariable::SetData(int t, void* data)
 {
     stVector* vec = NULL;
     int len = 0;
 
-    // ƒ^ƒCƒv‚É‰‚¶‚ÄA’l‚ªŠi”[‚³‚ê‚Ä‚¢‚éêŠ‚É‚æ‚Á‚ÄˆÙ‚È‚è‚Ü‚·B
+    // ã‚¿ã‚¤ãƒ—ã«å¿œã˜ã¦ã€å€¤ãŒæ ¼ç´ã•ã‚Œã¦ã„ã‚‹å ´æ‰€ã«ã‚ˆã£ã¦ç•°ãªã‚Šã¾ã™ã€‚
     switch (t)
     {
     case INT_VAR:
@@ -120,7 +116,7 @@ void CVariable::SetData(int t, void* data)
         break;
 
     default:
-        // ‚±‚±‚É“’B‚·‚é‚ÆA‚»‚ê‚ÍNULL•Ï”‚Å‚·B
+        // ã“ã“ã«åˆ°é”ã™ã‚‹ã¨ã€ãã‚Œã¯NULLå¤‰æ•°ã§ã™ã€‚
         return;
         break;
     };
@@ -128,20 +124,16 @@ void CVariable::SetData(int t, void* data)
     type = t;
 }
 
-
 CPropertyScript::CPropertyScript() : variableList(NULL),
 m_totalVars(0), currentLineChar(0)
 {
-
 }
-
 
 CPropertyScript::~CPropertyScript()
 {
-    // ‚·‚×‚Ä‚ÌƒŠƒ\[ƒX‚ğ‰ğ•ú‚µ‚Ü‚·B
+    // ã™ã¹ã¦ã®ãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾ã—ã¾ã™ã€‚
     Shutdown();
 }
-
 
 bool CPropertyScript::IncreaseVariableList()
 {
@@ -149,14 +141,14 @@ bool CPropertyScript::IncreaseVariableList()
     {
         variableList = new CVariable[1];
 
-        if (!variableList) 
+        if (!variableList)
             return false;
     }
     else
     {
         CVariable* temp;
         temp = new CVariable[m_totalVars + 1];
-        if (!temp) 
+        if (!temp)
             return false;
 
         memcpy(temp, variableList,
@@ -169,7 +161,6 @@ bool CPropertyScript::IncreaseVariableList()
     return true;
 }
 
-
 bool CPropertyScript::LoadScriptFile(char* filename)
 {
     int totalScriptLines = 0;
@@ -179,15 +170,15 @@ bool CPropertyScript::LoadScriptFile(char* filename)
     char param[3072];
     int type = 0;
 
-    // ƒtƒ@ƒCƒ‹‚ğŠJ‚¢‚ÄA‚»‚±‚©‚çs”‚ğæ“¾‚µ‚Ü‚·B
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã„ã¦ã€ãã“ã‹ã‚‰è¡Œæ•°ã‚’å–å¾—ã—ã¾ã™ã€‚
     input.open(filename);
-    if (!input.is_open()) 
+    if (!input.is_open())
         return false;
 
-    // ˆÈ‘O‚Ìƒf[ƒ^‚ğ‚·‚×‚ÄƒNƒŠƒA‚µ‚Ü‚·B
+    // ä»¥å‰ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã™ã¹ã¦ã‚¯ãƒªã‚¢ã—ã¾ã™ã€‚
     Shutdown();
 
-    // s”‚ğæ“¾‚µ‚Ü‚·B
+    // è¡Œæ•°ã‚’å–å¾—ã—ã¾ã™ã€‚
     while (!input.eof())
     {
         input.getline(tempLine, 256, '\n');
@@ -196,30 +187,30 @@ bool CPropertyScript::LoadScriptFile(char* filename)
 
     input.close();
 
-    // ¡‰ñ‚Í•Ï”‚ğæ‚èo‚µ‚Ü‚·B
+    // ä»Šå›ã¯å¤‰æ•°ã‚’å–ã‚Šå‡ºã—ã¾ã™ã€‚
     input2.open(filename);
-    if (!input2.is_open()) 
+    if (!input2.is_open())
         return false;
 
-    // ƒXƒNƒŠƒvƒg‚ÌŠes‚ğƒ‹[ƒv‚µ‚ÄA‚·‚×‚Ä‚Ì•Ï”‚ğæ“¾‚µ‚Ü‚·B
+    // ã‚¹ã‚¯ãƒªãƒ—ãƒˆã®å„è¡Œã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦ã€ã™ã¹ã¦ã®å¤‰æ•°ã‚’å–å¾—ã—ã¾ã™ã€‚
     for (int i = 0; i < totalScriptLines; i++)
     {
-        // ƒ‰ƒCƒ“ƒJƒEƒ“ƒ^[‚ğÅ‰‚ÉƒŠƒZƒbƒg‚µ‚Ü‚·B
+        // ãƒ©ã‚¤ãƒ³ã‚«ã‚¦ãƒ³ã‚¿ãƒ¼ã‚’æœ€åˆã«ãƒªã‚»ãƒƒãƒˆã—ã¾ã™ã€‚
         currentLineChar = 0;
 
-        // ƒtƒ@ƒCƒ‹‚©‚ç1s‚ğ“Ç‚İæ‚è‚Ü‚·B
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰1è¡Œã‚’èª­ã¿å–ã‚Šã¾ã™ã€‚
         input2.getline(tempLine, 256, '\n');
         tempLine[strlen(tempLine)] = '\0';
 
-        // ‚±‚ê‚ªƒRƒƒ“ƒg‚©‚Ç‚¤‚©‚ğŠm”F‚·‚éA‚È‚¢ê‡Œp‘±‚µ‚Ü‚·B
+        // ã“ã‚ŒãŒã‚³ãƒ¡ãƒ³ãƒˆã‹ã©ã†ã‹ã‚’ç¢ºèªã™ã‚‹ã€ãªã„å ´åˆç¶™ç¶šã—ã¾ã™ã€‚
         if (tempLine[0] != '#')
         {
-            // –¼‘O‚ğ“Ç‚İAƒ^ƒCƒv‚ğ”»•Ê‚µ‚Ü‚·B
+            // åå‰ã‚’èª­ã¿ã€ã‚¿ã‚¤ãƒ—ã‚’åˆ¤åˆ¥ã—ã¾ã™ã€‚
             ParseNext(tempLine, varName);
             type = DetermineType(currentLineChar, tempLine);
 
-            // ƒ^ƒCƒv‚É‚æ‚Á‚Ä‚ÍA–¼‘O‚ÌŒã‚É“Ç‚Ş•K—v‚Ì‚ ‚é’PŒê‚Ì”‚É‚æ‚Á‚ÄˆÙ‚È‚è‚Ü‚·B int‚Ìê‡‚Í1AƒxƒNƒgƒ‹3A•¶š—ñ1‚È‚Ç‚ª•K—v‚Å‚·B
-            // ƒf[ƒ^‚ğæ“¾‚µ‚½‚çA‚»‚ê‚ğ•K—v‚Èƒ^ƒCƒv‚É•ÏŠ·‚µA•Ï”‚Éİ’è‚µ‚Ü‚·B
+            // ã‚¿ã‚¤ãƒ—ã«ã‚ˆã£ã¦ã¯ã€åå‰ã®å¾Œã«èª­ã‚€å¿…è¦ã®ã‚ã‚‹å˜èªã®æ•°ã«ã‚ˆã£ã¦ç•°ãªã‚Šã¾ã™ã€‚ intã®å ´åˆã¯1ã€ãƒ™ã‚¯ãƒˆãƒ«3ã€æ–‡å­—åˆ—1ãªã©ãŒå¿…è¦ã§ã™ã€‚
+            // ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã—ãŸã‚‰ã€ãã‚Œã‚’å¿…è¦ãªã‚¿ã‚¤ãƒ—ã«å¤‰æ›ã—ã€å¤‰æ•°ã«è¨­å®šã—ã¾ã™ã€‚
             switch (type)
             {
             case INT_VAR:
@@ -270,51 +261,49 @@ bool CPropertyScript::LoadScriptFile(char* filename)
         }
     }
 
-    // ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚Ü‚·.
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã¾ã™.
     input2.close();
     return true;
 }
-
 
 void CPropertyScript::ParseNext(char* tempLine, char* outData)
 {
     int commandSize = 0;
     int paramSize = 0;
 
-    // ƒGƒ‰[ƒ`ƒFƒbƒN‚µ‚Ü‚·B
-    if (!tempLine || !outData) 
+    // ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯ã—ã¾ã™ã€‚
+    if (!tempLine || !outData)
         return;
 
-    // ”z—ñ‚ğ‰Šú‰»‚µ‚Ü‚·B
+    // é…åˆ—ã‚’åˆæœŸåŒ–ã—ã¾ã™ã€‚
     outData[0] = '\0';
 
-    // ƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚ÅA‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·B
+    // ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã€ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™ã€‚
     while (currentLineChar < (int)strlen(tempLine))
     {
         if (tempLine[currentLineChar] == ' ' || tempLine[currentLineChar] == '\n')
             break;
 
-        // ƒf[ƒ^‚ğ•Û‘¶
+        // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
         outData[paramSize] = tempLine[currentLineChar];
         paramSize++;
         currentLineChar++;
     }
 
-    // '\0'o—Í‚µ‚ÄAŸ‚ÌƒXƒy[ƒX‚Ü‚ÅˆÚ“®‚µ‚Ü‚·BƒXƒy[ƒX‚ª‚È‚¢ê‡AŸ‚Ìs‚ÉˆÚ“®‚µ‚Ü‚·B
+    // '\0'å‡ºåŠ›ã—ã¦ã€æ¬¡ã®ã‚¹ãƒšãƒ¼ã‚¹ã¾ã§ç§»å‹•ã—ã¾ã™ã€‚ã‚¹ãƒšãƒ¼ã‚¹ãŒãªã„å ´åˆã€æ¬¡ã®è¡Œã«ç§»å‹•ã—ã¾ã™ã€‚
     outData[paramSize] = '\0';
     currentLineChar++;
 }
 
-
 bool CPropertyScript::AddVariable(char* name, int t, void* val)
 {
-    // •Ï”‚ª‚·‚Å‚É‘¶İ‚·‚é‚©‚Ç‚¤‚©‚ğŠm”F‚µ‚Ü‚·B
+    // å¤‰æ•°ãŒã™ã§ã«å­˜åœ¨ã™ã‚‹ã‹ã©ã†ã‹ã‚’ç¢ºèªã—ã¾ã™ã€‚
     if (!SetVariable(name, t, val))
     {
-        if (!IncreaseVariableList()) 
+        if (!IncreaseVariableList())
             return false;
 
-        // •Ï”ƒf[ƒ^‚ğİ’è‚µ‚Ü‚·B
+        // å¤‰æ•°ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ã€‚
         variableList[m_totalVars].SetData(t, name, val);
         m_totalVars++;
     }
@@ -322,10 +311,9 @@ bool CPropertyScript::AddVariable(char* name, int t, void* val)
     return true;
 }
 
-
 bool CPropertyScript::SetVariable(char* name, int t, void* val)
 {
-    // ƒŠƒXƒg‚ğƒ‹[ƒv‚µ‚Ä–¼‘O‚ğ”äŠr‚µ‚Ü‚·B•Ï”‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA‚»‚Ìƒf[ƒ^‚ğİ’è‚µ‚Ü‚·B
+    // ãƒªã‚¹ãƒˆã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦åå‰ã‚’æ¯”è¼ƒã—ã¾ã™ã€‚å¤‰æ•°ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€ãã®ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ã€‚
     for (int i = 0; i < m_totalVars; i++)
     {
         if (_stricmp(variableList[i].GetName(), name) == 0)
@@ -338,10 +326,9 @@ bool CPropertyScript::SetVariable(char* name, int t, void* val)
     return false;
 }
 
-
 int CPropertyScript::GetVariableAsInt(char* name)
 {
-    // ƒŠƒXƒg‚ğƒ‹[ƒv‚µ‚Ä–¼‘O‚ğ”äŠr‚µ‚Ü‚·B•Ï”‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA‚»‚Ìƒf[ƒ^‚ğİ’è‚µ‚Ü‚·B
+    // ãƒªã‚¹ãƒˆã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦åå‰ã‚’æ¯”è¼ƒã—ã¾ã™ã€‚å¤‰æ•°ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€ãã®ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ã€‚
     for (int i = 0; i < m_totalVars; i++)
     {
         if (_stricmp(variableList[i].GetName(), name) == 0)
@@ -351,10 +338,9 @@ int CPropertyScript::GetVariableAsInt(char* name)
     return 0;
 }
 
-
 float CPropertyScript::GetVariableAsFloat(char* name)
 {
-    // ƒŠƒXƒg‚ğƒ‹[ƒv‚µ‚Ä–¼‘O‚ğ”äŠr‚µ‚Ü‚·B•Ï”‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA‚»‚Ìƒf[ƒ^‚ğİ’è‚µ‚Ü‚·B
+    // ãƒªã‚¹ãƒˆã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦åå‰ã‚’æ¯”è¼ƒã—ã¾ã™ã€‚å¤‰æ•°ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€ãã®ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ã€‚
     for (int i = 0; i < m_totalVars; i++)
     {
         if (_stricmp(variableList[i].GetName(), name) == 0)
@@ -364,10 +350,9 @@ float CPropertyScript::GetVariableAsFloat(char* name)
     return 0;
 }
 
-
 char* CPropertyScript::GetVariableAsString(char* name)
 {
-    // ƒŠƒXƒg‚ğƒ‹[ƒv‚µ‚Ä–¼‘O‚ğ”äŠr‚µ‚Ü‚·B•Ï”‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÍA‚»‚Ìƒf[ƒ^‚ğİ’è‚µ‚Ü‚·B
+    // ãƒªã‚¹ãƒˆã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦åå‰ã‚’æ¯”è¼ƒã—ã¾ã™ã€‚å¤‰æ•°ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã¯ã€ãã®ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã¾ã™ã€‚
     for (int i = 0; i < m_totalVars; i++)
     {
         if (_stricmp(variableList[i].GetName(), name) == 0)
@@ -377,12 +362,11 @@ char* CPropertyScript::GetVariableAsString(char* name)
     return NULL;
 }
 
-
 stVector CPropertyScript::GetVariableAsVector(char* name)
 {
     stVector null;
 
-    //ƒŠƒXƒg‚ğƒ‹[ƒv‚µ‚ÄA–¼‘O‚ğ”äŠr‚µ‚Ü‚·B•Ï”‚ªŒ©‚Â‚©‚Á‚½ê‡A‚»‚Ìƒf[ƒ^‚ğ•Ô‚µ‚Ü‚·B
+    //ãƒªã‚¹ãƒˆã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦ã€åå‰ã‚’æ¯”è¼ƒã—ã¾ã™ã€‚å¤‰æ•°ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã€ãã®ãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã—ã¾ã™ã€‚
     for (int i = 0; i < m_totalVars; i++)
     {
         if (_stricmp(variableList[i].GetName(), name) == 0)
@@ -392,11 +376,10 @@ stVector CPropertyScript::GetVariableAsVector(char* name)
     return null;
 }
 
-
 void CPropertyScript::Shutdown()
 {
-    // ƒŠƒXƒgíœ‚µ‚Ü‚·B
-    if (variableList) 
+    // ãƒªã‚¹ãƒˆå‰Šé™¤ã—ã¾ã™ã€‚
+    if (variableList)
         delete[] variableList;
     variableList = NULL;
 }

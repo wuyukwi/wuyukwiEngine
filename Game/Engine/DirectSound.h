@@ -1,7 +1,7 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: DirectSound.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/12
@@ -31,61 +31,57 @@ struct AUDIO_STATE
 {
     int Repeats;
 
-    IXAudio2SourceVoice* pSourceVoice;	// É\Å[ÉXÉ{ÉCÉX
-    BYTE* pDataAudio;					// ÉIÅ[ÉfÉBÉIÉfÅ[É^
-    DWORD SizeAudio;					// ÉIÅ[ÉfÉBÉIÉfÅ[É^ÉTÉCÉY
+    IXAudio2SourceVoice* pSourceVoice;	// „ÇΩ„Éº„Çπ„Éú„Ç§„Çπ
+    BYTE* pDataAudio;					// „Ç™„Éº„Éá„Ç£„Ç™„Éá„Éº„Çø
+    DWORD SizeAudio;					// „Ç™„Éº„Éá„Ç£„Ç™„Éá„Éº„Çø„Çµ„Ç§„Ç∫
 };
-
 
 class CDMSoundObject : public CSoundInterface
 {
-   public:
-      CDMSoundObject();
-      ~CDMSoundObject() { Shutdown(); }
+public:
+    CDMSoundObject();
+    ~CDMSoundObject() { Shutdown(); }
 
-      bool Initialize(const char* filepath);
-      bool AddSound(char* soundfile, int numRepeats, int& id);
-      bool SetupSoundParameters(int id, float dopplerFactor,float rolloffFactor,float minDist, float maxDist);
+    bool Initialize(const char* filepath);
+    bool AddSound(char* soundfile, int numRepeats, int& id);
+    bool SetupSoundParameters(int id, float dopplerFactor, float rolloffFactor, float minDist, float maxDist);
 
-      void Play(int id);
-      void UpdateSoundPosition(int id, float x, float y, float z);
-      void Stop(int id);
-      void Shutdown();
+    void Play(int id);
+    void UpdateSoundPosition(int id, float x, float y, float z);
+    void Stop(int id);
+    void Shutdown();
 
-   private:
+private:
     int IncreaseSounds();
 
     const char* m_filePath;
     bool m_comInit;
-    IXAudio2* m_pXAudio2;							// XAudio2ÉIÉuÉWÉFÉNÉgÇ÷ÇÃÉCÉìÉ^Å[ÉtÉFÉCÉX
-    IXAudio2MasteringVoice* pMasterVoice;			// É}ÉXÉ^Å[É{ÉCÉX
+    IXAudio2* m_pXAudio2;							// XAudio2„Ç™„Éñ„Ç∏„Çß„ÇØ„Éà„Å∏„ÅÆ„Ç§„É≥„Çø„Éº„Éï„Çß„Ç§„Çπ
+    IXAudio2MasteringVoice* pMasterVoice;			// „Éû„Çπ„Çø„Éº„Éú„Ç§„Çπ
     AUDIO_STATE* m_audioState;
     int m_totalSounds;
-
 };
-
 
 class CDirectMusicSystem : public CSoundSystemInterface
 {
-   public:
-      CDirectMusicSystem();
-      ~CDirectMusicSystem() { Shutdown(); }
+public:
+    CDirectMusicSystem();
+    ~CDirectMusicSystem() { Shutdown(); }
 
-      bool Initialize(const char* filepath);
-      bool AddSound(const char *soundfile, int numRepeats, int *id);
-      bool SetupSoundParameters(int id,float dopplerFactor,float rolloffFactor,float minDist, float maxDist);
+    bool Initialize(const char* filepath);
+    bool AddSound(const char* soundfile, int numRepeats, int* id);
+    bool SetupSoundParameters(int id, float dopplerFactor, float rolloffFactor, float minDist, float maxDist);
 
-      void Play(int id);
-      void UpdateSoundPosition(int id, float x,float y, float z);
-      void Stop(int id);
-      void Shutdown();
-      
+    void Play(int id);
+    void UpdateSoundPosition(int id, float x, float y, float z);
+    void Stop(int id);
+    void Shutdown();
 
-   private:
-      
-      CDMSoundObject *m_soundList;
+private:
+
+    CDMSoundObject* m_soundList;
 };
 
-bool CreateDMSound(CSoundInterface**pObj);
+bool CreateDMSound(CSoundInterface** pObj);
 
 #endif _DIRECTSOUND_H_

@@ -1,4 +1,4 @@
-// dear imgui: Renderer Backend for DirectX9
+﻿// dear imgui: Renderer Backend for DirectX9
 // This needs to be used along with a Platform Backend (e.g. Win32)
 
 // Implemented features:
@@ -46,7 +46,7 @@ struct ImGui_ImplDX9_Data
     int                         VertexBufferSize;
     int                         IndexBufferSize;
 
-    ImGui_ImplDX9_Data()        { memset(this, 0, sizeof(*this)); VertexBufferSize = 5000; IndexBufferSize = 10000; }
+    ImGui_ImplDX9_Data() { memset(this, 0, sizeof(*this)); VertexBufferSize = 5000; IndexBufferSize = 10000; }
 };
 
 struct CUSTOMVERTEX
@@ -129,10 +129,10 @@ static void ImGui_ImplDX9_SetupRenderState(ImDrawData* draw_data)
         D3DMATRIX mat_identity = { { { 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 0.0f, 1.0f } } };
         D3DMATRIX mat_projection =
         { { {
-            2.0f/(R-L),   0.0f,         0.0f,  0.0f,
-            0.0f,         2.0f/(T-B),   0.0f,  0.0f,
+            2.0f / (R - L),   0.0f,         0.0f,  0.0f,
+            0.0f,         2.0f / (T - B),   0.0f,  0.0f,
             0.0f,         0.0f,         0.5f,  0.0f,
-            (L+R)/(L-R),  (T+B)/(B-T),  0.5f,  1.0f
+            (L + R) / (L - R),  (T + B) / (B - T),  0.5f,  1.0f
         } } };
         bd->pd3dDevice->SetTransform(D3DTS_WORLD, &mat_identity);
         bd->pd3dDevice->SetTransform(D3DTS_VIEW, &mat_identity);

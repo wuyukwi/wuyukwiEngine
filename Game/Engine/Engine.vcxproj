@@ -160,10 +160,11 @@
     <ClInclude Include="InputInterface.h" />
     <ClInclude Include="LogSystem.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="objLoader.h" />
     <ClInclude Include="PropertyScript.h" />
     <ClInclude Include="Route.h" />
-    <ClInclude Include="ScltMath.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="D3D9Renderer.h" />
     <ClInclude Include="defines.h" />
@@ -182,7 +183,6 @@
     <ClInclude Include="RenderInterface.h" />
     <ClInclude Include="SoundInterface.h" />
     <ClInclude Include="Token.h" />
-    <ClInclude Include="UMFLoader.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="XMesh.h" />
@@ -195,6 +195,7 @@
     <ClCompile Include="DirectSound.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="LogSystem.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="objLoader.cpp" />
     <ClCompile Include="PropertyScript.cpp" />
     <ClCompile Include="Route.cpp" />
@@ -210,7 +211,6 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="Token.cpp" />
-    <ClCompile Include="UMFLoader.cpp" />
     <ClCompile Include="XMesh.cpp" />
     <ClCompile Include="XStructures.cpp" />
   </ItemGroup>

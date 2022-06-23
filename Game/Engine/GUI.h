@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: GUI.h
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/05
@@ -12,64 +12,64 @@
 #define _GUI_H_
 
 #include "defines.h"
+#include <vector>
 
 struct stGUIControl
 {
-    // ƒ{ƒ^ƒ“ƒ^ƒCƒvAƒJƒ‰[
+    // ãƒœã‚¿ãƒ³ã‚¿ã‚¤ãƒ—ã€ã‚«ãƒ©ãƒ¼
     int m_type, m_id;
     unsigned long m_color;
 
-    // ƒeƒLƒXƒg‚Ìê‡A‚±‚ê‚ÍƒtƒHƒ“ƒgID‚Å‚ ‚èA‚»‚êˆÈŠO‚Ìê‡‚ÍÃ“Iƒoƒbƒtƒ@[ID‚Å‚·
+    // ãƒ†ã‚­ã‚¹ãƒˆã®å ´åˆã€ã“ã‚Œã¯ãƒ•ã‚©ãƒ³ãƒˆIDã§ã‚ã‚Šã€ãã‚Œä»¥å¤–ã®å ´åˆã¯é™çš„ãƒãƒƒãƒ•ã‚¡ãƒ¼IDã§ã™
     int m_listID;
 
-    // ƒIƒuƒWƒFƒNƒg‚ÌˆÊ’uAƒ{ƒ^ƒ“‚Ì•‚Æ‚‚³
+    // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½ç½®ã€ãƒœã‚¿ãƒ³ã®å¹…ã¨é«˜ã•
     int m_xPos, m_yPos, m_width, m_height;
 
-    // ƒeƒLƒXƒg
+    // ãƒ†ã‚­ã‚¹ãƒˆ
     char* m_text;
 
-    //ƒ{ƒ^ƒ“‚ÌƒAƒbƒvAƒ_ƒEƒ“AƒI[ƒo[ƒeƒNƒXƒ`ƒƒB m_upTex‚Í”wŒi‰æ‘œ‚É‚àg—p‚³‚ê‚Ü‚·
+    //ãƒœã‚¿ãƒ³ã®ã‚¢ãƒƒãƒ—ã€ãƒ€ã‚¦ãƒ³ã€ã‚ªãƒ¼ãƒãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã€‚ m_upTexã¯èƒŒæ™¯ç”»åƒã«ã‚‚ä½¿ç”¨ã•ã‚Œã¾ã™
     int m_upTex, m_downTex, m_overTex;
 };
-
 
 class CGUISystem
 {
 public:
-    CGUISystem() : m_controls(0), m_totalControls(0),m_backDropID(-1) {}
+    CGUISystem() : m_backDropID(-1) {}
     ~CGUISystem() { Shutdown(); }
 
     int IncreaseControls();
 
     bool AddBackdrop(int texID, int staticID);
-    bool AddStaticText(int id, const char* text, int x, int y,unsigned long color, int fontID);
-    bool AddButton(int id, int x, int y, int width,int height, int upID, int overID,int downID, int staticID);
+    bool AddStaticText(int id, const char* text, int x, int y, unsigned long color, int fontID);
+    bool AddButton(int id, int x, int y, int width, int height, int upID, int overID, int downID, int staticID);
     void Shutdown();
 
-    stGUIControl* GetGUIControl(int id)
+    stGUIControl* GetGUIControl(size_t id)
     {
-        if (id < 0 || id >= m_totalControls) 
-            return NULL;
+        if (id < 0 || id >= m_controls.size())
+            return nullptr;
 
         return &m_controls[id];
     }
 
-    int GetTotalControls()
+    int GetTotalControls() const
     {
-        return m_totalControls;
+        return m_controls.size();
     }
 
     stGUIControl* GetBackDrop()
     {
-        if (m_backDropID >= 0 && m_totalControls)
+        if (m_backDropID >= 0 && !m_controls.empty())
             return &m_controls[m_backDropID];
 
-        return NULL;
+        return nullptr;
     }
 
 private:
-    stGUIControl* m_controls;
-    int m_totalControls;
+
+    std::vector<stGUIControl> m_controls{};
     int m_backDropID;
 };
 

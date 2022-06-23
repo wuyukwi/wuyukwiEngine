@@ -1,12 +1,10 @@
-/*
+﻿/*
    Demo Name:  Game Project 13
       Author:  Allen Sherrod
      Chapter:  Chapter 15
 */
 
-
 #include"Frustum.h"
-
 
 //void CFrustum::CalculateFrustum(float *mv, float *proj)
 //{
@@ -36,7 +34,7 @@
 //	clip[13] = mv[12] * proj[1] + mv[13] * proj[5] + mv[14] * proj[9]  + mv[15] * proj[13];
 //	clip[14] = mv[12] * proj[2] + mv[13] * proj[6] + mv[14] * proj[10] + mv[15] * proj[14];
 //	clip[15] = mv[12] * proj[3] + mv[13] * proj[7] + mv[14] * proj[11] + mv[15] * proj[15];
-//	
+//
 //
 //	// Calculate the right side of the frustum.
 //   Frustum[0].a = clip[3]  - clip[0];
@@ -86,8 +84,8 @@
 //   // Loop through each side of the frustum and normalize it.
 //   for(int i = 0; i < MAX_SIDES; i++)
 //      {
-//         magnitude = (float)sqrt(Frustum[i].a * Frustum[i].a + 
-//			   		               Frustum[i].b * Frustum[i].b + 
+//         magnitude = (float)sqrt(Frustum[i].a * Frustum[i].a +
+//			   		               Frustum[i].b * Frustum[i].b +
 //						               Frustum[i].c * Frustum[i].c);
 //         magnitude = 1 / magnitude;
 //
@@ -144,14 +142,14 @@
 //   for(int i = 0; i < MAX_SIDES; i++)
 //      {
 //         if(Frustum[i].GetDistance(minX, minY, minZ) > 0) continue;
-//         if(Frustum[i].GetDistance(maxX, minY, minZ) > 0) continue;   
-//         if(Frustum[i].GetDistance(minX, maxY, minZ) > 0) continue;   
-//         if(Frustum[i].GetDistance(maxX, maxY, minZ) > 0) continue;   
-//         if(Frustum[i].GetDistance(minX, minY, maxZ) > 0) continue;   
-//         if(Frustum[i].GetDistance(maxX, minY, maxZ) > 0) continue;   
-//         if(Frustum[i].GetDistance(minX, maxY, maxZ) > 0) continue;   
+//         if(Frustum[i].GetDistance(maxX, minY, minZ) > 0) continue;
+//         if(Frustum[i].GetDistance(minX, maxY, minZ) > 0) continue;
+//         if(Frustum[i].GetDistance(maxX, maxY, minZ) > 0) continue;
+//         if(Frustum[i].GetDistance(minX, minY, maxZ) > 0) continue;
+//         if(Frustum[i].GetDistance(maxX, minY, maxZ) > 0) continue;
+//         if(Frustum[i].GetDistance(minX, maxY, maxZ) > 0) continue;
 //         if(Frustum[i].GetDistance(maxX, maxY, maxZ) > 0) continue;
-//         
+//
 //         return false;
 //      }
 //

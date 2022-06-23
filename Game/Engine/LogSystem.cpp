@@ -1,77 +1,65 @@
-/*
-   Demo Name:  Game Project 13
-      Author:  Allen Sherrod
-     Chapter:  Chapter 15
-*/
+﻿#include"LogSystem.h"
 
-
-#include"LogSystem.h"
-
-
-bool CLogSystem::ClearLog(const char *filename)
+bool CLogSystem::ClearLog(const char* filename)
 {
-   errorLog.open(filename, std::ios::out);
+    errorLog.open(filename, std::ios::out);
 
-   if(!Write(errorLog, ""))
-      return false;
-   
-   errorLog.close();
+    if (!Write(errorLog, ""))
+        return false;
 
-   return true;
+    errorLog.close();
+
+    return true;
 }
 
-
-bool CLogSystem::WriteLog(const char *filename, const char *message, ...)
+bool CLogSystem::WriteLog(const char* filename, const char* message, ...)
 {
-   va_list args;
-   va_start(args, message);
-   
-   errorLog.open(filename, std::ios::out);
+    va_list args;
+    va_start(args, message);
 
-   if(!Write(errorLog, message, args)) return false;
-   
-   errorLog.close();
-   return true;
+    errorLog.open(filename, std::ios::out);
+
+    if (!Write(errorLog, message, args)) return false;
+
+    errorLog.close();
+    return true;
 }
 
-
-bool CLogSystem::AppendLog(const char *filename, const char *message, ...)
+bool CLogSystem::AppendLog(const char* filename, const char* message, ...)
 {
-   va_list args;
-   va_start(args, message);
-   
-   errorLog.open(filename, std::ios::app);
+    va_list args;
+    va_start(args, message);
 
-   if(!Write(errorLog, message, args)) return false;
+    errorLog.open(filename, std::ios::app);
 
-   errorLog.close();
-   return true;
+    if (!Write(errorLog, message, args)) return false;
+
+    errorLog.close();
+    return true;
 }
 
-
-bool CLogSystem::Write(std::ofstream &file, const char *message)
+bool CLogSystem::Write(std::ofstream& file, const char* message)
 {
-   file << message;
-   #ifdef DEBUG
-      file.flush();
-   #endif
+    file << message;
+#ifdef DEBUG
+    file.flush();
+#endif
 
-   return true;
+    return true;
 }
 
-
-bool CLogSystem::Write(std::ofstream &file, const char *message, va_list &args)
+bool CLogSystem::Write(std::ofstream& file, const char* message, va_list& args)
 {
-   char buffer[1024];
-   
-   if(!file.is_open()) return false;
-   
-   vsprintf(buffer, message, args);
+    char buffer[1024];
 
-   file << buffer;
-   #ifdef DEBUG
-      file.flush();
-   #endif
+    if (!file.is_open()) return false;
 
-   return true;
+    vsprintf(buffer, message, args);
+
+    file << buffer;
+#ifdef DEBUG
+    file.flush();
+#endif
+
+    return true;
 }

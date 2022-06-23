@@ -99,9 +99,6 @@
     <ClInclude Include="objLoader.h">
       <Filter>meshLoad</Filter>
     </ClInclude>
-    <ClInclude Include="UMFLoader.h">
-      <Filter>meshLoad</Filter>
-    </ClInclude>
     <ClInclude Include="Route.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -132,14 +129,17 @@
     <ClInclude Include="common.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="ScltMath.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="Vector.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>D3D9</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>D3D9</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -185,9 +185,6 @@
     <ClCompile Include="objLoader.cpp">
       <Filter>meshLoad</Filter>
     </ClCompile>
-    <ClCompile Include="UMFLoader.cpp">
-      <Filter>meshLoad</Filter>
-    </ClCompile>
     <ClCompile Include="Route.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -214,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="LogSystem.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>D3D9</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

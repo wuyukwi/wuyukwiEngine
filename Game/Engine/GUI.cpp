@@ -1,7 +1,7 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: GUI.cpp
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/05
@@ -10,62 +10,28 @@
 
 #include "GUI.h"
 
-// m_controlÇÃîzóÒÇëùÇ‚Ç∑
-int CGUISystem::IncreaseControls()
-{
-    if (!m_controls)
-    {
-        m_controls = new stGUIControl[1];
-
-        if (!m_controls) 
-            return UGP_FAIL;
-
-        memset(&m_controls[0], 0, sizeof(stGUIControl));
-    }
-    else
-    {
-        stGUIControl* temp;
-        temp = new stGUIControl[m_totalControls + 1];
-
-        if (!temp) 
-            return UGP_FAIL;
-
-        memset(temp, 0, sizeof(stGUIControl) *(m_totalControls + 1));
-
-        memcpy(temp, m_controls,sizeof(stGUIControl) * m_totalControls);
-
-        delete[] m_controls;
-        m_controls = temp;
-    }
-
-    return UGP_OK;
-}
-
-
 bool CGUISystem::AddBackdrop(int texID, int sID)
 {
-    if (texID < 0 || sID < 0) 
+    if (texID < 0 || sID < 0)
         return false;
 
     if (m_backDropID < 0)
     {
-         // êVÇµÇ¢ÉRÉìÉgÉçÅ[ÉâÅ[îzóÒÇçÏê¨
-        if (!IncreaseControls()) 
-            return false;
+        stGUIControl control{};
 
-        // ïKóvÇ»èÓïÒÇï€ë∂
-        m_controls[m_totalControls].m_type = UGP_GUI_BACKDROP;
-        m_controls[m_totalControls].m_upTex = texID;
-        m_controls[m_totalControls].m_listID = sID;
+        // ÂøÖË¶Å„Å™ÊÉÖÂ†±„Çí‰øùÂ≠ò
+        control.m_type = UGP_GUI_BACKDROP;
+        control.m_upTex = texID;
+        control.m_listID = sID;
 
-        //Ç«ÇÃÉCÉìÉfÉbÉNÉXÇ™îwåiÇ≈Ç†ÇÈÇ©Çí«ê’óp
-        m_backDropID = m_totalControls;
+        //„Å©„ÅÆ„Ç§„É≥„Éá„ÉÉ„ÇØ„Çπ„ÅåËÉåÊôØ„Åß„ÅÇ„Çã„Åã„ÇíËøΩË∑°Áî®
+        m_backDropID = m_controls.size();
 
-        m_totalControls++;
+        this->m_controls.push_back(control);
     }
     else
     {
-        //// IDÇï€ë∂Ç∑ÇÈÇæÇØ
+        //// ID„Çí‰øùÂ≠ò„Åô„Çã„Å†„Åë
         m_controls[m_backDropID].m_upTex = texID;
         m_controls[m_backDropID].m_listID = sID;
     }
@@ -73,74 +39,62 @@ bool CGUISystem::AddBackdrop(int texID, int sID)
     return true;
 }
 
-
-bool CGUISystem::AddStaticText(int id, const char* text, int x, int y,unsigned long color, int fontID)
+bool CGUISystem::AddStaticText(int id, const char* text, int x, int y, unsigned long color, int fontID)
 {
-    if (!text || fontID < 0) 
+    if (!text || fontID < 0)
         return false;
 
-    // êVÇµÇ¢ÉRÉìÉgÉçÅ[ÉâÅ[îzóÒÇçÏê¨
-    if (!IncreaseControls()) 
-        return false;
+    stGUIControl control{};
 
-    // ÉeÉLÉXÉgïKóvÇÃèÓïÒÇï€ë∂
-    m_controls[m_totalControls].m_type = UGP_GUI_STATICTEXT;
-    m_controls[m_totalControls].m_id = id;
-    m_controls[m_totalControls].m_color = color;
-    m_controls[m_totalControls].m_xPos = x;
-    m_controls[m_totalControls].m_yPos = y;
-    m_controls[m_totalControls].m_listID = fontID;
+    // „ÉÜ„Ç≠„Çπ„ÉàÂøÖË¶Å„ÅÆÊÉÖÂ†±„Çí‰øùÂ≠ò
+    control.m_type = UGP_GUI_STATICTEXT;
+    control.m_id = id;
+    control.m_color = color;
+    control.m_xPos = x;
+    control.m_yPos = y;
+    control.m_listID = fontID;
 
-    // ÉfÅ[É^ÇÉRÉsÅ[Ç∑ÇÈ
+    // „Éá„Éº„Çø„Çí„Ç≥„Éî„Éº„Åô„Çã
     int len = strlen(text);
-    m_controls[m_totalControls].m_text = new char[len + 1];
+    control.m_text = new char[len + 1];
 
-    if (!m_controls[m_totalControls].m_text) 
+    if (!control.m_text)
         return false;
 
-    memcpy(m_controls[m_totalControls].m_text, text, len);
-    m_controls[m_totalControls].m_text[len] = '\0';
+    memcpy(control.m_text, text, len);
+    control.m_text[len] = '\0';
 
-    m_totalControls++;
+    this->m_controls.push_back(control);
 
     return true;
 }
 
-
-bool CGUISystem::AddButton(int id, int x, int y, int width,int height, int upID, int overID,int downID, int staticID)
+bool CGUISystem::AddButton(int id, int x, int y, int width, int height, int upID, int overID, int downID, int staticID)
 {
-    // êVÇµÇ¢ÉRÉìÉgÉçÅ[ÉâÅ[îzóÒÇçÏê¨
-    if (!IncreaseControls()) 
-        return false;
+    stGUIControl control{};
 
-    //  É{É^ÉìïKóvÇÃèÓïÒÇï€ë∂
-    m_controls[m_totalControls].m_type = UGP_GUI_BUTTON;
-    m_controls[m_totalControls].m_id = id;
-    m_controls[m_totalControls].m_xPos = x;
-    m_controls[m_totalControls].m_yPos = y;
-    m_controls[m_totalControls].m_width = width;
-    m_controls[m_totalControls].m_height = height;
-    m_controls[m_totalControls].m_upTex = upID;
-    m_controls[m_totalControls].m_overTex = overID;
-    m_controls[m_totalControls].m_downTex = downID;
-    m_controls[m_totalControls].m_listID = staticID;
+    //  „Éú„Çø„É≥ÂøÖË¶Å„ÅÆÊÉÖÂ†±„Çí‰øùÂ≠ò
+    control.m_type = UGP_GUI_BUTTON;
+    control.m_id = id;
+    control.m_xPos = x;
+    control.m_yPos = y;
+    control.m_width = width;
+    control.m_height = height;
+    control.m_upTex = upID;
+    control.m_overTex = overID;
+    control.m_downTex = downID;
+    control.m_listID = staticID;
 
-    m_totalControls++;
+    this->m_controls.push_back(control);
 
     return true;
 }
-
 
 void CGUISystem::Shutdown()
 {
-    // ëSÇƒÇÃÉäÉ\Å[ÉXÇÉäÉäÅ[ÉX
-    for (int s = 0; s < m_totalControls; s++)
-    {   
+    // ÂÖ®„Å¶„ÅÆ„É™„ÇΩ„Éº„Çπ„Çí„É™„É™„Éº„Çπ
+    for (uint32_t s = 0; s < m_controls.size(); s++)
+    {
         SAFE_DELETE_ARRAY(m_controls[s].m_text);
     }
-
-    m_totalControls = 0;
-
-    SAFE_DELETE_ARRAY(m_controls);
-  
 }

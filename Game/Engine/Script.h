@@ -1,13 +1,12 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: Script.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/02
 
 **********************************************************************************/
-
 
 #ifndef _SCRIPT_H_
 #define _SCRIPT_H_
@@ -20,32 +19,32 @@
 
 class CScript
 {
-   public:
-      CScript();
-      ~CScript();
-      
-      bool LoadScriptFile(const char *filename);
-      void ParseCommand(char *destCommand);
-      void ParseStringParam(char *destString);
-      bool ParseBoolParam();
-      int ParseIntParam();
-      float ParseFloatParam();
-      void ParseSoundFileParan(char* destString, int* repeats);
-      void Shutdown();
+public:
+    CScript();
+    ~CScript();
 
-      void MoveToStart();
-      void MoveToNextLine();
-      int GetCurrentLineNum();
-      int GetTotalLines();
-      bool IsLineComment();
+    bool LoadScriptFile(const char* filename);
+    void ParseCommand(char* destCommand);
+    void ParseStringParam(char* destString);
+    bool ParseBoolParam();
+    int ParseIntParam();
+    float ParseFloatParam();
+    void ParseSoundFileParan(char* destString, int* repeats);
+    void Shutdown();
 
-      bool SaveScript(const char* filename, const char** data, int currentLine, int currentLineChar);
+    void MoveToStart();
+    void MoveToNextLine();
+    int GetCurrentLineNum();
+    int GetTotalLines();
+    bool IsLineComment();
 
-   private:
-      int totalScriptLines;
-      int currentLine;
-      int currentLineChar;
-      char **m_script;
+    bool SaveScript(const char* filename, const char** data, int currentLine, int currentLineChar);
+
+private:
+    int totalScriptLines;
+    int currentLine;
+    int currentLineChar;
+    char** m_script;
 };
 
 #endif

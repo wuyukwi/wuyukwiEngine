@@ -1,13 +1,12 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: XStructures.h
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/15
 
 **********************************************************************************/
-
 
 #ifndef _X_ALLOCATE_
 #define _X_ALLOCATE_
@@ -15,40 +14,39 @@
 #include<d3d9.h>
 #include<d3dx9.h>
 
-
-struct stD3DFrameDerived: public D3DXFRAME
+struct stD3DFrameDerived : public D3DXFRAME
 {
-   D3DXMATRIX finalMatrix;  //s—ñ•ÏŠ·Œã‚Ìƒ}ƒgƒŠƒbƒNƒX
+    D3DXMATRIX finalMatrix;  //è¡Œåˆ—å¤‰æ›å¾Œã®ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
 };
 
 //--------------------------------------------------------------------------------------
-// D3DXMESHCONTAINER‚©‚ç”h¶‚µ‚½\‘¢AŠeƒƒbƒVƒ…‚É•Û‘¶‚³‚ê‚½ŒÅ—L‚Ìî•ñ‚ğ’Ç‰Á‚Å‚«‚Ü‚·
+// D3DXMESHCONTAINERã‹ã‚‰æ´¾ç”Ÿã—ãŸæ§‹é€ ã€å„ãƒ¡ãƒƒã‚·ãƒ¥ã«ä¿å­˜ã•ã‚ŒãŸå›ºæœ‰ã®æƒ…å ±ã‚’è¿½åŠ ã§ãã¾ã™
 //--------------------------------------------------------------------------------------
-struct stD3DContainerDerived: public D3DXMESHCONTAINER
+struct stD3DContainerDerived : public D3DXMESHCONTAINER
 {
-   //LPDIRECT3DTEXTURE9 *textures;
-   //D3DMATERIAL9 *mat;
-   //LPD3DXMESH originalMesh;
-   //D3DXMATRIX **boneMatrices;
+    //LPDIRECT3DTEXTURE9 *textures;
+    //D3DMATERIAL9 *mat;
+    //LPD3DXMESH originalMesh;
+    //D3DXMATRIX **boneMatrices;
 
-   //ƒeƒNƒXƒ`ƒƒ
-   LPDIRECT3DTEXTURE9* ppTextures;
+    //ãƒ†ã‚¯ã‚¹ãƒãƒ£
+    LPDIRECT3DTEXTURE9* ppTextures;
 
-   //ƒƒbƒVƒ…         
-   LPD3DXMESH pOrigMesh;					// ƒIƒŠƒWƒiƒ‹ƒƒbƒVƒ…
-   LPD3DXATTRIBUTERANGE pAttributeTable;	// ‘®«ƒe[ƒuƒ‹ƒGƒ“ƒgƒŠ
-   DWORD NumAttributeGroups;				// ƒ{[ƒ“‚Ì”
-   DWORD NumInfl;							// ‚P‚Â‚Ì’¸“_‚É‰e‹¿‚ğ‹y‚Ú‚·d‚İ‚Ì”
-   LPD3DXBUFFER pBoneCombinationBuf;		// ƒ{[ƒ“ƒf[ƒ^‚ªŠi”[‚³‚ê‚½ƒoƒbƒtƒ@
-   D3DXMATRIX** ppBoneMatrixPtrs;			// ƒ{[ƒ“ƒ}ƒgƒŠƒNƒX
-   D3DXMATRIX* pBoneOffsetMatrices;		// ƒ{[ƒ“‰Šúƒ}ƒgƒŠƒNƒX
-   DWORD NumPaletteEntries;				// ƒ{[ƒ“Å‘å’l
-   bool UseSoftwareVP;						// ƒ\ƒtƒgƒEƒFƒAg‚¤‚©‚Ç‚¤‚©
-   DWORD iAttributeSW;						// ƒCƒ“ƒfƒbƒNƒX•t‚¯‚³‚ê‚Ä‚¢‚È‚¢ƒXƒLƒjƒ“ƒO‚É•K—v‚Èê‡‚ÍASW‚ÆHW‚ÌŠÔ‚Ì•ªŠ„‚ğ¦‚·‚½‚ß‚Ég—p‚³‚ê‚Ü‚·
+    //ãƒ¡ãƒƒã‚·ãƒ¥
+    LPD3DXMESH pOrigMesh;					// ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒ¡ãƒƒã‚·ãƒ¥
+    LPD3DXATTRIBUTERANGE pAttributeTable;	// å±æ€§ãƒ†ãƒ¼ãƒ–ãƒ«ã‚¨ãƒ³ãƒˆãƒª
+    DWORD NumAttributeGroups;				// ãƒœãƒ¼ãƒ³ã®æ•°
+    DWORD NumInfl;							// ï¼‘ã¤ã®é ‚ç‚¹ã«å½±éŸ¿ã‚’åŠã¼ã™é‡ã¿ã®æ•°
+    LPD3DXBUFFER pBoneCombinationBuf;		// ãƒœãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿ãŒæ ¼ç´ã•ã‚ŒãŸãƒãƒƒãƒ•ã‚¡
+    D3DXMATRIX** ppBoneMatrixPtrs;			// ãƒœãƒ¼ãƒ³ãƒãƒˆãƒªã‚¯ã‚¹
+    D3DXMATRIX* pBoneOffsetMatrices;		// ãƒœãƒ¼ãƒ³åˆæœŸãƒãƒˆãƒªã‚¯ã‚¹
+    DWORD NumPaletteEntries;				// ãƒœãƒ¼ãƒ³æœ€å¤§å€¤
+    bool UseSoftwareVP;						// ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ä½¿ã†ã‹ã©ã†ã‹
+    DWORD iAttributeSW;						// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ã‘ã•ã‚Œã¦ã„ãªã„ã‚¹ã‚­ãƒ‹ãƒ³ã‚°ã«å¿…è¦ãªå ´åˆã¯ã€SWã¨HWã®é–“ã®åˆ†å‰²ã‚’ç¤ºã™ãŸã‚ã«ä½¿ç”¨ã•ã‚Œã¾ã™
 };
 
 //--------------------------------------------------------------------------------------
-// xƒtƒ@ƒCƒ‹‚©‚çƒƒbƒVƒ…ƒf[ƒ^“Ç‚İ‚İ—p
+// xãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ç”¨
 //--------------------------------------------------------------------------------------
 class CAllocateHierarchy : public ID3DXAllocateHierarchy
 {
@@ -56,22 +54,21 @@ private:
     HRESULT AllocateName(LPCSTR Name, LPSTR* pNewName);
     HRESULT GenerateSkinnedMesh(IDirect3DDevice9* pd3dDevice, stD3DContainerDerived* pMeshContainer);
 
-   public:	
-	   STDMETHOD(CreateFrame)(THIS_ LPCSTR Name, LPD3DXFRAME* ppNewFrame);
-	   STDMETHOD(CreateMeshContainer)(THIS_
-		   LPCSTR Name,
-		   CONST D3DXMESHDATA* pMeshData,
-		   CONST D3DXMATERIAL* pMaterials,
-		   CONST D3DXEFFECTINSTANCE* pEffectInstances,
-		   DWORD NumMaterials,
-		   CONST DWORD* pAdjacency,
-		   LPD3DXSKININFO pSkinInfo,
-		   LPD3DXMESHCONTAINER* ppNewMeshContainer);
-	   STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pInFrame);
-	   STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerBase);
+public:
+    STDMETHOD(CreateFrame)(THIS_ LPCSTR Name, LPD3DXFRAME* ppNewFrame);
+    STDMETHOD(CreateMeshContainer)(THIS_
+        LPCSTR Name,
+        CONST D3DXMESHDATA* pMeshData,
+        CONST D3DXMATERIAL* pMaterials,
+        CONST D3DXEFFECTINSTANCE* pEffectInstances,
+        DWORD NumMaterials,
+        CONST DWORD* pAdjacency,
+        LPD3DXSKININFO pSkinInfo,
+        LPD3DXMESHCONTAINER* ppNewMeshContainer);
+    STDMETHOD(DestroyFrame)(THIS_ LPD3DXFRAME pInFrame);
+    STDMETHOD(DestroyMeshContainer)(THIS_ LPD3DXMESHCONTAINER pMeshContainerBase);
 
-	   CAllocateHierarchy() {}
-
+    CAllocateHierarchy() {}
 };
 
 #endif

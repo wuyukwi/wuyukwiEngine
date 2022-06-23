@@ -1,29 +1,27 @@
-/*
+﻿/*
    Demo Name:  Game Project 13
       Author:  Allen Sherrod
      Chapter:  Chapter 15
 */
-
 
 #ifndef _FRUSTUM_H_
 #define _FRUSTUM_H_
 
 #define MAX_SIDES       6
 
-
 class CFrustum
 {
-   public:
-      void CalculateFrustum(float *mv, float *proj);
-      bool isPointVisiable(float x, float y, float z);
-      bool isSphereVisiable(float x, float y, float z, float radius);
-      bool isBoxVisiable(float x, float y, float z, float size);
+public:
+    void CalculateFrustum(float* mv, float* proj);
+    bool isPointVisiable(float x, float y, float z);
+    bool isSphereVisiable(float x, float y, float z, float radius);
+    bool isBoxVisiable(float x, float y, float z, float size);
 
-   protected:
-      void NormalizeFrustum();
+protected:
+    void NormalizeFrustum();
 
-   protected:
-      //CPlane Frustum[MAX_SIDES];
+protected:
+    //CPlane Frustum[MAX_SIDES];
 };
 
 #endif

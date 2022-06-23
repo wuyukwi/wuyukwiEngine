@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: Script.cpp
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/11
@@ -11,137 +11,132 @@
 #include"Script.h"
 #include<fstream>
 
-
-CScript::CScript() : totalScriptLines(0), currentLine(0),currentLineChar(0), m_script(0)
+CScript::CScript() : totalScriptLines(0), currentLine(0), currentLineChar(0), m_script(0)
 {
-
 }
-
 
 CScript::~CScript()
 {
-   Shutdown();
+    Shutdown();
 }
 
-
-bool CScript::LoadScriptFile(const char *filename)
+bool CScript::LoadScriptFile(const char* filename)
 {
-   std::ifstream input, input2;
-   char tempLine[MAX_LINE_SIZE];
-   
-   input.open(filename);
-   if(!input.is_open()) 
-       return false;
-   
-   Shutdown();
+    std::ifstream input, input2;
+    char tempLine[MAX_LINE_SIZE];
 
-   // ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğŠJ‚­s‚²‚Ææ“¾‚·‚é
-   while(!input.eof())
-      {
-         input.getline(tempLine, MAX_LINE_SIZE, '\n');
-         totalScriptLines++;
-      }
-   
-   input.close();
-   
-   input2.open(filename);
-   if(!input2.is_open()) 
-       return false;
-   
-   // ƒeƒLƒXƒg‚Ì‚·‚×‚Ä‚Ìs‚ğƒ[ƒh‚·‚é
-   m_script = new char*[totalScriptLines];
-   
-   for(int i = 0; i < totalScriptLines; i++)
-      {
-         m_script[i] = new char[MAX_LINE_SIZE + 1];
-         input2.getline(m_script[i], MAX_LINE_SIZE, '\n');
-      }
-   
-   input2.close();
-   return true;
+    input.open(filename);
+    if (!input.is_open())
+        return false;
+
+    Shutdown();
+
+    // ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãè¡Œã”ã¨å–å¾—ã™ã‚‹
+    while (!input.eof())
+    {
+        input.getline(tempLine, MAX_LINE_SIZE, '\n');
+        totalScriptLines++;
+    }
+
+    input.close();
+
+    input2.open(filename);
+    if (!input2.is_open())
+        return false;
+
+    // ãƒ†ã‚­ã‚¹ãƒˆã®ã™ã¹ã¦ã®è¡Œã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+    m_script = new char* [totalScriptLines];
+
+    for (int i = 0; i < totalScriptLines; i++)
+    {
+        m_script[i] = new char[MAX_LINE_SIZE + 1];
+        input2.getline(m_script[i], MAX_LINE_SIZE, '\n');
+    }
+
+    input2.close();
+    return true;
 }
 
-
-void CScript::ParseCommand(char *destCommand)
+void CScript::ParseCommand(char* destCommand)
 {
-    //‚±‚ÌŠÖ”‚ÍAŒ»İ‚Ìs‚ÌÅ‰‚Ì’PŒê‚ğæ“¾‚µA‚»‚ê‚ğdestCommand‚É•Û‘¶‚µ‚Ü‚·B
+    //ã“ã®é–¢æ•°ã¯ã€ç¾åœ¨ã®è¡Œã®æœ€åˆã®å˜èªã‚’å–å¾—ã—ã€ãã‚Œã‚’destCommandã«ä¿å­˜ã—ã¾ã™ã€‚
 
-   int commandSize = 0;
+    int commandSize = 0;
 
-   // destcommand‚ªNULL‚Ìê‡As‚ªƒI[ƒo[‚µ‚Ä‚¢‚éê‡A‚Ü‚½‚ÍŒ»İ‚Ìs‚ÌI‚í‚è‚É‚ ‚éê‡‚ÍA–ß‚è‚Ü‚·B
-   if(!destCommand) 
-       return;
-   if(currentLine >= totalScriptLines) 
-       return;
-   /*if(currentLineChar >= (int)strlen(m_script[currentLine])) 
-       return;*/
+    // destcommandãŒNULLã®å ´åˆã€è¡ŒãŒã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹å ´åˆã€ã¾ãŸã¯ç¾åœ¨ã®è¡Œã®çµ‚ã‚ã‚Šã«ã‚ã‚‹å ´åˆã¯ã€æˆ»ã‚Šã¾ã™ã€‚
+    if (!destCommand)
+        return;
+    if (currentLine >= totalScriptLines)
+        return;
+    /*if(currentLineChar >= (int)strlen(m_script[currentLine]))
+        return;*/
 
-   destCommand[0] = '\0';
+    destCommand[0] = '\0';
 
-   // s‚Ìæ“ª‚É”‚ª‚ ‚éê‡A‚±‚ê‚ÍƒRƒƒ“ƒg‚Å‚ ‚é
-   if (IsLineComment())
-   {
-       destCommand[0] = '#';
-       destCommand[1] = '\0';
-       return;
-   }
-   // s‚Ìæ‚ª‰üs‚Ìê‡
-   if (m_script[currentLine][0] == '\0')
-   {
-       return;
-   }
+    // è¡Œã®å…ˆé ­ã«ï¼ƒãŒã‚ã‚‹å ´åˆã€ã“ã‚Œã¯ã‚³ãƒ¡ãƒ³ãƒˆã§ã‚ã‚‹
+    if (IsLineComment())
+    {
+        destCommand[0] = '#';
+        destCommand[1] = '\0';
+        return;
+    }
+    // è¡Œã®å…ˆãŒæ”¹è¡Œã®å ´åˆ
+    if (m_script[currentLine][0] == '\0')
+    {
+        return;
+    }
 
-   // ƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚Å‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·B
-   while(currentLineChar < (int)strlen(m_script[currentLine]))
-      {
-         if(m_script[currentLine][currentLineChar] == ' ' ||
+    // ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™ã€‚
+    while (currentLineChar < (int)strlen(m_script[currentLine]))
+    {
+        if (m_script[currentLine][currentLineChar] == ' ' ||
             m_script[currentLine][currentLineChar] == '\n')
             break;
 
-         // ”z—ñ‚ÉƒeƒLƒXƒgƒf[ƒ^‚ğ•Û‘¶‚µ‚Ü‚·
-         destCommand[commandSize] = m_script[currentLine][currentLineChar];
-         commandSize++;
-         currentLineChar++;
-      }
+        // é…åˆ—ã«ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã¾ã™
+        destCommand[commandSize] = m_script[currentLine][currentLineChar];
+        commandSize++;
+        currentLineChar++;
+    }
 
-   // Ÿ‚Ìƒf[ƒ^‚Ü‚ÅƒXƒLƒbƒv‚µ‚Ü‚·B
-   currentLineChar++;
+    // æ¬¡ã®ãƒ‡ãƒ¼ã‚¿ã¾ã§ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚
+    currentLineChar++;
 
-   while (currentLineChar < (int)strlen(m_script[currentLine]))
-   {
-       if (m_script[currentLine][currentLineChar] != ' ')
-       {
-           break;
-       }
-       
-       currentLineChar++;
-   }
-   destCommand[commandSize] = '\0';
+    while (currentLineChar < (int)strlen(m_script[currentLine]))
+    {
+        if (m_script[currentLine][currentLineChar] != ' ')
+        {
+            break;
+        }
+
+        currentLineChar++;
+    }
+    destCommand[commandSize] = '\0';
 }
 
-void CScript::ParseStringParam(char *destString)
+void CScript::ParseStringParam(char* destString)
 {
-   // ‚±‚ÌŠÖ”‚Íg h‚Ì’†‚ÉƒeƒLƒXƒg‚ğæ‚èA‚»‚ê‚ğdestString‚É•Û‘¶‚µ‚Ü‚·B
+    // ã“ã®é–¢æ•°ã¯â€œ â€ã®ä¸­ã«ãƒ†ã‚­ã‚¹ãƒˆã‚’å–ã‚Šã€ãã‚Œã‚’destStringã«ä¿å­˜ã—ã¾ã™ã€‚
 
-   int paramSize = 0;
-   bool beginQuoteFound = false;
-   bool endQuoteFound = false;
+    int paramSize = 0;
+    bool beginQuoteFound = false;
+    bool endQuoteFound = false;
 
-   // destcommand‚ªNULL‚Ìê‡As‚ªƒI[ƒo[‚µ‚Ä‚¢‚éê‡A‚Ü‚½‚ÍŒ»İ‚Ìs‚ÌI‚í‚è‚É‚ ‚éê‡‚ÍA–ß‚è‚Ü‚·B
-   if(!destString) 
-       return;
-   if(currentLine >= totalScriptLines) 
-       return;
-   if(currentLineChar >= (int)strlen(m_script[currentLine])) 
-       return;
+    // destcommandãŒNULLã®å ´åˆã€è¡ŒãŒã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹å ´åˆã€ã¾ãŸã¯ç¾åœ¨ã®è¡Œã®çµ‚ã‚ã‚Šã«ã‚ã‚‹å ´åˆã¯ã€æˆ»ã‚Šã¾ã™ã€‚
+    if (!destString)
+        return;
+    if (currentLine >= totalScriptLines)
+        return;
+    if (currentLineChar >= (int)strlen(m_script[currentLine]))
+        return;
 
-   // •¶š—ñ”z—ñ‚ğ‰Šú‰»‚µ‚Ü‚·
-   destString[0] = '\0';
+    // æ–‡å­—åˆ—é…åˆ—ã‚’åˆæœŸåŒ–ã—ã¾ã™
+    destString[0] = '\0';
 
-   // Å‰‚Ì"‚ğƒXƒLƒbƒv‚µ‚Ü‚·B
-   currentLineChar++;
+    // æœ€åˆã®"ã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚
+    currentLineChar++;
 
-    // "‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚Å‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·B
+    // "ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™ã€‚
     while (currentLineChar < (int)strlen(m_script[currentLine]))
     {
         if (m_script[currentLine][currentLineChar] == '"')
@@ -155,133 +150,128 @@ void CScript::ParseStringParam(char *destString)
             break;
         }
 
-        // ƒeƒLƒXƒgƒf[ƒ^‚ğ•Û‘¶
+        // ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
         destString[paramSize] = m_script[currentLine][currentLineChar];
         paramSize++;
         currentLineChar++;
     }
 
-    // I—¹ˆø—p•„‚ÆŸ‚ÌƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ğƒXƒLƒbƒv‚µ‚Ü‚·B•¶š—ñ‚ª•¡”s‚ğè‚ß‚é‚±‚Æ‚Í‹–‰Â‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB 
+    // çµ‚äº†å¼•ç”¨ç¬¦ã¨æ¬¡ã®ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡Œã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚æ–‡å­—åˆ—ãŒè¤‡æ•°è¡Œã‚’å ã‚ã‚‹ã“ã¨ã¯è¨±å¯ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
     if (endQuoteFound)
         currentLineChar += 2;
     else
         currentLineChar++;
-  
 
-   destString[paramSize] = '\0';
+    destString[paramSize] = '\0';
 }
-
 
 bool CScript::ParseBoolParam()
 {
-   // ‚±‚ÌŠÖ”‚ÍŸ‚ÌƒeƒLƒXƒg‚ğæ“¾‚µA‚±‚ÌƒeƒLƒXƒg‚ªutruev‚Ìê‡‚Ítrue‚ğ•Ô‚µAufalsev‚Ìê‡‚Ífalse‚ğ•Ô‚µ‚Ü‚·B
+    // ã“ã®é–¢æ•°ã¯æ¬¡ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’å–å¾—ã—ã€ã“ã®ãƒ†ã‚­ã‚¹ãƒˆãŒã€Œtrueã€ã®å ´åˆã¯trueã‚’è¿”ã—ã€ã€Œfalseã€ã®å ´åˆã¯falseã‚’è¿”ã—ã¾ã™ã€‚
 
-   char string[MAX_PARAM_SIZE];
-   int paramSize = 0;
+    char string[MAX_PARAM_SIZE];
+    int paramSize = 0;
 
-   // s‚ª‘«‚è‚È‚­‚È‚Á‚½ê‡A‚Ü‚½‚ÍŒ»İ‚Ìs‚ÌI‚í‚è‚É‚ ‚éê‡‚ÍA–ß‚è‚Ü‚·B
-   if(currentLine >= totalScriptLines) 
-       return false;
-   if(currentLineChar >= (int)strlen(m_script[currentLine])) 
-       return false;
+    // è¡ŒãŒè¶³ã‚Šãªããªã£ãŸå ´åˆã€ã¾ãŸã¯ç¾åœ¨ã®è¡Œã®çµ‚ã‚ã‚Šã«ã‚ã‚‹å ´åˆã¯ã€æˆ»ã‚Šã¾ã™ã€‚
+    if (currentLine >= totalScriptLines)
+        return false;
+    if (currentLineChar >= (int)strlen(m_script[currentLine]))
+        return false;
 
-   // ƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚ÅA‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·
-   while(currentLineChar < (int)strlen(m_script[currentLine]))
-      {
-       if (m_script[currentLine][currentLineChar] == ' ' ||
-           m_script[currentLine][currentLineChar] == '\n')
-       {
-           break;
-       }
-           
+    // ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã€ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™
+    while (currentLineChar < (int)strlen(m_script[currentLine]))
+    {
+        if (m_script[currentLine][currentLineChar] == ' ' ||
+            m_script[currentLine][currentLineChar] == '\n')
+        {
+            break;
+        }
 
-         // ƒf[ƒ^‚ğ•Û‘¶
-         string[paramSize] = m_script[currentLine][currentLineChar];
-         paramSize++;
-         currentLineChar++;
-      }
+        // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
+        string[paramSize] = m_script[currentLine][currentLineChar];
+        paramSize++;
+        currentLineChar++;
+    }
 
-   // Ÿ‚ÌƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ğƒXƒLƒbƒv‚µ‚Ü‚·B
-   currentLineChar++;
-   string[paramSize] = '\0';
+    // æ¬¡ã®ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡Œã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚
+    currentLineChar++;
+    string[paramSize] = '\0';
 
-   if(_stricmp(string, "true") == 0) 
-       return true;
+    if (_stricmp(string, "true") == 0)
+        return true;
 
-   return false;
+    return false;
 }
-
 
 int CScript::ParseIntParam()
 {
-   // ‚±‚ÌŠÖ”‚ÍŸ‚ÌƒeƒLƒXƒg‚ğó‚¯æ‚èA‚»‚ê‚ğint‚É•ÏŠ·‚µ‚Ü‚·B
+    // ã“ã®é–¢æ•°ã¯æ¬¡ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’å—ã‘å–ã‚Šã€ãã‚Œã‚’intã«å¤‰æ›ã—ã¾ã™ã€‚
 
-   char string[MAX_PARAM_SIZE];
-   int paramSize = 0;
+    char string[MAX_PARAM_SIZE];
+    int paramSize = 0;
 
-   // s‚ª‘«‚è‚È‚­‚È‚Á‚½ê‡A‚Ü‚½‚ÍŒ»İ‚Ìs‚ÌI‚í‚è‚É‚ ‚éê‡‚ÍA–ß‚è‚Ü‚·B
-   if(currentLine >= totalScriptLines) 
-       return false;
-   if(currentLineChar >= (int)strlen(m_script[currentLine])) 
-       return false;
+    // è¡ŒãŒè¶³ã‚Šãªããªã£ãŸå ´åˆã€ã¾ãŸã¯ç¾åœ¨ã®è¡Œã®çµ‚ã‚ã‚Šã«ã‚ã‚‹å ´åˆã¯ã€æˆ»ã‚Šã¾ã™ã€‚
+    if (currentLine >= totalScriptLines)
+        return false;
+    if (currentLineChar >= (int)strlen(m_script[currentLine]))
+        return false;
 
-   // ƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚ÅA‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·
-   while(currentLineChar < (int)strlen(m_script[currentLine]))
-      {
-         if(m_script[currentLine][currentLineChar] == ' ' ||
+    // ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã€ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™
+    while (currentLineChar < (int)strlen(m_script[currentLine]))
+    {
+        if (m_script[currentLine][currentLineChar] == ' ' ||
             m_script[currentLine][currentLineChar] == '\n')
             break;
 
-         // ƒf[ƒ^‚ğ•Û‘¶
-         string[paramSize] = m_script[currentLine][currentLineChar];
-         paramSize++;
-         currentLineChar++;
-      }
+        // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
+        string[paramSize] = m_script[currentLine][currentLineChar];
+        paramSize++;
+        currentLineChar++;
+    }
 
-   // Ÿ‚ÌƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ğƒXƒLƒbƒv‚µ‚Ü‚·B
-   currentLineChar++;
-   string[paramSize] = '\0';
-   return atoi(string);
+    // æ¬¡ã®ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡Œã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚
+    currentLineChar++;
+    string[paramSize] = '\0';
+    return atoi(string);
 }
-
 
 float CScript::ParseFloatParam()
 {
-    // ‚±‚ÌŠÖ”‚ÍŸ‚ÌƒeƒLƒXƒg‚ğó‚¯æ‚èA‚»‚ê‚ğfloat‚É•ÏŠ·‚µ‚Ü‚·B
+    // ã“ã®é–¢æ•°ã¯æ¬¡ã®ãƒ†ã‚­ã‚¹ãƒˆã‚’å—ã‘å–ã‚Šã€ãã‚Œã‚’floatã«å¤‰æ›ã—ã¾ã™ã€‚
 
-   char string[MAX_PARAM_SIZE];
-   int paramSize = 0;
+    char string[MAX_PARAM_SIZE];
+    int paramSize = 0;
 
-   // s‚ª‘«‚è‚È‚­‚È‚Á‚½ê‡A‚Ü‚½‚ÍŒ»İ‚Ìs‚ÌI‚í‚è‚É‚ ‚éê‡‚ÍA–ß‚è‚Ü‚·B
-   if(currentLine >= totalScriptLines) 
-       return false;
-   if(currentLineChar >= (int)strlen(m_script[currentLine])) 
-       return false;
+    // è¡ŒãŒè¶³ã‚Šãªããªã£ãŸå ´åˆã€ã¾ãŸã¯ç¾åœ¨ã®è¡Œã®çµ‚ã‚ã‚Šã«ã‚ã‚‹å ´åˆã¯ã€æˆ»ã‚Šã¾ã™ã€‚
+    if (currentLine >= totalScriptLines)
+        return false;
+    if (currentLineChar >= (int)strlen(m_script[currentLine]))
+        return false;
 
-   // ƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚ÅA‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·
-   while(currentLineChar < (int)strlen(m_script[currentLine]))
-      {
-         if(m_script[currentLine][currentLineChar] == ' ' ||
+    // ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã€ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™
+    while (currentLineChar < (int)strlen(m_script[currentLine]))
+    {
+        if (m_script[currentLine][currentLineChar] == ' ' ||
             m_script[currentLine][currentLineChar] == '\n')
             break;
 
-         // ƒf[ƒ^‚ğ•Û‘¶
-         string[paramSize] = m_script[currentLine][currentLineChar];
-         paramSize++;
-         currentLineChar++;
-      }
+        // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
+        string[paramSize] = m_script[currentLine][currentLineChar];
+        paramSize++;
+        currentLineChar++;
+    }
 
-   // Ÿ‚ÌƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ğƒXƒLƒbƒv‚µ‚Ü‚·B
-   currentLineChar++;
-   string[paramSize] = '\0';
-   return (float)atof(string);
+    // æ¬¡ã®ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡Œã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚
+    currentLineChar++;
+    string[paramSize] = '\0';
+    return (float)atof(string);
 }
 
-void CScript::ParseSoundFileParan(char* destString,int* repeats)
+void CScript::ParseSoundFileParan(char* destString, int* repeats)
 {
     MoveToNextLine();
 
-    // ‚±‚ÌŠÖ”‚Íg h‚Ì’†‚ÉƒeƒLƒXƒg‚ğæ‚èA‚»‚ê‚ğdestString‚É•Û‘¶‚µ‚Ü‚·B
+    // ã“ã®é–¢æ•°ã¯â€œ â€ã®ä¸­ã«ãƒ†ã‚­ã‚¹ãƒˆã‚’å–ã‚Šã€ãã‚Œã‚’destStringã«ä¿å­˜ã—ã¾ã™ã€‚
     char stringInt[MAX_PARAM_SIZE];
     int paramSizeInt = 0;
 
@@ -289,21 +279,21 @@ void CScript::ParseSoundFileParan(char* destString,int* repeats)
     bool beginQuoteFound = false;
     bool endQuoteFound = false;
 
-    // destcommand‚ªNULL‚Ìê‡As‚ªƒI[ƒo[‚µ‚Ä‚¢‚éê‡A‚Ü‚½‚ÍŒ»İ‚Ìs‚ÌI‚í‚è‚É‚ ‚éê‡‚ÍA–ß‚è‚Ü‚·B
-    if (!destString||!repeats)
+    // destcommandãŒNULLã®å ´åˆã€è¡ŒãŒã‚ªãƒ¼ãƒãƒ¼ã—ã¦ã„ã‚‹å ´åˆã€ã¾ãŸã¯ç¾åœ¨ã®è¡Œã®çµ‚ã‚ã‚Šã«ã‚ã‚‹å ´åˆã¯ã€æˆ»ã‚Šã¾ã™ã€‚
+    if (!destString || !repeats)
         return;
     if (currentLine >= totalScriptLines)
         return;
     if (currentLineChar >= (int)strlen(m_script[currentLine]))
         return;
 
-    // •¶š—ñ”z—ñ‚ğ‰Šú‰»‚µ‚Ü‚·
+    // æ–‡å­—åˆ—é…åˆ—ã‚’åˆæœŸåŒ–ã—ã¾ã™
     destString[0] = '\0';
 
-    // Å‰‚Ì"‚ğƒXƒLƒbƒv‚µ‚Ü‚·B
+    // æœ€åˆã®"ã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚
     currentLineChar++;
 
-    // "‚Ü‚½‚Í‰üs‚ªŒ©‚Â‚©‚é‚Ü‚Å‚·‚×‚Ä‚Ì•¶š‚ğ“Ç‚İ‚İ‚Ü‚·B
+    // "ã¾ãŸã¯æ”¹è¡ŒãŒè¦‹ã¤ã‹ã‚‹ã¾ã§ã™ã¹ã¦ã®æ–‡å­—ã‚’èª­ã¿è¾¼ã¿ã¾ã™ã€‚
     while (currentLineChar < (int)strlen(m_script[currentLine]))
     {
         if (m_script[currentLine][currentLineChar] == '"')
@@ -318,25 +308,24 @@ void CScript::ParseSoundFileParan(char* destString,int* repeats)
             break;
         }
 
-        // ƒeƒLƒXƒgƒf[ƒ^‚ğ•Û‘¶
+        // ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
         destString[paramSize] = m_script[currentLine][currentLineChar];
         paramSize++;
         currentLineChar++;
     }
-    // I—¹ˆø—p•„‚ÆŸ‚ÌƒXƒy[ƒX‚Ü‚½‚Í‰üs‚ğƒXƒLƒbƒv‚µ‚Ü‚·B•¶š—ñ‚ª•¡”s‚ğè‚ß‚é‚±‚Æ‚Í‹–‰Â‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB 
+    // çµ‚äº†å¼•ç”¨ç¬¦ã¨æ¬¡ã®ã‚¹ãƒšãƒ¼ã‚¹ã¾ãŸã¯æ”¹è¡Œã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™ã€‚æ–‡å­—åˆ—ãŒè¤‡æ•°è¡Œã‚’å ã‚ã‚‹ã“ã¨ã¯è¨±å¯ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
     if (endQuoteFound)
         currentLineChar += 2;
     else
         currentLineChar++;
     destString[paramSize] = '\0';
 
-
     while (currentLineChar < (int)strlen(m_script[currentLine]))
     {
-        // •Ï”‚ğ“Ç‚İ‚Ş
+        // å¤‰æ•°ã‚’èª­ã¿è¾¼ã‚€
         if (m_script[currentLine][currentLineChar] != ' ')
         {
-            // ƒf[ƒ^‚ğ•Û‘¶
+            // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
             stringInt[paramSizeInt] = m_script[currentLine][currentLineChar];
             paramSizeInt++;
             currentLineChar++;
@@ -348,71 +337,66 @@ void CScript::ParseSoundFileParan(char* destString,int* repeats)
     }
 
     stringInt[paramSize] = '\0';
-    *repeats= atoi(stringInt);
+    *repeats = atoi(stringInt);
 }
 
 void CScript::MoveToStart()
 {
-   currentLine = 0;
-   currentLineChar = 0;
+    currentLine = 0;
+    currentLineChar = 0;
 }
-
 
 void CScript::MoveToNextLine()
 {
-   currentLine++;
-   currentLineChar = 0;
+    currentLine++;
+    currentLineChar = 0;
 }
-
 
 int CScript::GetCurrentLineNum()
 {
-   return currentLine;
+    return currentLine;
 }
-
 
 int CScript::GetTotalLines()
 {
-   return totalScriptLines;
+    return totalScriptLines;
 }
-
 
 bool CScript::IsLineComment()
 {
-   // s‚ÌÅ‰‚Ì•¶š‚ª”‚Ìê‡A‚»‚Ìs‚ÍƒRƒƒ“ƒgƒAƒEƒg‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B
-   if(m_script[currentLine][0] == '#') 
-       return true;
+    // è¡Œã®æœ€åˆã®æ–‡å­—ãŒï¼ƒã®å ´åˆã€ãã®è¡Œã¯ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+    if (m_script[currentLine][0] == '#')
+        return true;
 
-   return false;
+    return false;
 }
-
 
 void CScript::Shutdown()
 {
-   if(m_script)
-      {
-         // ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹‚Ì‚·‚×‚Ä‚Ìƒf[ƒ^‚ğíœ‚µ‚Ü‚·B
-         for(int i = 0; i < totalScriptLines; i++)
+    if (m_script)
+    {
+        // ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®ã™ã¹ã¦ã®ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¾ã™ã€‚
+        for (int i = 0; i < totalScriptLines; i++)
+        {
+            if (m_script[i])
             {
-               if(m_script[i])
-                  {
-                     delete[] m_script[i];
-                     m_script[i] = 0;
-                  }
+                delete[] m_script[i];
+                m_script[i] = 0;
             }
-         
-         delete m_script;
-         m_script = 0;
-      }
- 
-   // •Ï”‚ğ‰Šú‰»‚µ‚Ü‚·
-   totalScriptLines = 0;
-   currentLineChar = 0;
-   currentLine = 0;
+        }
+
+        delete m_script;
+        m_script = 0;
+    }
+
+    // å¤‰æ•°ã‚’åˆæœŸåŒ–ã—ã¾ã™
+    totalScriptLines = 0;
+    currentLineChar = 0;
+    currentLine = 0;
 }
 
 //-----------------------------------------------------------------------------
-// ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹‚ğ•Û‘¶
+// ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜
 //-----------------------------------------------------------------------------
 bool CScript::SaveScript(const char* filename, const char** data, int currentLine, int currentLineChar)
 {
@@ -430,11 +414,10 @@ bool CScript::SaveScript(const char* filename, const char** data, int currentLin
     //    output << data[i][0];
     //    output.write
     //}
-   
 
     //while (!output.eof())
     //{
-    //   
+    //
 
     //    output.getline(tempLine, MAX_LINE_SIZE, '\n');
     //    totalScriptLines++;
@@ -446,7 +429,7 @@ bool CScript::SaveScript(const char* filename, const char** data, int currentLin
     //if (!output2.is_open())
     //    return false;
 
-    //// ƒeƒLƒXƒg‚Ì‚·‚×‚Ä‚Ìs‚ğƒ[ƒh‚·‚é
+    //// ãƒ†ã‚­ã‚¹ãƒˆã®ã™ã¹ã¦ã®è¡Œã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
     //m_script = new char* [totalScriptLines];
 
     //for (int i = 0; i < totalScriptLines; i++)
@@ -460,7 +443,7 @@ bool CScript::SaveScript(const char* filename, const char** data, int currentLin
     //FILE* file = NULL;
     //char output[260];
 
-    //// ƒtƒ@ƒCƒ‹–¼‚È‚¢ê‡‚ÍŒ»—L‚Ìƒtƒ@ƒCƒ‹‚ğ‚ ‚­
+    //// ãƒ•ã‚¡ã‚¤ãƒ«åãªã„å ´åˆã¯ç¾æœ‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ã
     //if (filename != NULL)
     //{
     //    if ((file = fopen(filename, "w")) == NULL)
@@ -472,10 +455,10 @@ bool CScript::SaveScript(const char* filename, const char** data, int currentLin
     //        return;
     //}
 
-    //// #begin ‚ğ‘‚«‚İ
+    //// #begin ã‚’æ›¸ãè¾¼ã¿
     //fputs("#begin\n", file);
 
-    //// ‘S‚Ä‚Ì•Ï”‚ğ‘‚«‚İ
+    //// å…¨ã¦ã®å¤‰æ•°ã‚’æ›¸ãè¾¼ã¿
     //m_variables->Iterate(true);
     //while (m_variables->Iterate() != NULL)
     //{
@@ -528,11 +511,11 @@ bool CScript::SaveScript(const char* filename, const char** data, int currentLin
     //    }
     //}
 
-    //// #end ‚ğ‘‚«‚İ
+    //// #end ã‚’æ›¸ãè¾¼ã¿
     //fputs("#end", file);
 
-    //// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+    //// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
     //fclose(file);
 
-return true;
+    return true;
 }

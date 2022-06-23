@@ -1,7 +1,7 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: particle.cpp
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/05
@@ -16,13 +16,12 @@ inline float GET_RANDOM()
     return (((float)rand() - (float)rand()) / RAND_MAX);
 }
 
-CRainPS::CRainPS() : m_width(0), m_height(0), m_depth(0),m_particles(0), m_maxParticles(0),m_particleCount(0), m_totalTime(0)
+CRainPS::CRainPS() : m_width(0), m_height(0), m_depth(0), m_particles(0), m_maxParticles(0), m_particleCount(0), m_totalTime(0)
 {
     m_pos[0] = m_pos[1] = m_pos[2] = 0;
 }
 
-
-bool CRainPS::Initialize(float x, float y, float z, int maxP,float w, float h, float d)
+bool CRainPS::Initialize(float x, float y, float z, int maxP, float w, float h, float d)
 {
     // Release all previous data.
     Shutdown();
@@ -35,17 +34,16 @@ bool CRainPS::Initialize(float x, float y, float z, int maxP,float w, float h, f
     m_pos[0] = x; m_pos[1] = y; m_pos[2] = z;
 
     // Error checking.
-    if (m_maxParticles <= 0) 
+    if (m_maxParticles <= 0)
         m_maxParticles = 1;
 
     // Allocate space for the particles.
     m_particles = new CParticle[m_maxParticles];
-    if (!m_particles) 
+    if (!m_particles)
         return false;
 
     return true;
 }
-
 
 void CRainPS::CreateParticle(int amount)
 {
@@ -66,7 +64,6 @@ void CRainPS::CreateParticle(int amount)
         m_particleCount++;
     }
 }
-
 
 void CRainPS::Update(float scalar)
 {
@@ -98,10 +95,9 @@ void CRainPS::Update(float scalar)
     CreateParticle(numParticles);
 }
 
-
 void CRainPS::Shutdown()
 {
-    if (m_particles) 
+    if (m_particles)
         delete[] m_particles;
 
     m_particles = NULL;

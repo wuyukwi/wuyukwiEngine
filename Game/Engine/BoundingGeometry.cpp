@@ -1,7 +1,7 @@
-///*********************************************************************************
+Ôªø///*********************************************************************************
 //
 //  *FileName: BoundingGeometry.cpp
-//            ÉRÉE  ÉLÉKÉN
+//            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
 //  *Author:  Huang QiYue
 //  *Version:  1.0
 //  *Date:  2022/04/12
@@ -38,7 +38,7 @@
 //   if(m_max.z <= v.z) return false;
 //   if(m_min.z >= v.z) return false;
 //
-//   return true;	
+//   return true;
 //}
 //
 //
@@ -112,7 +112,7 @@
 //
 //   if(fabs(ray.m_direction.x) < 0.00001f)
 //      {
-//         if((ray.m_origin.x < m_min.x) ||(ray.m_origin.x > m_max.x)) 
+//         if((ray.m_origin.x < m_min.x) ||(ray.m_origin.x > m_max.x))
 //             return false;
 //      }
 //
@@ -159,7 +159,7 @@
 //
 //   if(min > 0) d = min;
 //   else d = max;
-//   
+//
 //   if(d > length) return false;
 //   if(dist) *dist = d;
 //
@@ -172,23 +172,23 @@
 //   // Right.
 //   planes[0].a = 1.0f; planes[0].b = 0.0f; planes[0].c = 0.0f;
 //   planes[0].d = -(1 * m_max.x + 0 * m_max.y + 0 * m_max.z);
-//   
+//
 //   // Left.
 //   planes[1].a = -1.0f; planes[1].b = 0.0f; planes[1].c = 0.0f;
 //   planes[1].d = -(-1 * m_min.x + 0 * m_min.y + 0 * m_min.z);
-//   
+//
 //   // Front.
 //   planes[2].a = 0.0f; planes[2].b = 0.0f; planes[2].c = -1.0f;
 //   planes[2].d = -(0 * m_min.x + 0 * m_min.y + -1 * m_min.z);
-//   
+//
 //   // Back.
 //   planes[3].a = 0.0f; planes[3].b = 0.0f; planes[3].c = 1.0f;
 //   planes[3].d = -(0 * m_max.x + 0 * m_max.y + 1 * m_max.z);
-//   
+//
 //   // Top.
 //   planes[4].a = 0.0f; planes[4].b = 1.0f; planes[4].c = 0.0f;
 //   planes[4].d = -(0 * m_max.x + 1 * m_max.y + 0 * m_max.z);
-//   
+//
 //   // Bottom.
 //   planes[5].a = 0.0f; planes[5].b = -1.0f; planes[5].c = 0.0f;
 //   planes[5].d = -(0 * m_min.x + -1 * m_min.y + 0 * m_min.z);
@@ -242,7 +242,7 @@
 //{
 //   // The distance between the two spheres.
 //   Vector3f intersect = m_center - v;
-//	
+//
 //   // Test for collision.
 //   if(sqrt(intersect.x * intersect.x + intersect.y * intersect.y +
 //           intersect.z * intersect.z) < m_radius)
@@ -264,7 +264,7 @@
 //   RayToSphereDir = m_center - ray.m_origin;
 //
 //   // Dot product the direction of the ray to current sphere to get the length.
-//   
+//
 //   RayToSphereLength = DotProduct(RayToSphereDir, RayToSphereDir);
 //
 //   // Find intersect distance.
@@ -297,7 +297,7 @@
 //
 //   // Get the direction of the ray to the object.
 //   RayToSphereDir = m_center - ray.m_origin;
-//   
+//
 //   // Dot product the direction of the ray to current sphere to get the length.
 //   RayToSphereLength = DotProduct(RayToSphereDir, RayToSphereDir);
 //
@@ -351,7 +351,7 @@
 //{
 //   // The distance between the two spheres.
 //   Vector3f intersect = bs1.m_center - bs2.m_center;
-//	
+//
 //   // Test for collision.
 //   if(sqrt(intersect.x * intersect.x + intersect.y * intersect.y +
 //           intersect.z * intersect.z) < bs1.m_radius + bs2.m_radius)

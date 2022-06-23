@@ -1,13 +1,12 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: DirectInput.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/12
 
 **********************************************************************************/
-
 
 #ifndef _DIRECTINPUT_H_
 #define _DIRECTINPUT_H_
@@ -16,146 +15,142 @@
 #include"InputInterface.h"
 #include"defines.h"
 
-
 class CKeyboard : public CDeviceInterface
 {
-   public:
-      CKeyboard(LPDIRECTINPUT8 input, HWND hwnd);
-      ~CKeyboard() { Shutdown(); }
+public:
+    CKeyboard(LPDIRECTINPUT8 input, HWND hwnd);
+    ~CKeyboard() override { Shutdown(); }
 
-      bool UpdateDevice();
+    bool UpdateDevice() override;
 
-      bool ButtonUp(size_t key);
-      bool ButtonDown(size_t key);
+    bool ButtonUp(size_t key) override;
+    bool ButtonDown(size_t key) override;
 
-      POINT GetPosition(bool delta = false);
-      POINT GetZPosition();
+    POINT GetPosition(bool delta = false) override;
+    POINT GetZPosition() override;
 
-      void Shutdown();
+    void Shutdown() override;
 
-      // Keyboard device.
-      LPDIRECTINPUTDEVICE8 m_pDevice;
-      char m_keys[KEYS_SIZE];
-      char m_oldKeys[KEYS_SIZE];
+    // Keyboard device.
+    LPDIRECTINPUTDEVICE8 m_pDevice;
+    char m_keys[KEYS_SIZE];
+    char m_oldKeys[KEYS_SIZE];
 };
-
 
 class CMouse : public CDeviceInterface
 {
-   public:
-      CMouse(LPDIRECTINPUT8 input, HWND hwnd, bool exclusive);
-      ~CMouse() { Shutdown(); }
+public:
+    CMouse(LPDIRECTINPUT8 input, HWND hwnd, bool exclusive);
+    ~CMouse() override { Shutdown(); }
 
-      bool UpdateDevice();
+    bool UpdateDevice() override;
 
-      bool ButtonUp(size_t key);
-      bool ButtonDown(size_t key);
+    bool ButtonUp(size_t key) override;
+    bool ButtonDown(size_t key) override;
 
-      POINT GetPosition(bool delta = false);
-      POINT GetZPosition();
+    POINT GetPosition(bool delta = false) override;
+    POINT GetZPosition() override;
 
-      void Shutdown();
+    void Shutdown() override;
 
-      // Mouse device.
-      LPDIRECTINPUTDEVICE8 m_pDevice;
-      DIMOUSESTATE m_mouseState;
-      DIMOUSESTATE m_oldMouseState;
-      bool m_button[3];
+    // Mouse device.
+    LPDIRECTINPUTDEVICE8 m_pDevice;
+    DIMOUSESTATE m_mouseState;
+    DIMOUSESTATE m_oldMouseState;
+    bool m_button[3];
 
-      // É}ÉEÉXÇÃÇÃà íu
-      POINT m_position;
+    // „Éû„Ç¶„Çπ„ÅÆ„ÅÆ‰ΩçÁΩÆ
+    POINT m_position;
 
-      // êeÉEÉBÉìÉhÉEÇÃÉnÉìÉhÉãÅB
-      HWND m_hwnd;
+    // Ë¶™„Ç¶„Ç£„É≥„Éâ„Ç¶„ÅÆ„Éè„É≥„Éâ„É´„ÄÇ
+    HWND m_hwnd;
 
-      // ç≈ëÂxÅiïùÅjÇ®ÇÊÇ—yÅiçÇÇ≥Åjêßå¿
-      bool m_restrict;
-      int m_width;
-      int m_height;
+    // ÊúÄÂ§ßxÔºàÂπÖÔºâ„Åä„Çà„Å≥yÔºàÈ´ò„ÅïÔºâÂà∂Èôê
+    bool m_restrict;
+    int m_width;
+    int m_height;
 };
-
 
 class CGameController : public CDeviceInterface
 {
-   public:
-      CGameController(LPDIRECTINPUT8 input, HWND hwnd);
-      ~CGameController() { Shutdown(); }
+public:
+    CGameController(LPDIRECTINPUT8 input, HWND hwnd);
+    ~CGameController() override { Shutdown(); }
 
-      bool UpdateDevice();
+    bool UpdateDevice() override;
 
-      // Used to create the game controllers.
-      BOOL EnumDeviceCallBack(const DIDEVICEINSTANCE *inst, void* pData);
+    // Used to create the game controllers.
+    BOOL EnumDeviceCallBack(const DIDEVICEINSTANCE* inst, void* pData);
 
-      bool ButtonUp(size_t key);
-      bool ButtonDown(size_t key);
+    bool ButtonUp(size_t key) override;
+    bool ButtonDown(size_t key) override;
 
-      POINT GetPosition(bool delta = false);
-      POINT GetZPosition();
+    POINT GetPosition(bool delta = false) override;
+    POINT GetZPosition() override;
 
-      void Shutdown();
+    void Shutdown() override;
 
-      // Game controller device.
-      LPDIRECTINPUTDEVICE8 m_pDevice;
-      DIJOYSTATE2 m_gcState;
-      DIJOYSTATE2 m_oldGCState;
-      char m_name[256];
-      unsigned long m_numButtons;
+    // Game controller device.
+    LPDIRECTINPUTDEVICE8 m_pDevice;
+    DIJOYSTATE2 m_gcState;
+    DIJOYSTATE2 m_oldGCState;
+    char m_name[256];
+    unsigned long m_numButtons;
 
-      // Left and right stick x and y positions.
-      long m_xGCPos;
-      long m_yGCPos;
-      long m_xGCPos2;
-      long m_yGCPos2;
-      
-      // Window handled (needed for game controllers).
-      HWND m_hwnd;
+    // Left and right stick x and y positions.
+    long m_xGCPos;
+    long m_yGCPos;
+    long m_xGCPos2;
+    long m_yGCPos2;
 
-      // Copy of input system.
-      LPDIRECTINPUT8 m_inputSystem;
+    // Window handled (needed for game controllers).
+    HWND m_hwnd;
+
+    // Copy of input system.
+    LPDIRECTINPUT8 m_inputSystem;
 };
-
 
 class CDirectInputSystem : public CInputInterface
 {
-   public:
-      CDirectInputSystem(HWND hwnd, HINSTANCE hInst, bool exclusive);
-      ~CDirectInputSystem();
+public:
+    CDirectInputSystem(HWND hwnd, HINSTANCE hInst, bool exclusive);
+    ~CDirectInputSystem() override;
 
-      // Init devics, update devices states.
-      bool Initialize();
-      bool UpdateDevices();
-      
-      // Keyboard functions.
-      bool KeyUp(size_t key);
-      bool KeyDown(size_t key);
+    // Init devics, update devices states.
+    bool Initialize() override;
+    bool UpdateDevices() override;
 
-      // Mouse functions.
-      bool MouseButtonUp(size_t button);
-      bool MouseButtonDown(size_t button);
+    // Keyboard functions.
+    bool KeyUp(size_t key) override;
+    bool KeyDown(size_t key) override;
 
-      // Get mouse position (x, y) and mouse wheel data (z).
-      POINT GetMousePos(bool delta = false);
-      long GetMouseWheelPos();
+    // Mouse functions.
+    bool MouseButtonUp(size_t button) override;
+    bool MouseButtonDown(size_t button) override;
 
-      // Game controller functions.
-      bool ControllerButtonUp(size_t button);
-      bool ControllerButtonDown(size_t button);
-      
-      // Get controller main (left) and right stick position.
-      POINT GetLeftStickPos();
-      POINT GetRightStickPos();
+    // Get mouse position (x, y) and mouse wheel data (z).
+    POINT GetMousePos(bool delta = false) override;
+    long GetMouseWheelPos() override;
 
-      void Shutdown();
+    // Game controller functions.
+    bool ControllerButtonUp(size_t button) override;
+    bool ControllerButtonDown(size_t button) override;
 
-   protected:
-      LPDIRECTINPUT8 m_system;
+    // Get controller main (left) and right stick position.
+    POINT GetLeftStickPos() override;
+    POINT GetRightStickPos() override;
 
-      // Devices.
-      CKeyboard *m_keyboard;
-      CMouse *m_mouse;
-      CGameController *m_gameController;
+    void Shutdown() override;
+
+protected:
+    LPDIRECTINPUT8 m_system;
+
+    // Devices.
+    CKeyboard* m_keyboard;
+    CMouse* m_mouse;
+    CGameController* m_gameController;
 };
 
-bool CreateDIInput(CInputInterface **pObj, HWND hwnd, HINSTANCE hInst, bool exclusive);
+bool CreateDIInput(CInputInterface** pObj, HWND hwnd, HINSTANCE hInst, bool exclusive);
 
-#endif 
+#endif

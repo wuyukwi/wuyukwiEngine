@@ -1,17 +1,15 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: BoundingGeometry.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/12
 
 **********************************************************************************/
 
-
 #ifndef _BOUNDINGGEOMETRY_H_
 #define _BOUNDINGGEOMETRY_H_
-
 
 //class CBoundingBase
 //{
@@ -35,7 +33,7 @@
 //   public:
 //      CBoundingBox() {}
 //      ~CBoundingBox() {}
-//      
+//
 //      void CreateFromPoints(Vector3f *pointList, int numPoints);
 //      bool isPointInside(Vector3f &v);
 //
@@ -44,7 +42,7 @@
 //
 //      void GetPlanes(CPlane *planes);
 //      bool isRayInside(CRay &ray, float length);
-//      
+//
 //      Vector3f m_min, m_max;
 //};
 //
@@ -54,7 +52,7 @@
 //   public:
 //      CBoundingSphere() : m_radius(0) {}
 //      ~CBoundingSphere() {}
-//      
+//
 //      void CreateFromPoints(Vector3f *pointList, int numPoints);
 //      bool isPointInside(Vector3f &v);
 //
@@ -63,7 +61,7 @@
 //
 //      void GetPlanes(CPlane *planes) {}
 //      bool isRayInside(CRay &ray, float length);
-//      
+//
 //      Vector3f m_center;
 //      float m_radius;
 //};

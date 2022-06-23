@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: gameEngine.cpp
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
@@ -60,7 +60,7 @@ bool GameWorldLoad(const char* file)
         else if (_stricmp(command, "SetCamera") == 0) {}
         else
         {
-            gameLog.AppendLog("ErrorLog.txt","Error loading level on %d.\n",
+            gameLog.AppendLog("ErrorLog.txt", "Error loading level on %d.\n",
                 script.GetCurrentLineNum() + 1);
 
             script.Shutdown();
@@ -205,11 +205,9 @@ bool GameWorldLoad(const char* file)
         else if (_stricmp(command, "#") == 0) {}
         else if (_stricmp(command, "\0") == 0) {}
         else if (_stricmp(command, "SetCamera") == 0)
-            {
-           
-            }
+        {
+        }
 
-      
         script.MoveToNextLine();
     }
 
@@ -239,7 +237,6 @@ bool GameWorldLoad(const char* file)
     return true;
 }
 
-
 //bool TestArtifactCollision(int i)
 //{
 //    CBoundingSphere sphere;
@@ -256,7 +253,6 @@ bool GameWorldLoad(const char* file)
 //    return false;
 //}
 
-
 void GameWorldRender()
 {
     if (!g_Render || g_gameState != GAME_STATE::GS_LEVEL) return;
@@ -265,7 +261,7 @@ void GameWorldRender()
     BuildMatrixIdentity(world);
 
     g_Render->SetViewMatrix(g_camera.GetCameraView());
-    
+
     g_Render->SetWorldMatrix(&world);
     g_Render->RenderXModel(g_gameWorld.m_levelID);
 
@@ -281,14 +277,13 @@ void GameWorldRender()
             g_Render->SetWorldMatrix(&g_gameWorld.m_models[i].worldMat);
 
             if (g_gameWorld.m_models[i].m_type == X_ANIMATED_MESH)
-                g_Render->UpdateXAnimation(g_gameWorld.m_models[i].m_id,g_elapsed,&g_gameWorld.m_models[i].worldMat);
+                g_Render->UpdateXAnimation(g_gameWorld.m_models[i].m_id, g_elapsed, &g_gameWorld.m_models[i].worldMat);
             else
-                g_Render->UpdateXAnimation(g_gameWorld.m_models[i].m_id, 0,&g_gameWorld.m_models[i].worldMat);
+                g_Render->UpdateXAnimation(g_gameWorld.m_models[i].m_id, 0, &g_gameWorld.m_models[i].worldMat);
 
             g_Render->RenderXModel(g_gameWorld.m_models[i].m_id);
         }
     }
-
 
     if (g_gameWorld.m_artifacts)
     {
@@ -303,7 +298,7 @@ void GameWorldRender()
         }
     }
 
-    if(g_gameWorld.m_characters)
+    if (g_gameWorld.m_characters)
     {
         for (int i = 0; i < g_gameWorld.m_totalCharacters; i++)
         {
@@ -311,13 +306,10 @@ void GameWorldRender()
             {
                 g_Render->SetWorldMatrix(&g_gameWorld.m_characters[i].worldMat);
 
-               
-                g_Render->UpdateXAnimation(g_gameWorld.m_characters[i].m_id, g_elapsed,&g_gameWorld.m_characters[i].worldMat);
-             
+                g_Render->UpdateXAnimation(g_gameWorld.m_characters[i].m_id, g_elapsed, &g_gameWorld.m_characters[i].worldMat);
 
                 g_Render->RenderXModel(g_gameWorld.m_characters[i].m_id);
             }
         }
     }
-
 }

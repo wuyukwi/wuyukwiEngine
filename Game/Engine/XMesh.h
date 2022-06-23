@@ -1,13 +1,12 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: XMesh.h
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/15
 
 **********************************************************************************/
-
 
 #ifndef _X_ANIMATED_MODEL_H_
 #define _X_ANIMATED_MODEL_H_
@@ -16,85 +15,83 @@
 
 class CXModel
 {
-   public:
-      CXModel();
-      ~CXModel() { }
+public:
+    CXModel();
+    ~CXModel() { }
 
-      void SetDevice(LPDIRECT3DDEVICE9 device, D3DCAPS9 caps)
-      {
-         m_pDevice = device;
-         m_caps = caps;
-      }
+    void SetDevice(LPDIRECT3DDEVICE9 device, D3DCAPS9 caps)
+    {
+        m_pDevice = device;
+        m_caps = caps;
+    }
 
-      bool LoadXFile(char *file);
-      void Shutdown();
+    bool LoadXFile(char* file);
+    void Shutdown();
 
-      void GetBoundingSphere(D3DXVECTOR3 *center, float *radius)
-      {
-         if(center) *center = m_center;
-         if(radius) *radius = m_radius;
-      }
+    void GetBoundingSphere(D3DXVECTOR3* center, float* radius)
+    {
+        if (center) *center = m_center;
+        if (radius) *radius = m_radius;
+    }
 
-      void Update(float time, const LPD3DXMATRIX matWorld);
+    void Update(float time, const LPD3DXMATRIX matWorld);
 
-      void Render();
+    void Render();
 
-      void SetAnimation(unsigned int index);
-      void NextAnimation();
+    void SetAnimation(unsigned int index);
+    void NextAnimation();
 
-      unsigned int GetCurrentAnimation() { return m_currentAni; }
-      unsigned int GetTotalAnimations() { return m_numAnimations; }
+    unsigned int GetCurrentAnimation() { return m_currentAni; }
+    unsigned int GetTotalAnimations() { return m_numAnimations; }
 
-      float GetAnimationSpeed() { return m_speed; }
-      void IncreaseAnimationSpeed(float amt) { m_speed += amt; }
-      void DecreaseAnimationSeep(float amt)
-      {
-         if(m_speed > 0.1f) m_speed -= amt;
-      }
+    float GetAnimationSpeed() { return m_speed; }
+    void IncreaseAnimationSpeed(float amt) { m_speed += amt; }
+    void DecreaseAnimationSeep(float amt)
+    {
+        if (m_speed > 0.1f) m_speed -= amt;
+    }
 
-      float GetTransitionSpeed() { return m_transition; }
-      void DecreaseTransitionSpeed(float amt) { m_transition += amt; }
-      void IncreaseTransitionSeep(float amt)
-      {
-         if(m_transition > 0.1f) m_transition -= amt;
-      }
+    float GetTransitionSpeed() { return m_transition; }
+    void DecreaseTransitionSpeed(float amt) { m_transition += amt; }
+    void IncreaseTransitionSeep(float amt)
+    {
+        if (m_transition > 0.1f) m_transition -= amt;
+    }
 
+private:
+    HRESULT SetupBoneMatrixPointers(LPD3DXFRAME pFrameBase, LPD3DXFRAME pFrameRoot);
+    void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, LPD3DXMATRIX pParentMatrix);
+    void DrawFrame(LPD3DXFRAME frame);
+    void DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase);
 
-   private:
-       HRESULT SetupBoneMatrixPointers(LPD3DXFRAME pFrameBase, LPD3DXFRAME pFrameRoot);
-       void UpdateFrameMatrices(LPD3DXFRAME pFrameBase, LPD3DXMATRIX pParentMatrix);
-      void DrawFrame(LPD3DXFRAME frame);
-      void DrawMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase, LPD3DXFRAME pFrameBase);
+private:
+    // D3D ãƒ‡ãƒã‚¤ã‚¹
+    LPDIRECT3DDEVICE9 m_pDevice;
+    D3DCAPS9 m_caps;
 
+    // ãƒ«ãƒ¼ãƒˆãƒ•ãƒ¬ãƒ¼ãƒ ã¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã€‚
+    LPD3DXFRAME m_pRoot;
+    LPD3DXANIMATIONCONTROLLER m_pAnimControl;
+    CAllocateHierarchy* m_pAllocateHier;
 
-   private:
-      // D3D ƒfƒoƒCƒX
-      LPDIRECT3DDEVICE9 m_pDevice;
-      D3DCAPS9 m_caps;
+    // ãƒœãƒ¼ãƒ³.
+    D3DXMATRIX* m_boneMatrices;
+    unsigned int m_maxBones;
 
-      // ƒ‹[ƒgƒtƒŒ[ƒ€‚ÆƒAƒjƒ[ƒVƒ‡ƒ“ƒRƒ“ƒgƒ[ƒ‰[B
-      LPD3DXFRAME m_pRoot;
-      LPD3DXANIMATIONCONTROLLER m_pAnimControl;
-      CAllocateHierarchy* m_pAllocateHier;		
+    // ç¾åœ¨ã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠã€‚
+    stD3DContainerDerived* m_currentContainer;
 
-      // ƒ{[ƒ“.
-      D3DXMATRIX *m_boneMatrices;
-      unsigned int m_maxBones;
+    // ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚¹ãƒ•ã‚£ã‚¢ã€‚
+    D3DXVECTOR3 m_center;
+    float m_radius;
 
-      // Œ»İ‚ÌƒƒbƒVƒ…ƒRƒ“ƒeƒiB
-      stD3DContainerDerived *m_currentContainer;
-
-      // ƒoƒEƒ“ƒfƒBƒ“ƒOƒXƒtƒBƒAB
-      D3DXVECTOR3 m_center;
-      float m_radius;
-
-      // ƒAƒjƒ[ƒVƒ‡ƒ“•Ï”B
-      unsigned int m_currentAni;
-      unsigned int m_numAnimations;
-      unsigned long m_currentTrack;
-      float m_speed;
-      float m_currentTime;
-      float m_transition;
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å¤‰æ•°ã€‚
+    unsigned int m_currentAni;
+    unsigned int m_numAnimations;
+    unsigned long m_currentTrack;
+    float m_speed;
+    float m_currentTime;
+    float m_transition;
 };
 
 #endif

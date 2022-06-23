@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: gameEngine.h
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
@@ -22,7 +22,7 @@ int g_currentGUI = GUI_MAIN_SCREEN;
 int g_menuSound = -1;
 
 //=========================================
-// ƒƒjƒ…[‚Ì‰Šú‰»
+// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®åˆæœŸåŒ–
 //=========================================
 bool InitializeMainMenu()
 {
@@ -31,20 +31,20 @@ bool InitializeMainMenu()
     if (!g_Render->CreateGUI(g_creditsGui)) return false;
     if (!g_Render->CreateGUI(g_loadingGui)) return false;
 
-    // ƒƒjƒ…[”wŒi‚ğ“Ç‚İ‚Ş
+    // ãƒ¡ãƒ‹ãƒ¥ãƒ¼èƒŒæ™¯ã‚’èª­ã¿è¾¼ã‚€
     if (!g_Render->AddGUIBackdrop(g_mainGui, "menu/mainMenu.jpg"))
         return false;
-    // ƒXƒ^[ƒg‰æ–Ê‚ğ“Ç‚İ‚Ş
+    // ã‚¹ã‚¿ãƒ¼ãƒˆç”»é¢ã‚’èª­ã¿è¾¼ã‚€
     if (!g_Render->AddGUIBackdrop(g_startGui, "menu/startMenu.jpg"))
         return false;
-    // ƒNƒŒƒWƒbƒg‰æ–Ê‚ğ“Ç‚İ‚Ş
+    // ã‚¯ãƒ¬ã‚¸ãƒƒãƒˆç”»é¢ã‚’èª­ã¿è¾¼ã‚€
     if (!g_Render->AddGUIBackdrop(g_creditsGui, "menu/creditsMenu.jpg"))
         return false;
-    // ƒ[ƒh‰æ–Ê‚ğ“Ç‚İ‚Ş
+    // ãƒ­ãƒ¼ãƒ‰ç”»é¢ã‚’èª­ã¿è¾¼ã‚€
     if (!g_Render->AddGUIBackdrop(g_loadingGui, "menu/loadingMenu.jpg"))
         return false;
-    
-    // ƒƒjƒ…[•¶š—ñ‚ğ’Ç‰Á
+
+    // ãƒ¡ãƒ‹ãƒ¥ãƒ¼æ–‡å­—åˆ—ã‚’è¿½åŠ 
     if (!g_Render->AddGUIStaticText(g_mainGui, STATIC_TEXT_ID, "Version: 1.0",
         int(g_width * 0.85f), int(g_height * 0.05f),
         COLOR_ARGB(255, 255, 255, 255), g_arialID))
@@ -52,7 +52,7 @@ bool InitializeMainMenu()
         return false;
     }
 
-    // ƒƒjƒ…[ƒ{ƒ^ƒ“‚ğ’Ç‰Á
+    // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒœã‚¿ãƒ³ã‚’è¿½åŠ 
     if (!g_Render->AddGUIButton(g_mainGui, BUTTON_START_ID,
         int(g_width * 0.05f), int(g_height * 0.4f),
         "menu/startUp.png", "menu/startOver.png", "menu/startDown.png"))
@@ -97,13 +97,12 @@ bool InitializeMainMenu()
     return true;
 }
 
-
 //=========================================
-// ƒƒjƒ…[‚Ì•`‰æ
+// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®æç”»
 //=========================================
 void MainMenuRender()
 {
-    // ƒƒjƒ…[‚Ì•`‰æ
+    // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®æç”»
     switch (g_currentGUI)
     {
     case GUI_MAIN_SCREEN:
@@ -125,11 +124,10 @@ void MainMenuRender()
     default:
         break;
     }
-
 }
 
 //=========================================
-// ƒƒjƒ…[ƒR[ƒ‹ƒoƒbƒNŠÖ”
+// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 //=========================================
 void MainMenuCallback(int id, size_t state)
 {
@@ -157,7 +155,7 @@ void MainMenuCallback(int id, size_t state)
         if (state == UGP_BUTTON_DOWN)
         {
             g_currentGUI = GUI_MAIN_SCREEN;
-        }      
+        }
         break;
 
     case BUTTON_LEVEL_1_ID:

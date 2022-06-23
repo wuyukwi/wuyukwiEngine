@@ -1,13 +1,12 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: gameEngine.h
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
 
 **********************************************************************************/
-
 
 #ifndef _GAME_ENGINE_H_
 #define _GAME_ENGINE_H_
@@ -15,18 +14,18 @@
 #include "Engine/engine.h"
 
 //*****************************************
-// ƒOƒ[ƒoƒ‹ŠÖ”éŒ¾
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°å®£è¨€
 //*****************************************
 bool InitializeEngine();
 void ShutdownEngine();
-bool LoadSoundScript();     //ƒXƒNƒŠƒvƒgŠÖ”
+bool LoadSoundScript();     //ã‚¹ã‚¯ãƒªãƒ—ãƒˆé–¢æ•°
 
 //*****************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************
 extern CRenderInterface* g_Render;
 extern CInputInterface* g_Input;
 extern CSoundInterface* g_Sound;
-extern int g_arialID;       //ƒtƒHƒ“ƒgid
+extern int g_arialID;       //ãƒ•ã‚©ãƒ³ãƒˆid
 
 #endif _GAME_ENGINE_H_

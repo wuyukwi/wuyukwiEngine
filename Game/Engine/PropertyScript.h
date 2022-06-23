@@ -1,7 +1,7 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: PropertyScript.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/11
@@ -13,7 +13,7 @@
 
 #include "structs.h"
 
-enum enVarType 
+enum enVarType
 {
     NULL_VAR = 0,
     INT_VAR,
@@ -32,8 +32,8 @@ public:
     }
     ~CVariable()
     {
-        if (stringVal) 
-            delete[] stringVal; 
+        if (stringVal)
+            delete[] stringVal;
         stringVal = 0;
     }
 
@@ -56,7 +56,6 @@ private:
     char* stringVal;
     stVector vecVal;
 };
-
 
 class CPropertyScript
 {

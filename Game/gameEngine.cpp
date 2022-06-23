@@ -1,7 +1,7 @@
-/*********************************************************************************
+ï»¿/*********************************************************************************
 
   *FileName: gameEngine.cpp
-            ƒRƒE  ƒLƒKƒN
+            ã‚³ã‚¦  ã‚­ã‚¬ã‚¯
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
@@ -20,21 +20,20 @@ CInputInterface* g_Input = nullptr;
 CSoundInterface* g_Sound = nullptr;
 int g_arialID = -1;
 
-
 //=========================================
-// ƒGƒ“ƒWƒ“‰Šú‰»
+// ã‚¨ãƒ³ã‚¸ãƒ³åˆæœŸåŒ–
 //=========================================
 bool InitializeEngine()
 {
     if (!CreateD3DRenderer(&g_Render))
     {
-        MessageBox(g_hwnd, "Render ‰Šú‰»¸”s‚µ‚Ü‚µ‚½B", "ƒGƒ‰[", MB_OK);
+        MessageBox(g_hwnd, "Render åˆæœŸåŒ–å¤±æ•—ã—ã¾ã—ãŸã€‚", "ã‚¨ãƒ©ãƒ¼", MB_OK);
         return false;
     }
 
     if (!g_Render->Initialize(g_width, g_height, g_hwnd, g_fullScreen, g_multiSample))
     {
-        MessageBox(g_hwnd, "Render ‰Šú‰»¸”s‚µ‚Ü‚µ‚½B", "ƒGƒ‰[", MB_OK);
+        MessageBox(g_hwnd, "Render åˆæœŸåŒ–å¤±æ•—ã—ã¾ã—ãŸã€‚", "ã‚¨ãƒ©ãƒ¼", MB_OK);
         return false;
     }
 
@@ -42,19 +41,19 @@ bool InitializeEngine()
 
     if (!g_Render->CreateText("Arial", 0, true, 18, g_arialID))
     {
-        MessageBox(g_hwnd, "Text ‰Šú‰»¸”s‚µ‚Ü‚µ‚½B", "ƒGƒ‰[", MB_OK);
+        MessageBox(g_hwnd, "Text åˆæœŸåŒ–å¤±æ•—ã—ã¾ã—ãŸã€‚", "ã‚¨ãƒ©ãƒ¼", MB_OK);
         return false;
     }
 
     if (!CreateDIInput(&g_Input, g_hwnd, g_hinstance, false) || !g_Input->Initialize())
     {
-        MessageBox(g_hwnd, "Input ‰Šú‰»¸”s‚µ‚Ü‚µ‚½B", "ƒGƒ‰[", MB_OK);
+        MessageBox(g_hwnd, "Input åˆæœŸåŒ–å¤±æ•—ã—ã¾ã—ãŸã€‚", "ã‚¨ãƒ©ãƒ¼", MB_OK);
         return false;
     }
 
     if (!CreateDMSound(&g_Sound) || !LoadSoundScript())
     {
-        MessageBox(g_hwnd, "Sound ‰Šú‰»¸”s‚µ‚Ü‚µ‚½B", "ƒGƒ‰[", MB_OK);
+        MessageBox(g_hwnd, "Sound åˆæœŸåŒ–å¤±æ•—ã—ã¾ã—ãŸã€‚", "ã‚¨ãƒ©ãƒ¼", MB_OK);
         return false;
     }
 
@@ -62,17 +61,16 @@ bool InitializeEngine()
 }
 
 //=========================================
-// ƒGƒ“ƒWƒ“I—¹
+// ã‚¨ãƒ³ã‚¸ãƒ³çµ‚äº†
 //=========================================
 void ShutdownEngine()
 {
-
-    // imguiI—¹ˆ—
+    // imguiçµ‚äº†å‡¦ç†
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
-    // ƒGƒ“ƒWƒ“I—¹ˆ—
+    // ã‚¨ãƒ³ã‚¸ãƒ³çµ‚äº†å‡¦ç†
     if (g_Render)
     {
         g_Render->Shutdown();
@@ -80,7 +78,7 @@ void ShutdownEngine()
         g_Render = nullptr;
     }
 
-    // InputI—¹ˆ—
+    // Inputçµ‚äº†å‡¦ç†
     if (g_Input)
     {
         g_Input->Shutdown();
@@ -97,7 +95,7 @@ void ShutdownEngine()
 }
 
 //=========================================
-// ‰¹º‰Šú‰»ŠÖ”
+// éŸ³å£°åˆæœŸåŒ–é–¢æ•°
 //=========================================
 bool LoadSoundScript()
 {
@@ -109,11 +107,11 @@ bool LoadSoundScript()
     int repeats = 0;
     int id = 0;
 
-    // ƒ‹[ƒv‚µ‚ÄAw’è‚³‚ê‚½ŠeƒRƒ}ƒ“ƒh‚ğÀs‚µ‚Ü‚·B
+    // ãƒ«ãƒ¼ãƒ—ã—ã¦ã€æŒ‡å®šã•ã‚ŒãŸå„ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚
     for (int i = 0; i < g_pScript->GetTotalLines(); i++)
     {
         g_pScript->ParseCommand(command);
-  
+
         if (_stricmp(command, "MENU_SOUND") == 0)
         {
             g_pScript->ParseStringParam(fileName);
@@ -124,13 +122,13 @@ bool LoadSoundScript()
         {
             g_pScript->ParseStringParam(fileName);
             repeats = g_pScript->ParseIntParam();
-            g_Sound->AddSound(fileName, repeats,g_shotSound );
+            g_Sound->AddSound(fileName, repeats, g_shotSound);
         }
 
         g_pScript->MoveToNextLine();
     }
 
-    // ‚·‚×‚Ä‚ÌƒŠƒ\[ƒX‚ğ‰ğ•ú‚µ‚Ü‚·B‚±‚ÌƒXƒNƒŠƒvƒg‚ÍA‰Šú‰»’†‚É‚Ì‚İÀs‚³‚ê‚é‚æ‚¤‚ÉİŒv‚³‚ê‚Ä‚¢‚Ü‚·B
+    // ã™ã¹ã¦ã®ãƒªã‚½ãƒ¼ã‚¹ã‚’è§£æ”¾ã—ã¾ã™ã€‚ã“ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã¯ã€åˆæœŸåŒ–ä¸­ã«ã®ã¿å®Ÿè¡Œã•ã‚Œã‚‹ã‚ˆã†ã«è¨­è¨ˆã•ã‚Œã¦ã„ã¾ã™ã€‚
     g_pScript->Shutdown();
     return true;
 }

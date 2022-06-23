@@ -1,7 +1,7 @@
-/*********************************************************************************
+Ôªø/*********************************************************************************
 
   *FileName: menu.h
-            ÉRÉE  ÉLÉKÉN
+            „Ç≥„Ç¶  „Ç≠„Ç¨„ÇØ
   *Author:  Huang QiYue
   *Version:  1.0
   *Date:  2022/04/19
@@ -12,20 +12,19 @@
 #define _MENU_H_
 
 //-----------------------------------------
-// ÉÅÉjÉÖÅ[ä÷êî
+// „É°„Éã„É•„ÉºÈñ¢Êï∞
 //-----------------------------------------
 bool InitializeMainMenu();
 void MainMenuCallback(int id, size_t state);
 void MainMenuRender();
 
-
-// ÉÅÉCÉìÉÅÉjÉÖÅ[
+// „É°„Ç§„É≥„É°„Éã„É•„Éº
 #define GUI_MAIN_SCREEN       (1)
 #define GUI_START_SCREEN      (2)
 #define GUI_CREDITS_SCREEN    (3)
 #define GUI_LOADING_SCREEN    (4)
 
-// GUIÉRÉìÉgÉçÅ[ÉâÅ[
+// GUI„Ç≥„É≥„Éà„É≠„Éº„É©„Éº
 #define STATIC_TEXT_ID     (1)
 #define BUTTON_START_ID    (2)
 #define BUTTON_CREDITS_ID  (3)
