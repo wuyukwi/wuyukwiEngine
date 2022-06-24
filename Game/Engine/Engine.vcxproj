@@ -151,12 +151,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationInterface.h" />
     <ClInclude Include="BoundingGeometry.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="DirectSound.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="gameEngine.h" />
+    <ClInclude Include="GfxConfiguration.h" />
     <ClInclude Include="InputInterface.h" />
     <ClInclude Include="LogSystem.h" />
     <ClInclude Include="Matrix.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="Token.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="WindowsApplication.h" />
     <ClInclude Include="XMesh.h" />
     <ClInclude Include="XStructures.h" />
   </ItemGroup>
@@ -194,6 +198,7 @@
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="DirectSound.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="gameEngine.cpp" />
     <ClCompile Include="LogSystem.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="objLoader.cpp" />
@@ -211,6 +216,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="Token.cpp" />
+    <ClCompile Include="WindowsApplication.cpp" />
     <ClCompile Include="XMesh.cpp" />
     <ClCompile Include="XStructures.cpp" />
   </ItemGroup>

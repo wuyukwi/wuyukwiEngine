@@ -102,27 +102,27 @@ bool LoadSoundScript()
     g_Sound->Initialize(SOUNDS_PATH);
     g_pScript->LoadScriptFile(SOUNDS_FILE);
 
-    char command[MAX_COMMAND_SIZE];
-    char fileName[MAX_COMMAND_SIZE];
     int repeats = 0;
     int id = 0;
 
     // ループして、指定された各コマンドを実行します。
     for (int i = 0; i < g_pScript->GetTotalLines(); i++)
     {
+        char fileName[MAX_COMMAND_SIZE];
+        char command[MAX_COMMAND_SIZE];
         g_pScript->ParseCommand(command);
 
         if (_stricmp(command, "MENU_SOUND") == 0)
         {
             g_pScript->ParseStringParam(fileName);
             repeats = g_pScript->ParseIntParam();
-            g_Sound->AddSound(fileName, repeats, g_menuSound);
+            g_Sound->AddSound(fileName, repeats, command);
         }
         else if (_stricmp(command, "SHOT_SOUND") == 0)
         {
             g_pScript->ParseStringParam(fileName);
             repeats = g_pScript->ParseIntParam();
-            g_Sound->AddSound(fileName, repeats, g_shotSound);
+            g_Sound->AddSound(fileName, repeats, command);
         }
 
         g_pScript->MoveToNextLine();

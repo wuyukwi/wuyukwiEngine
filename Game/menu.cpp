@@ -92,7 +92,7 @@ bool InitializeMainMenu()
         return false;
     }
 
-    g_Sound->Play(g_menuSound);
+    g_Sound->Play(0);
 
     return true;
 }

@@ -16,8 +16,6 @@
 #include "menu.h"
 #include "gameLoad.h"
 
-// ビルド時の警告対処用マクロ
-#define DIRECTINPUT_VERSION	(0x0800)
 
 //*****************************************
 // グローバル関数宣言

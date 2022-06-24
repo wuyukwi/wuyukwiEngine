@@ -76,7 +76,6 @@ void GameLoop()
         g_scene->Render();
 
         //GameWorldRender();
-
     }
     else if (g_gameState == GAME_STATE::GS_MENU)
     {
@@ -91,7 +90,6 @@ void GameLoop()
 
             if (GameWorldLoad("maps/level1/level1.lvl"))
             {
-
             }
             else
             {
@@ -144,7 +142,7 @@ void GameReleaseAll()
     if (!g_Sound) return;
 
     if (g_gameState != GAME_STATE::GS_MENU && g_gameState != GAME_STATE::GS_LEVEL)
-        g_Sound->Stop(g_menuSound);
+        g_Sound->Stop("all");
 }
 
 //=========================================
@@ -170,7 +168,7 @@ void fpsRender()
     g_Render->DisplayText(g_arialID, 0, 40, COLOR_ARGB(255, 255, 255, 255), timeCount);
 
     //FPSを計測
-    currentTime = float(timeGetTime());
+    currentTime = static_cast<float>(timeGetTime());
     g_elapsed = ((currentTime - lastTime) * 0.001f);
     lastTime = currentTime;
 
@@ -222,84 +220,84 @@ void GameProcessInput()
             GameReleaseAll();
 
             InitializeMainMenu();
-            g_Sound->Play(g_menuSound);
+            g_Sound->Play("MENU_SOUND");
             g_gameState = GAME_STATE::GS_MENU;
             g_currentGUI = GUI_MAIN_SCREEN;
         }
     }
 
-    ImGui::Begin("camera");
-    ImGui::Text("camera pos :%f,%f,%f", g_camera.GetCameraPos()->x, g_camera.GetCameraPos()->y, g_camera.GetCameraPos()->z);
-    ImGui::Text("camera right :%f,%f,%f", g_camera.GetCameraRight()->x, g_camera.GetCameraRight()->y, g_camera.GetCameraRight()->z);
-    ImGui::Text("camera up :%f,%f,%f", g_camera.GetCameraUp()->x, g_camera.GetCameraUp()->y, g_camera.GetCameraUp()->z);
-    ImGui::Text("camera look :%f,%f,%f", g_camera.GetCameraLook()->x, g_camera.GetCameraLook()->y, g_camera.GetCameraLook()->z);
+    /*  ImGui::Begin("camera");
+      ImGui::Text("camera pos :%f,%f,%f", g_camera.GetCameraPos()->x, g_camera.GetCameraPos()->y, g_camera.GetCameraPos()->z);
+      ImGui::Text("camera right :%f,%f,%f", g_camera.GetCameraRight()->x, g_camera.GetCameraRight()->y, g_camera.GetCameraRight()->z);
+      ImGui::Text("camera up :%f,%f,%f", g_camera.GetCameraUp()->x, g_camera.GetCameraUp()->y, g_camera.GetCameraUp()->z);
+      ImGui::Text("camera look :%f,%f,%f", g_camera.GetCameraLook()->x, g_camera.GetCameraLook()->y, g_camera.GetCameraLook()->z);
 
-    static float angle = 0.0f;
-    static float cameraRot[3] = { 0.0f };
-    if (g_Input->MouseButtonDown(MOUSE_LEFT_BUTTON))
-    {
-    }
+      static float angle = 0.0f;
+      static float cameraRot[3] = { 0.0f };
+      if (g_Input->MouseButtonDown(MOUSE_LEFT_BUTTON))
+      {
+      }
 
-    ImGui::SliderFloat3("rot", cameraRot, -1.0f, 1.0f);
-    ImGui::SliderFloat("angle", &angle, -3.14f, 3.14f);
-    ImGui::End();
-    if (g_gameState == GAME_STATE::GS_LEVEL && g_gameWorld.m_missionStatus == MISSION_ONGOING)
-    {
-        if (g_Input->KeyDown(DIK_W))
-        {
-            g_camera.walk(1.0f);
-        }
+      ImGui::SliderFloat3("rot", cameraRot, -1.0f, 1.0f);
+      ImGui::SliderFloat("angle", &angle, -3.14f, 3.14f);
+      ImGui::End();
+      if (g_gameState == GAME_STATE::GS_LEVEL && g_gameWorld.m_missionStatus == MISSION_ONGOING)
+      {
+          if (g_Input->KeyDown(DIK_W))
+          {
+              g_camera.walk(1.0f);
+          }
 
-        if (g_Input->KeyDown(DIK_S))
-        {
-            g_camera.walk(-1.0f);
-        }
+          if (g_Input->KeyDown(DIK_S))
+          {
+              g_camera.walk(-1.0f);
+          }
 
-        g_Input->GetMousePos();
+          g_Input->GetMousePos();
 
-        if (g_Input->KeyDown(DIK_A))
-        {
-            g_camera.strafe(-1.0f);
-        }
+          if (g_Input->KeyDown(DIK_A))
+          {
+              g_camera.strafe(-1.0f);
+          }
 
-        if (g_Input->KeyDown(DIK_D))
-        {
-            g_camera.strafe(1.0f);
-        }
+          if (g_Input->KeyDown(DIK_D))
+          {
+              g_camera.strafe(1.0f);
+          }
 
-        if (g_Input->KeyDown(DIK_R))
-        {
-            g_camera.fly(0.5f);
-        }
+          if (g_Input->KeyDown(DIK_R))
+          {
+              g_camera.fly(0.5f);
+          }
 
-        if (g_Input->KeyDown(DIK_F))
-        {
-            g_camera.fly(-0.5f);
-        }
+          if (g_Input->KeyDown(DIK_F))
+          {
+              g_camera.fly(-0.5f);
+          }
 
-        if (g_Input->KeyDown(DIK_UP))
-        {
-            g_camera.pitch(0.01f);
-        }
-        if (g_Input->KeyDown(DIK_DOWN))
-        {
-            g_camera.pitch(-0.01f);
-        }
-        if (g_Input->KeyDown(DIK_LEFT))
-        {
-            g_camera.yaw(0.01f);
-        }
-        if (g_Input->KeyDown(DIK_RIGHT))
-        {
-            g_camera.yaw(-0.01f);
-        }
+          if (g_Input->KeyDown(DIK_UP))
+          {
+              g_camera.pitch(0.01f);
+          }
+          if (g_Input->KeyDown(DIK_DOWN))
+          {
+              g_camera.pitch(-0.01f);
+          }
+          if (g_Input->KeyDown(DIK_LEFT))
+          {
+              g_camera.yaw(0.01f);
+          }
+          if (g_Input->KeyDown(DIK_RIGHT))
+          {
+              g_camera.yaw(-0.01f);
+          }
 
-        if (g_Input->MouseButtonUp(MOUSE_LEFT_BUTTON))
-        {
-        }
-    }
+          if (g_Input->MouseButtonUp(MOUSE_LEFT_BUTTON))
+          {
+          }
+      }*/
 
-    // Mouse Input
+      // Mouse Input
     POINT pos = g_Input->GetMousePos();
     g_mouseX = pos.x;
     g_mouseY = pos.y;

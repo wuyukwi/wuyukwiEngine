@@ -9,6 +9,7 @@
 **********************************************************************************/
 
 #include"DirectSound.h"
+#include"defines.h"
 
 HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD* pChunkSize, DWORD* pChunkDataPosition);
 HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
@@ -26,35 +27,9 @@ CDMSoundObject::CDMSoundObject()
     m_filePath = nullptr;
     m_pXAudio2 = nullptr;
     pMasterVoice = nullptr;
-    m_audioState = nullptr;
     m_comInit = false;
-    m_totalSounds = 0;
 }
 
-int CDMSoundObject::IncreaseSounds()
-{
-    // This function increases the m_control array.
-
-    if (!m_audioState)
-    {
-        m_audioState = new AUDIO_STATE[1];
-        if (!m_audioState) return UGP_FAIL;
-    }
-    else
-    {
-        AUDIO_STATE* temp;
-        temp = new AUDIO_STATE[m_totalSounds + 1];
-        if (!temp) return UGP_FAIL;
-
-        memcpy(temp, m_audioState,
-            sizeof(AUDIO_STATE) * m_totalSounds);
-
-        delete[] m_audioState;
-        m_audioState = temp;
-    }
-
-    return UGP_OK;
-}
 
 bool CDMSoundObject::Initialize(const char* filepath)
 {
@@ -101,52 +76,62 @@ bool CDMSoundObject::Initialize(const char* filepath)
     return true;
 }
 
-bool CDMSoundObject::AddSound(char* soundfile, int numRepeats, int& id)
+bool CDMSoundObject::AddSound(const char* sound_file, int numRepeats, const char* command)
 {
-    if (id > m_totalSounds || soundfile == nullptr)
+    // コマンド既にある場合はtrueを返す
+    for (auto it = m_audioState.begin(); it < m_audioState.end(); ++it)
+    {
+        if (it->command == command)
+        {
+            return true;
+        }
+    }
+
+    if (sound_file == nullptr)
     {
         return false;
     }
 
-    // 音声データ格納配列を増加
-    if (!IncreaseSounds())
-        return false;
+    AUDIO_STATE temp;
 
-    id = m_totalSounds;
-
-    // サウンドデータの初期化
-    HANDLE hFile;
     DWORD dwChunkSize = 0;
     DWORD dwChunkPosition = 0;
     DWORD dwFiletype;
     WAVEFORMATEXTENSIBLE wfx;
     XAUDIO2_BUFFER buffer;
-    char* fileName = new char[strlen(m_filePath) + strlen(soundfile) + 1];
-    ZeroMemory(fileName, strlen(m_filePath) + strlen(soundfile) + 1);
+
+    // ファイルネーム保存
+    char* fileName = new char[strlen(m_filePath) + strlen(sound_file) + 1];
+    ZeroMemory(fileName, strlen(m_filePath) + strlen(sound_file) + 1);
     strcat(fileName, m_filePath);
-    strcat(fileName, soundfile);
+    strcat(fileName, sound_file);
+    temp.fileName = fileName;
+
+    // コマンド保存
+    temp.command = command;
 
     // バッファのクリア
     memset(&wfx, 0, sizeof(WAVEFORMATEXTENSIBLE));
     memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
 
     // サウンドデータファイルの生成
-    hFile = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-    if (hFile == INVALID_HANDLE_VALUE)
+    const HANDLE h_file = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ,
+        nullptr, OPEN_EXISTING, 0, nullptr);
+    if (h_file == INVALID_HANDLE_VALUE)
     {
         return false;
     }
-    if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
+    if (SetFilePointer(h_file, 0, nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {// ファイルポインタを先頭に移動
         return false;
     }
 
     // WAVEファイルのチェック
-    if (FAILED(CheckChunk(hFile, 'FFIR', &dwChunkSize, &dwChunkPosition)))
+    if (FAILED(CheckChunk(h_file, 'FFIR', &dwChunkSize, &dwChunkPosition)))
     {
         return false;
     }
-    if (FAILED(ReadChunkData(hFile, &dwFiletype, sizeof(DWORD), dwChunkPosition)))
+    if (FAILED(ReadChunkData(h_file, &dwFiletype, sizeof(DWORD), dwChunkPosition)))
     {
         return false;
     }
@@ -156,46 +141,46 @@ bool CDMSoundObject::AddSound(char* soundfile, int numRepeats, int& id)
     }
 
     // フォーマットチェック
-    if (FAILED(CheckChunk(hFile, ' tmf', &dwChunkSize, &dwChunkPosition)))
+    if (FAILED(CheckChunk(h_file, ' tmf', &dwChunkSize, &dwChunkPosition)))
     {
         return false;
     }
-    if (FAILED(ReadChunkData(hFile, &wfx, dwChunkSize, dwChunkPosition)))
+    if (FAILED(ReadChunkData(h_file, &wfx, dwChunkSize, dwChunkPosition)))
     {
         return false;
     }
 
     // オーディオデータ読み込み
-    if (FAILED(CheckChunk(hFile, 'atad', &m_audioState[id].SizeAudio, &dwChunkPosition)))
+    if (FAILED(CheckChunk(h_file, 'atad', &temp.SizeAudio, &dwChunkPosition)))
     {
         return false;
     }
-    m_audioState[id].pDataAudio = (BYTE*)malloc(m_audioState[id].SizeAudio);
-    if (FAILED(ReadChunkData(hFile, m_audioState[id].pDataAudio, m_audioState[id].SizeAudio, dwChunkPosition)))
+    temp.pDataAudio = static_cast<BYTE*>(malloc(temp.SizeAudio));
+    if (FAILED(ReadChunkData(h_file, temp.pDataAudio, temp.SizeAudio, dwChunkPosition)))
     {
         return false;
     }
 
     // ソースボイスの生成
-    if (FAILED(m_pXAudio2->CreateSourceVoice(&m_audioState[id].pSourceVoice, &(wfx.Format))))
+    if (FAILED(m_pXAudio2->CreateSourceVoice(&temp.pSourceVoice, &(wfx.Format))))
     {
         return S_FALSE;
     }
 
     // バッファの値設定
     memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-    buffer.AudioBytes = m_audioState[id].SizeAudio;
-    buffer.pAudioData = m_audioState[id].pDataAudio;
+    buffer.AudioBytes = temp.SizeAudio;
+    buffer.pAudioData = temp.pDataAudio;
     buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.LoopCount = m_audioState[id].Repeats = numRepeats;
+    buffer.LoopCount = temp.Repeats = numRepeats;
 
     // オーディオバッファの登録
-    m_audioState[id].pSourceVoice->SubmitSourceBuffer(&buffer);
+    temp.pSourceVoice->SubmitSourceBuffer(&buffer);
 
     // ファイルをクローズ
-    CloseHandle(hFile);
+    CloseHandle(h_file);
 
-    m_totalSounds++;
+    m_audioState.push_back(temp);
 
     return true;
 }
@@ -215,14 +200,59 @@ bool CDMSoundObject::SetupSoundParameters(int id, float dopplerFactor, float rol
     return true;
 }
 
-void CDMSoundObject::Play(int id)
+bool CDMSoundObject::Play(const char* command)
 {
     // セグメント再生(再生中なら停止)
     XAUDIO2_VOICE_STATE xa2state;
     XAUDIO2_BUFFER buffer;
 
-    // バッファの値設定
-    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+    // コマンドを探す
+    for (auto it = m_audioState.begin(); it < m_audioState.end(); ++it)
+    {
+        if (it->command == command)
+        {
+            // バッファの値設定
+            memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+            buffer.AudioBytes = it->SizeAudio;
+            buffer.pAudioData = it->pDataAudio;
+            buffer.Flags = XAUDIO2_END_OF_STREAM;
+            buffer.LoopCount = it->Repeats;
+
+            // 状態取得
+            it->pSourceVoice->GetState(&xa2state);
+            if (xa2state.BuffersQueued != 0)
+            {// 再生中
+                // 一時停止
+                it->pSourceVoice->Stop(0);
+
+                // オーディオバッファの削除
+                it->pSourceVoice->FlushSourceBuffers();
+            }
+
+            // オーディオバッファの登録
+            it->pSourceVoice->SubmitSourceBuffer(&buffer);
+
+            // 再生
+            it->pSourceVoice->Start(0);
+
+            return true;
+        }
+    }
+
+    // コマンド見つからない
+    return false;
+}
+
+void CDMSoundObject::Play(int32_t id)
+{
+    if (id >= static_cast<int>(m_audioState.size()) || id < 0)
+    {
+        return;
+    }
+    // セグメント再生(再生中なら停止)
+    XAUDIO2_VOICE_STATE xa2state;
+    XAUDIO2_BUFFER buffer = {};
+
     buffer.AudioBytes = m_audioState[id].SizeAudio;
     buffer.pAudioData = m_audioState[id].pDataAudio;
     buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -253,55 +283,98 @@ void CDMSoundObject::UpdateSoundPosition(int id, float x, float y, float z)
 //=============================================================================
 // セグメント停止(ラベル指定) -(全て)
 //=============================================================================
-void CDMSoundObject::Stop(int id)
+bool CDMSoundObject::Stop(const char* command)
 {
     XAUDIO2_VOICE_STATE xa2state;
 
-    if (id >= 0)
+    // コマンドを探す
+    for (auto it = m_audioState.begin(); it < m_audioState.end(); ++it)
     {
-        // 状態取得
-        m_audioState[id].pSourceVoice->GetState(&xa2state);
-        if (xa2state.BuffersQueued != 0)
-        {// 再生中
-            // 一時停止
-            m_audioState[id].pSourceVoice->Stop(0);
+        if (it->command == command)
+        {
+            // 状態取得
+            it->pSourceVoice->GetState(&xa2state);
+            if (xa2state.BuffersQueued != 0)
+            {// 再生中
+                // 一時停止
+                it->pSourceVoice->Stop(0);
 
-            // オーディオバッファの削除
-            m_audioState[id].pSourceVoice->FlushSourceBuffers();
+                // オーディオバッファの削除
+                it->pSourceVoice->FlushSourceBuffers();
+            }
+            return true;
+        }
+        if (_stricmp(command, "all") == 0)
+        {
+            for (const auto& state : m_audioState)
+            {
+                if (state.pSourceVoice)
+                {
+                    // 全て一時停止
+                    state.pSourceVoice->Stop(0);
+                }
+            }
+            return true;
         }
     }
-    else
+
+    // コマンド見つからない
+    return false;
+}
+
+void CDMSoundObject::Stop(int32_t id)
+{
+    if (id >= static_cast<int>(m_audioState.size()))
     {
-        // 全て一時停止
-        for (int nCntSound = 0; nCntSound < m_totalSounds; nCntSound++)
+        return;
+    }
+
+    if (id <= 0)
+    {
+        for (const auto& state : m_audioState)
         {
-            if (m_audioState[nCntSound].pSourceVoice)
+            if (state.pSourceVoice)
             {
                 // 全て一時停止
-                m_audioState[nCntSound].pSourceVoice->Stop(0);
+                state.pSourceVoice->Stop(0);
             }
         }
     }
+
+    // セグメント再生(再生中なら停止)
+    XAUDIO2_VOICE_STATE xa2state;
+
+    // 状態取得
+    m_audioState[id].pSourceVoice->GetState(&xa2state);
+    if (xa2state.BuffersQueued != 0)
+    {// 再生中
+        // 一時停止
+        m_audioState[id].pSourceVoice->Stop(0);
+
+        // オーディオバッファの削除
+        m_audioState[id].pSourceVoice->FlushSourceBuffers();
+    }
+
 }
 
 void CDMSoundObject::Shutdown()
 {
     // Release all resources.
 
-    for (int cnt = 0; cnt < m_totalSounds; cnt++)
+    for (auto& state : m_audioState)
     {
-        if (m_audioState[cnt].pSourceVoice)
+        if (state.pSourceVoice)
         {
             // 一時停止
-            m_audioState[cnt].pSourceVoice->Stop(0);
+            state.pSourceVoice->Stop(0);
 
             // ソースボイスの破棄
-            m_audioState[cnt].pSourceVoice->DestroyVoice();
-            m_audioState[cnt].pSourceVoice = NULL;
+            state.pSourceVoice->DestroyVoice();
+            state.pSourceVoice = nullptr;
 
             // オーディオデータの開放
-            free(m_audioState[cnt].pDataAudio);
-            m_audioState[cnt].pDataAudio = NULL;
+            free(state.pDataAudio);
+            state.pDataAudio = nullptr;
         }
     }
 

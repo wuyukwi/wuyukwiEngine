@@ -14,8 +14,8 @@
 #define MAIN_SETTING_FILE   ("Engine/Script/setting.txt")
 
 // グローバル変数
-HWND g_hwnd = NULL;
-HINSTANCE g_hinstance = NULL;
+HWND g_hwnd = nullptr;
+HINSTANCE g_hinstance = nullptr;
 CScript* g_pScript = nullptr;
 
 // 設定保存用変数
@@ -169,11 +169,10 @@ bool LoadScript(const char* filename)
     if (!g_pScript->LoadScriptFile(filename))
         return false;
 
-    char command[MAX_COMMAND_SIZE];
-
     // ループして、指定された各コマンドを実行します。
     for (int i = 0; i < g_pScript->GetTotalLines(); i++)
     {
+        char command[MAX_COMMAND_SIZE];
         g_pScript->ParseCommand(command);
 
         if (_stricmp(command, "WINDOW_CLASS") == 0)
@@ -215,7 +214,7 @@ bool LoadScript(const char* filename)
 
             sprintf(err, "Error in script on line %d.",
                 g_pScript->GetCurrentLineNum() + 1);
-            MessageBox(NULL, err, "Error", MB_OK);
+            MessageBox(nullptr, err, "Error", MB_OK);
 
             g_pScript->Shutdown();
             return false;

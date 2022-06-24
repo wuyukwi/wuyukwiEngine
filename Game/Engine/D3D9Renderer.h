@@ -11,6 +11,9 @@
 #ifndef _D3D_RENDERER_H_
 #define _D3D_RENDERER_H_
 
+// ビルド時の警告対処用マクロ
+#define DIRECTINPUT_VERSION	(0x0800)
+
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
