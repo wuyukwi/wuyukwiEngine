@@ -168,6 +168,7 @@
     <ClInclude Include="PropertyScript.h" />
     <ClInclude Include="Route.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="D3D9Renderer.h" />
     <ClInclude Include="defines.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="RenderInterface.h" />
     <ClInclude Include="SoundInterface.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Vector.h" />
@@ -204,6 +206,7 @@
     <ClCompile Include="objLoader.cpp" />
     <ClCompile Include="PropertyScript.cpp" />
     <ClCompile Include="Route.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="D3D9Renderer.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -215,6 +218,7 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="particle.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="WindowsApplication.cpp" />
     <ClCompile Include="XMesh.cpp" />

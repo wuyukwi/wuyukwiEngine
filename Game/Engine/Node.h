@@ -15,7 +15,6 @@ class Node
 protected:
     std::vector<Node*> m_children{};        ///< array of children nodes
     //Node* _parent;                  ///< weak reference to parent node
-    NodeVertex2D* m_vertexBuffer = nullptr;
     Vector2f m_xySize = 0;
     Vector2f m_pos = 0;
     Vector2f m_texPos = 0;
@@ -53,6 +52,7 @@ class Sprite :public Node
 {
 protected:
     CRenderInterface* m_renderer;
+    NodeVertex2D m_vertexBuffer[4];
     std::string m_texName;
     int32_t m_texId = -1;
     int32_t m_staticId = -1;
@@ -60,6 +60,7 @@ protected:
 public:
 
     Sprite() = delete;
+    ~Sprite() override;
     Sprite(int32_t key, const char* tex_name, CRenderInterface* renderer) : m_renderer(renderer), m_texName(tex_name),
         m_key(key)
     {
@@ -74,8 +75,6 @@ public:
         m_texName(tex_name), m_key(key)
     {
     }
-
-    ~Sprite() override;
 
     virtual void Start() override;
     virtual void Updata(float delta) override;

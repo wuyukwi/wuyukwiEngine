@@ -13,6 +13,7 @@
 #include "Engine/defines.h"
 #include "Engine/Scene.h"
 #include "gameScene.h"
+#include "Engine/Timer.h"
 
 char g_fpsStr[16] = { 0 };
 float g_elapsed = 0.0f;
@@ -33,6 +34,7 @@ stGameWorld g_gameWorld;
 GAME_STATE g_gameState = GAME_STATE::GS_MENU;
 
 Scene* g_scene;
+Timer* g_timer;
 
 //=========================================
 // ゲーム初期化
@@ -45,6 +47,8 @@ bool GameInitialize()
 
     g_scene = new gameScene();
     g_scene->Start();
+
+    g_timer = new Timer();
 
     return true;
 }
@@ -150,43 +154,48 @@ void GameReleaseAll()
 //=========================================
 void fpsRender()
 {
-    //FPSを計測用変数
-    static int fps = 0;
-    static float currentTime = 0.0f;
-    static float lastTime = 0.0f;
-    static float frameTime = 0.0f;
+    g_timer->Tick();
 
+
+    //FPSを計測用変数
+    //static int fps = 0;
+    ////static float currentTime = 0.0f;
+    ////static float lastTime = 0.0f;
+    //static double frameTime = 0.0f;
     //FPSの描画
+    sprintf(g_fpsStr, "FPS: %d", g_timer->GetFps());
     g_Render->DisplayText(g_arialID, 0, 0, COLOR_ARGB(255, 255, 255, 255), g_fpsStr);
 
     static char s_elapsed[16] = { 0 };
-    sprintf(s_elapsed, "elapsed: %f", g_elapsed);
+    sprintf(s_elapsed, "elapsed: %f", g_timer->GetElapsed());
+    //sprintf(s_elapsed, "elapsed: %f", g_elapsed);
     g_Render->DisplayText(g_arialID, 0, 20, COLOR_ARGB(255, 255, 255, 255), s_elapsed);
 
     static char timeCount[16] = { 0 };
-    sprintf(timeCount, "timeCount: %d", g_timeCount);
+    //sprintf(timeCount, "timeCount: %lld", t);
+    sprintf(timeCount, "timeCount: %d", g_timer->GetTimeCount());
     g_Render->DisplayText(g_arialID, 0, 40, COLOR_ARGB(255, 255, 255, 255), timeCount);
 
     //FPSを計測
-    currentTime = static_cast<float>(timeGetTime());
-    g_elapsed = ((currentTime - lastTime) * 0.001f);
-    lastTime = currentTime;
+    //currentTime = static_cast<float>(clock());
+    //g_elapsed = ((currentTime - lastTime) * 0.001f);
+    //lastTime = currentTime;
 
-    frameTime += g_elapsed;
-
-    // 1秒経過
-    if (frameTime > 1.0f)
-    {
-        sprintf(g_fpsStr, "FPS: %d", fps);
-
-        g_timeCount++;
-        fps = 0;
-        frameTime = 0.0f;
-    }
-    else
-    {
-        fps++;
-    }
+//    frameTime += g_timer->GetElapsed();
+//
+//    // 1秒経過
+//    if (frameTime > 1.0)
+//    {
+//        sprintf(g_fpsStr, "FPS: %d", fps);
+//
+//        g_timeCount++;
+//        fps = 0;
+//        frameTime = 0.0;
+//    }
+//    else
+//    {
+//        fps++;
+//    }
 }
 
 //=========================================

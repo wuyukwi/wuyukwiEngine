@@ -108,7 +108,7 @@ public:
     virtual int ReleaseStaticBuffer(int staticID) = 0;
     virtual int ReleaseXModel(int xModelId) = 0;
 
-    virtual int RenderStaticBuffer(uint32_t staticId) = 0;
+    virtual int RenderStaticBuffer(int32_t staticId) = 0;
     virtual int RenderXModel(int xModelId) = 0;
 
     virtual void GetXModelBoundingSphere(int xModelId, Vector3f* origin, float* radius) = 0;

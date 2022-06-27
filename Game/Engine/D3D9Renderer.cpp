@@ -1057,9 +1057,9 @@ int CD3D9Renderer::CreateStaticBuffer(VertexType vType,
 }
 
 // 描画関数
-int CD3D9Renderer::RenderStaticBuffer(uint32_t staticId)
+int CD3D9Renderer::RenderStaticBuffer(int32_t staticId)
 {
-    if (staticId >= m_staticBufferList.size())
+    if (staticId >= static_cast<int>(m_staticBufferList.size()))
         return UGP_FAIL;
 
     if (m_activeStaticBuffer != staticId)
@@ -1119,6 +1119,7 @@ int CD3D9Renderer::RenderStaticBuffer(uint32_t staticId)
                 return UGP_FAIL;
             break;
 
+        case PrimType::NULL_TYPE: break;
         default:
             return UGP_FAIL;
         }

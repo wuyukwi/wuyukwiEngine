@@ -25,5 +25,7 @@
 #include "Script.h"
 #include "PropertyScript.h"
 #include "LogSystem.h"
+#include "SceneManager.h"
+#include "Timer.h"
 
 #endif // _ENGINE_H_

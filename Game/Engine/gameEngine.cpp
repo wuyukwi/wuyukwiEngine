@@ -11,6 +11,10 @@ bool gameEngine::InitializeEngine(const char* path_file)
 {
     LoadScript(path_file);
 
+    m_pSceneManager = new SceneManager();
+
+    m_pTimer = new Timer();
+
     m_WinApp = new WindowsApplication{};
 
     if (m_WinApp->Initialize(&m_Config))
@@ -74,12 +78,16 @@ void gameEngine::ShutdownEngine()
     }
 }
 
-void gameEngine::Run() const
+bool gameEngine::Run() const
 {
     while (m_WinApp->IsQuit())
     {
+        m_pTimer->Tick();
         m_WinApp->Tick();
+        m_pSceneManager->Tick(m_pTimer->GetElapsed());
     }
+
+    return true;
 }
 
 bool gameEngine::LoadScript(const char* path_file)

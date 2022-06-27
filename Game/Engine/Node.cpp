@@ -3,7 +3,6 @@
 
 Node::~Node()
 {
-    delete[] m_vertexBuffer;
 }
 
 void Node::SetSize(float x, float y)
@@ -57,46 +56,51 @@ void Node::Start()
     {
         (*itr)->Start();
     }
-    m_vertexBuffer = new NodeVertex2D[4];
 }
 
 void Node::Updata(float delta)
 {
-    for (auto itr = m_children.begin(); itr < m_children.end(); ++itr)
+    for (auto it = m_children.begin(); it < m_children.end();)
     {
-        (*itr)->Updata(delta);
-        if ((*itr)->GetIsDelete())
+        // エレメントが削除された場合はvectorから削除
+        if (*it == nullptr)
         {
-            m_children.erase(itr);
+            //　erase関数は次のエレメントのイテレータを返す
+            it = m_children.erase(it);
+        }
+        else
+        {
+            (*it)->Updata(delta);
+
+            ++it;
         }
     }
-
-    if (m_vertexBuffer == nullptr)
-    {
-        m_vertexBuffer = new NodeVertex2D[4];
-    }
-
-    m_vertexBuffer[0] = NodeVertex2D(m_pos.x - m_xySize.x, m_pos.y - m_xySize.y, 0.0f, 0.0f);
-    m_vertexBuffer[1] = NodeVertex2D(m_pos.x - m_xySize.x, m_pos.y + m_xySize.y, 0.0f, 1.0f);
-    m_vertexBuffer[2] = NodeVertex2D(m_pos.x + m_xySize.x, m_pos.y - m_xySize.y, 1.0f, 0.0f);
-    m_vertexBuffer[3] = NodeVertex2D(m_pos.x + m_xySize.x, m_pos.y + m_xySize.y, 1.0f, 1.0f);
 
 }
 
 void Node::Render()
 {
-    for (auto itr = m_children.begin(); itr < m_children.end(); ++itr)
+    for (auto it = m_children.begin(); it < m_children.end();)
     {
-        (*itr)->Render();
-        if ((*itr)->GetIsDelete())
+        // エレメントが削除された場合はvectorから削除
+        if (*it == nullptr)
         {
-            m_children.erase(itr);
+            //　erase関数は次のエレメントのイテレータを返す
+            it = m_children.erase(it);
+        }
+        else
+        {
+            (*it)->Render();
+
+            ++it;
         }
     }
 }
 
 Sprite::~Sprite()
-= default;
+{
+    m_renderer->ReleaseStaticBuffer(m_staticId);
+}
 
 void Sprite::Start()
 {
@@ -110,13 +114,17 @@ void Sprite::Updata(float delta)
 {
     Node::Updata(delta);
 
+    m_vertexBuffer[0] = NodeVertex2D(m_pos.x - m_xySize.x, m_pos.y - m_xySize.y, 0.0f, 0.0f);
+    m_vertexBuffer[1] = NodeVertex2D(m_pos.x - m_xySize.x, m_pos.y + m_xySize.y, 0.0f, 1.0f);
+    m_vertexBuffer[2] = NodeVertex2D(m_pos.x + m_xySize.x, m_pos.y - m_xySize.y, 1.0f, 0.0f);
+    m_vertexBuffer[3] = NodeVertex2D(m_pos.x + m_xySize.x, m_pos.y + m_xySize.y, 1.0f, 1.0f);
 
     if (!m_renderer->CreateStaticBuffer(
         FVF_2D, PrimType::TRIANGLE_STRIP,
         4, NULL, sizeof(NodeVertex2D),
         reinterpret_cast<void**>(m_vertexBuffer), nullptr, &m_staticId))
     {
-        assert("Sprite CreateStaticBuffer error", m_staticId > 0);
+        //assert("Sprite CreateStaticBuffer error", m_staticId > 0);
     }
 }
 

@@ -125,7 +125,7 @@ public:
     int ReleaseStaticBuffer(int staticID) override;
     int ReleaseXModel(int xModelId) override;
 
-    int RenderStaticBuffer(uint32_t staticId) override;
+    int RenderStaticBuffer(int32_t staticId) override;
     int RenderXModel(int xModelId) override;
 
     void GetXModelBoundingSphere(int xModelId, Vector3f* origin, float* radius) override

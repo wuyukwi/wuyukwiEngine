@@ -16,35 +16,46 @@ public:
 
     virtual void Start()
     {
-        for (auto itr = m_sceneNodeMap.begin(); itr != m_sceneNodeMap.end(); ++itr)
+        for (auto it = m_sceneNodeMap.begin(); it != m_sceneNodeMap.end(); ++it)
         {
-            itr->second->Start();
+            it->second->Start();
         }
     }
 
     virtual void Updata(float delta)
     {
-        for (auto itr = m_sceneNodeMap.begin(); itr != m_sceneNodeMap.end(); ++itr)
+        for (auto it = m_sceneNodeMap.begin(); it != m_sceneNodeMap.end();)
         {
-            itr->second->Updata(delta);
-
-            if (itr->second->GetIsDelete())
+            // エレメントがdeleteされた場合はmapから削除
+            if (it->second == nullptr)
             {
-                m_sceneNodeMap.erase(itr);
+                //　erase関数は次のエレメントのイテレータを返す
+                it = m_sceneNodeMap.erase(it);
             }
+            else
+            {
+                it->second->Updata(delta);
 
+                ++it;
+            }
         }
     }
 
     virtual void Render()
     {
-        for (auto itr = m_sceneNodeMap.begin(); itr != m_sceneNodeMap.end(); ++itr)
+        for (auto it = m_sceneNodeMap.begin(); it != m_sceneNodeMap.end();)
         {
-            itr->second->Render();
-
-            if (itr->second->GetIsDelete())
+            // エレメントがdeleteされた場合はmapから削除
+            if (it->second == nullptr)
             {
-                m_sceneNodeMap.erase(itr);
+                //　erase関数は次のエレメントのイテレータを返す
+                it = m_sceneNodeMap.erase(it);
+            }
+            else
+            {
+                it->second->Render();
+
+                ++it;
             }
         }
     }
